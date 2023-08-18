@@ -4,19 +4,66 @@ repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
--   repo: https://github.com/psf/black
-    rev: 23.7.0
+      - id: trailing-whitespace
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-case-conflict
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-xml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: check-symlinks
+      - id: mixed-line-ending
+      - id: fix-encoding-pragma
+        args:
+          - --remove
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: requirements-txt-fixer
+
+-   repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
     hooks:
-    -   id: black
+      - id: python-check-blanket-noqa
+      - id: python-check-mock-methods
+      - id: python-no-eval
+      - id: python-no-log-warn
+
+-   repo: local
+    hooks:
+      - id: no-shebang
+        language: pygrep
+        name: Do not use shebangs in non-executable files
+        description: Only executable files should have shebangs (e.g. '#!/usr/bin/env python')
+        entry: "#!/"
+        pass_filenames: true
+        exclude: bin|cli|manage.py|app.py|setup.py|docs|test_data.py
+        files: \.py$
+
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.0.285
     hooks:
     -   id: ruff
--   repo: https://github.com/pycqa/isort
+
+-   repo: https://github.com/PyCQA/isort
     rev: 5.12.0
     hooks:
       - id: isort
+        name: Run isort to sort imports
+        files: \.py$
+        # To keep consistent with the global isort skip config defined in setup.cfg
+        exclude: ^build/.*$|^.tox/.*$|^venv/.*$
+        args:
+          - --lines-after-imports=2
+          - --profile=black
+
+-   repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+    -   id: black
+    -   args:
+          - --safe
+          - "--target-version=py311"

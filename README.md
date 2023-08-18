@@ -8,4 +8,4 @@
 
 
 ## Dev commands
-`make lint`: Runs `pre-check`
+`make lint`: Runs the `pre-check` processes and lints the repository.

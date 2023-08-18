@@ -8,4 +8,4 @@
 
 
 ## Dev commands
-`make lint`: Runs the `pre-check` processes and lints the repository.
+`pre-commit run`: Runs the `pre-commit` processes and lints the repository.

@@ -9,9 +9,32 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 
-
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.3"
+
+[tool.black]
+line-length = 80
+
+[tool.isort]
+profile= "black"
+line_length = 80
+skip = [".gitignore", "project/data/"]
+
+[tool.ruff]
+fix=true
+line-length = 80
+target-version = "py311"
+select = ["D"]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.extend-per-file-ignores]
+"__init__.py" = ["D104"]
+
+[tool.mypy]
+python_version = "3.11"
+no_implicit_optional = true
 
 [build-system]
 requires = ["poetry-core"]

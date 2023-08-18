@@ -14,10 +14,13 @@ pre-commit = "^3.3.3"
 
 [tool.black]
 line-length = 80
+safe=true
+target_version = ['py311']
 
 [tool.isort]
 profile= "black"
 line_length = 80
+lines_after_imports= 2
 skip = [".gitignore", "project/data/"]
 
 [tool.ruff]

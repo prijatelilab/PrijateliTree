@@ -56,9 +56,6 @@ repos:
         files: \.py$
         # To keep consistent with the global isort skip config defined in setup.cfg
         exclude: ^build/.*$|^.tox/.*$|^venv/.*$
-        args:
-          - --lines-after-imports=2
-          - --profile=black
 
 -   repo: https://github.com/psf/black
     rev: 23.7.0

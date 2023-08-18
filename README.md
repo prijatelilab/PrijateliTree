@@ -1,4 +1,4 @@
-# oTree Application
+# Untitled oTree Application
 
 
 ## Application Requirements

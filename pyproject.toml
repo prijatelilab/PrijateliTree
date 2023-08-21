@@ -21,22 +21,24 @@ safe=true
 target_version = ['py311']
 
 [tool.isort]
+src_paths = ["*.py", "./UntitledApp/*"]
 profile= "black"
 line_length = 80
 lines_after_imports= 2
-skip = [".gitignore", "project/data/"]
+skip = [".gitignore"]
 
 [tool.ruff]
-fix=true
+fixable = ["ALL"]
+include = ["*.py", "./UntitledApp/*"]
 line-length = 80
 target-version = "py311"
 select = ["D"]
 
-[tool.ruff.pydocstyle]
-convention = "numpy"
-
 [tool.ruff.extend-per-file-ignores]
 "__init__.py" = ["D104"]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
 
 [tool.mypy]
 python_version = "3.11"

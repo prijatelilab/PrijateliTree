@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "untitled otree application"
+name = "PrijateliTree"
 version = "0.1.0"
 description = ""
 authors = ["michplunkett <5885605+michplunkett@users.noreply.github.com>"]
@@ -21,7 +21,7 @@ safe=true
 target_version = ['py311']
 
 [tool.isort]
-src_paths = ["*.py", "./UntitledApp/*"]
+src_paths = ["*.py", "./PrijateliTree/*"]
 profile= "black"
 line_length = 80
 lines_after_imports= 2
@@ -29,7 +29,7 @@ skip = [".gitignore"]
 
 [tool.ruff]
 fixable = ["ALL"]
-include = ["*.py", "./UntitledApp/*"]
+include = ["*.py", "./PrijateliTree/*"]
 line-length = 80
 target-version = "py311"
 select = ["D"]

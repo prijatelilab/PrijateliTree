@@ -1,5 +1,5 @@
 # Prijateli Tree
-`PrijateliTree` is an oTree application used to play lab games and collect survey data. 
+`PrijateliTree` is an oTree application used to play lab games and collect survey data.
 The games are a means to provide insights into social learning, the economics of languages and other human behaviors.
 
 ## Application Requirements

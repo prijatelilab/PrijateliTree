@@ -15,9 +15,6 @@ psycopg2 = "^2.9.7"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.3"
 
-[tool.ruff.pydocstyle]
-convention = "numpy"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

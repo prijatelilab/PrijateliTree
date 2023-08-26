@@ -3,13 +3,13 @@
 ## Addresses the Following Issues
 
 
-## Describe your changes
+## Describe Your Changes
 
 
-## Non-obvious technical information
+## Non-Obvious Technical Information
 
 
-## Checklist before requesting a review
+## Checklist Before Requesting a Review
 - [ ] The code runs successfully.
 
 ```console

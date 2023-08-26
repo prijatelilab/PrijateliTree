@@ -15,34 +15,8 @@ psycopg2 = "^2.9.7"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.3"
 
-[tool.black]
-line-length = 80
-safe=true
-target_version = ['py311']
-
-[tool.isort]
-src_paths = ["*.py", "./PrijateliTree/*"]
-profile= "black"
-line_length = 80
-lines_after_imports= 2
-skip = [".gitignore"]
-
-[tool.ruff]
-fixable = ["ALL"]
-include = ["*.py", "./PrijateliTree/*"]
-line-length = 80
-target-version = "py311"
-select = ["D"]
-
-[tool.ruff.extend-per-file-ignores]
-"__init__.py" = ["D104"]
-
 [tool.ruff.pydocstyle]
 convention = "numpy"
-
-[tool.mypy]
-python_version = "3.11"
-no_implicit_optional = true
 
 [build-system]
 requires = ["poetry-core"]

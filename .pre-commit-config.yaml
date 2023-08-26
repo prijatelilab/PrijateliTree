@@ -56,7 +56,6 @@ repos:
           - --line-length=80
           - --target-version=py311
           - --select=B,C,E,F,W
-          - --extend-per-file-ignores __init__.py:D104
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0

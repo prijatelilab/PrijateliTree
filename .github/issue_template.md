@@ -1,4 +1,4 @@
-## What issue are you seeing or what feature needs to be added?
+## What Issue Are You Seeing or What Feature Needs To Be Added?
 
 
-## Are there any links that would be helpful?
+## Are There Any Links That Would Be Helpful?

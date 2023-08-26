@@ -42,9 +42,6 @@ repos:
         args:
           - --lines-after-imports=2
           - --profile=black
-          - --line-length=80
-          - .
-
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.0.286
@@ -53,7 +50,6 @@ repos:
         types_or: [python, pyi, jupyter]
         args:
           - --fix
-          - --line-length=80
           - --target-version=py311
           - --select=B,C,E,F,W
 
@@ -72,4 +68,3 @@ repos:
         args:
           - --safe
           - --target-version=py311
-          - --line-length=80

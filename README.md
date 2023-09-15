@@ -11,4 +11,4 @@ The games are a means to provide insights into social learning, the economics of
 2. Enter `pyenv activate otree_app` into your terminal to activate your local environment.
 
 ## Dev commands
-`pre-commit run`: Runs the `pre-commit` processes and lints the repository.
+`make lint`: Runs the `pre-commit` processes and lints the repository.

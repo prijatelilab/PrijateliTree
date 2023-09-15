@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "prijatelitree"
 version = "0.1.0"
-description = ""
+description = "A FastAPI application used to play lab games and collect survey data."
 authors = ["michplunkett <5885605+michplunkett@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"

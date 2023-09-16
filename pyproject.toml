@@ -2,7 +2,7 @@
 name = "prijatelitree"
 version = "0.1.0"
 description = "A FastAPI application used to play lab games and collect survey data."
-authors = ["michplunkett <5885605+michplunkett@users.noreply.github.com>"]
+authors = ["Ari Anisfeld", "Pepi Pandiloski"]
 license = "MIT"
 readme = "README.md"
 

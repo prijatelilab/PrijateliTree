@@ -71,6 +71,8 @@ class Denirs(Base):
         ForeignKey("users.id", name="denirs_created_by_user_id_fkey"),
         nullable=True,
     )
+    # Used for external auditing
+    external_id = Column(String, nullable=True, unique=True)
     amount = Column(Integer, nullable=False)
     __table_args__ = (
         CheckConstraint(

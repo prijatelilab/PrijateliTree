@@ -1,12 +1,19 @@
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Identity, Integer, String
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    Column,
+    Date,
+    DateTime,
+    ForeignKey,
+    Identity,
+    Integer,
+    String,
+)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func as sql_func
 
 
 Base = declarative_base()
-
-STR_LEN = 80
 
 
 class User(Base):
@@ -16,13 +23,17 @@ class User(Base):
         DateTime(timezone=True),
         nullable=False,
         server_default=sql_func.now(),
-        unique=False,
     )
-    first_name = Column(String, nullable=False, unique=False)
-    last_name = Column(String, nullable=False, unique=False)
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="users_created_by_fkey"),
+        nullable=True,
+    )
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
     email = Column(String, nullable=True, unique=True)
     phone_number = Column(String, nullable=True, unique=True)
-    birth_date = Column(Date, nullable=True, unique=False)
+    birth_date = Column(Date, nullable=True)
     language_id = Column(
         Integer,
         ForeignKey("languages.id", name="users_languages_id_fkey"),
@@ -33,8 +44,58 @@ class User(Base):
 class Language(Base):
     __tablename__ = "languages"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
     name = Column(String, nullable=False, unique=True)
     abbr = Column(String(2), nullable=False, unique=True)
+
+
+class Denirs(Base):
+    __tablename__ = "denirs"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    created_by_game_id = Column(
+        Integer,
+        ForeignKey("games.id", name="denirs_created_by_game_id_fkey"),
+        nullable=True,
+    )
+    created_by_user_id = Column(
+        Integer,
+        ForeignKey("users.id", name="denirs_created_by_user_id_fkey"),
+        nullable=True,
+    )
+    amount = Column(Integer, nullable=False)
+    __table_args__ = (
+        CheckConstraint(
+            "created_by_game_id IS NOT NULL OR created_by_user_id IS NOT NULL",
+            name="created_by_check",
+        ),
+    )
+
+
+class SessionType(Base):
+    __tablename__ = "session_types"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="session_types_created_by_fkey"),
+        nullable=False,
+    )
+    name = Column(String, nullable=False, unique=True)
+    # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
+    bag = Column(String, nullable=False)
 
 
 class Session(Base):
@@ -44,44 +105,99 @@ class Session(Base):
         DateTime(timezone=True),
         nullable=False,
         server_default=sql_func.now(),
-        unique=False,
     )
-    player_name = Column(String(STR_LEN), nullable=False)
-    player_id = Column(Integer, ForeignKey("players.id"), nullable=False)
-    player_language = Column(String(STR_LEN), nullable=False)
-    player = relationship("Player", back_populates="sessions")
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="sessions_created_by_fkey"),
+        nullable=False,
+    )
+    session_type_id = Column(
+        Integer,
+        ForeignKey("users.id", name="sessions_session_type_id_fkey"),
+        nullable=False,
+    )
+    rounds = Column(Integer, nullable=False)
 
 
 class Player(Base):
-    __tablename__ = "players"
+    __tablename__ = "session_players"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
         server_default=sql_func.now(),
-        unique=False,
     )
-    player_name = Column(String(STR_LEN), nullable=False)
-    player_language = Column(String(STR_LEN), nullable=False)
-    total_points = Column(Integer, nullable=False, default=0)
-    sessions = relationship("Session", back_populates="player")
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="session_players_created_by_fkey"),
+        nullable=False,
+    )
+    session_id = Column(
+        Integer,
+        ForeignKey("sessions.id", name="session_players_session_id_fkey"),
+        nullable=False,
+    )
+    player_id = Column(
+        Integer,
+        ForeignKey("users.id", name="session_players_player_id_fkey"),
+        nullable=False,
+    )
+    name_hidden = Column(Boolean, nullable=False)
 
 
-class PlayerRound(Base):
-    __tablename__ = "player_rounds"
-    game_id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
-    session_id = Column(Integer, ForeignKey("sessions.session_id"), nullable=False)
-    player_name = Column(String(STR_LEN), nullable=False)
-    player_id = Column(Integer, ForeignKey("players.player_id"), nullable=False)
-    player_points = Column(Integer, nullable=False, default=0)
-    network_position = Column(Integer, nullable=False)
-    random_draw = Column(Integer, nullable=False)
-    session = relationship("Session", back_populates="player_rounds")
-    player = relationship("Player", back_populates="player_rounds")
-
-
-class GameRound(Base):
-    __tablename__ = "game_rounds"
+class SessionAnswer(Base):
+    __tablename__ = "session_answers"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
-    network_id = Column(Integer, nullable=False)
-    name_condition_id = Column(Integer, nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    player_id = Column(
+        Integer,
+        ForeignKey("users.id", name="session_answers_player_id_fkey"),
+        nullable=False,
+    )
+    session_id = Column(
+        Integer,
+        ForeignKey("sessions.id", name="session_answers_session_id_fkey"),
+        nullable=False,
+    )
+    player_answer = Column(String(1), nullable=False)
+    correct_answer = Column(String(1), nullable=False)
+    round = Column(Integer, nullable=False)
+
+
+class Survey(Base):
+    __tablename__ = "surveys"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="surveys_created_by_fkey"),
+        nullable=False,
+    )
+    url = Column(String, nullable=False)
+
+
+class PlayerSurveyAnswer(Base):
+    __tablename__ = "player_survey_answers"
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    player_id = Column(
+        Integer,
+        ForeignKey("users.id", name="player_survey_answers_player_id_fkey"),
+        nullable=False,
+    )
+    survey_id = Column(
+        Integer,
+        ForeignKey("surveys.id", name="player_survey_answers_survey_id_fkey"),
+        nullable=False,
+    )

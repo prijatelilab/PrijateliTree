@@ -1,6 +1,7 @@
 """Script that houses database models."""
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+
 
 Base = declarative_base()
 
@@ -26,7 +27,7 @@ class Player(Base):
 class PlayerRound(Base):
     __tablename__ = "player_rounds"
     game_id = Column(Integer, primary_key=True)
-    session_id = Column(Integer, ForeignKey("sessions.session_id"))
+    session_id = Column(Integer, nullable=False)
     player_name = Column(String(STR_LEN), nullable=False)
     player_id = Column(String(STR_LEN), nullable=False)
     player_points = Column(Integer, nullable=False, default=0)

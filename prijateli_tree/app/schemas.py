@@ -12,6 +12,7 @@ class User(BaseModel):
     email: str
     phone_number: str
     birthdate: date
+    role: str
     language_id: int
 
     class Config:
@@ -31,7 +32,7 @@ class Language(BaseModel):
 class Denirs(BaseModel):
     id: int
     created_at: datetime
-    created_by_game_id: int
+    created_by_session_id: int
     created_by_user_id: int
     external_id: str
     amount: int

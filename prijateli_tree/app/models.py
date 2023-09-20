@@ -34,7 +34,7 @@ class User(Base):
     email = Column(String, nullable=True, unique=True)
     phone_number = Column(String, nullable=True, unique=True)
     birth_date = Column(Date, nullable=True)
-    type = Column(String, nullable=False)
+    role = Column(String, nullable=False)
     language_id = Column(
         Integer,
         ForeignKey("languages.id", name="users_languages_id_fkey"),

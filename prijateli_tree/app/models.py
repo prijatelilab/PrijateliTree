@@ -61,9 +61,9 @@ class Denirs(Base):
         nullable=False,
         server_default=sql_func.now(),
     )
-    created_by_game_id = Column(
+    created_by_session_id = Column(
         Integer,
-        ForeignKey("games.id", name="denirs_created_by_game_id_fkey"),
+        ForeignKey("sessions.id", name="denirs_created_by_session_id_fkey"),
         nullable=True,
     )
     created_by_user_id = Column(

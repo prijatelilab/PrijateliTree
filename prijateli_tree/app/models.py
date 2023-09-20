@@ -76,7 +76,7 @@ class Denirs(Base):
     amount = Column(Integer, nullable=False)
     __table_args__ = (
         CheckConstraint(
-            "created_by_game_id IS NOT NULL OR created_by_user_id IS NOT NULL",
+            "created_by_session_id IS NOT NULL OR created_by_user_id IS NOT NULL",
             name="created_by_check",
         ),
     )

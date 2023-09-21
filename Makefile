@@ -2,6 +2,7 @@ default: build start create_db
 
 .PHONY: build
 build: ## Build containers
+	poetry export --without-hashes --format=requirements.txt > requirements.txt
 	docker-compose build
 
 .PHONY: start

@@ -9,6 +9,9 @@ ENV PYTHONPATH=${PYTHONPATH}:${PWD} \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc
+
 # install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt

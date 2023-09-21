@@ -7,8 +7,12 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0
     volumes:
       - .:/app
+    links:
+      - postgres:postgres
+    expose:
+      - "3000"
     ports:
-      - "8008:8000"
+      - "3000:3000"
   postgres:
    restart: always
    image: postgres:latest

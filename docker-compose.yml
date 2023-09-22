@@ -9,7 +9,7 @@ services:
     restart: always
     image: postgres:latest
     environment:
-      POSTGRES_USER: user_user
+      POSTGRES_USER: prijateli
       POSTGRES_PASSWORD: password_password
       POSTGRES_DB: prijateli_tree
     volumes:
@@ -18,6 +18,8 @@ services:
       - "5433:5433"
   web:
     restart: always
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://prijateli:password_password@postgres/prijateli_tree
     build: .
     command: uvicorn --host 0.0.0.0 --port 8000 --reload prijateli_tree.app.main:app
     volumes:

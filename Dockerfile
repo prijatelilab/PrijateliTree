@@ -15,6 +15,3 @@ RUN apt-get update \
 # install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# copy project
-COPY . .

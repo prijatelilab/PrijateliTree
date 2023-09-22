@@ -7,6 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     Identity,
     Integer,
+    PrimaryKeyConstraint,
     String,
 )
 from sqlalchemy.ext.declarative import declarative_base
@@ -203,4 +204,8 @@ class PlayerSurveyAnswer(Base):
         Integer,
         ForeignKey("surveys.id", name="player_survey_answers_survey_id_fkey"),
         nullable=False,
+    )
+    __table_args__ = (
+        PrimaryKeyConstraint(player_id, survey_id),
+        {},
     )

@@ -42,6 +42,13 @@ class User(Base):
         nullable=False,
     )
 
+    __table_args__ = (
+        CheckConstraint(
+            "role in ('super-admin', 'admin', 'student')",
+            name="role_options",
+        ),
+    )
+
 
 class Language(Base):
     __tablename__ = "languages"
@@ -92,14 +99,16 @@ class SessionType(Base):
         nullable=False,
         server_default=sql_func.now(),
     )
-    created_by = Column(
-        Integer,
-        ForeignKey("users.id", name="session_types_created_by_fkey"),
-        nullable=False,
-    )
-    name = Column(String, nullable=False, unique=True)
+    network = Column(String, nullable=False, unique=True)
     # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
     bag = Column(String, nullable=False)
+
+    __table_args__ = (
+        CheckConstraint(
+            "network in ('integrated', 'segregated', 'self-selected')",
+            name="network_options",
+        ),
+    )
 
 
 class Session(Base):
@@ -121,6 +130,7 @@ class Session(Base):
         nullable=False,
     )
     rounds = Column(Integer, nullable=False)
+    practice = Column(Boolean, default=False, nullable=False)
 
 
 class Player(Base):

@@ -25,7 +25,7 @@ lint:
 
 .PHONY: run
 run:
-	uvicorn --app-dir=./prijateli_tree/app main:app --reload
+	uvicorn prijateli_tree.app.main:app --reload --port 8000 --host 0.0.0.0
 
 .PHONY: stop
 stop:

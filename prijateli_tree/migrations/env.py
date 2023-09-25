@@ -2,11 +2,14 @@ import os
 from logging.config import fileConfig
 
 from alembic import context
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 import prijateli_tree.app.models.database as models
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
+
+load_dotenv(".env")
 
 config = context.config
 config.set_main_option(

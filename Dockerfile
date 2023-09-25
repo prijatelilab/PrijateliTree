@@ -15,3 +15,5 @@ RUN apt-get update \
 # install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+
+ENV SQLALCHEMY_DATABASE_URI postgresql://prijateli:terriblepassword@postgres/prijateli_tree

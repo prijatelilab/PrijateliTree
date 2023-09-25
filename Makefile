@@ -11,7 +11,7 @@ start: build ## Run containers
 
 .PHONY: create_db
 create_db: start
-	@until docker-compose exec postgres psql -h localhost -U user_user -c '\l' postgres &>/dev/null; do \
+	@until docker-compose exec postgres psql -h localhost -d prijateli_tree -U prijateli -c '\l' postgres &>/dev/null; do \
 		echo "Postgres is unavailable - sleeping..."; \
 		sleep 1; \
 	done

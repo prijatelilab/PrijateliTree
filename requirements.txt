@@ -7,7 +7,7 @@ attrs==23.1.0 ; python_version >= "3.11" and python_version < "4.0"
 bcrypt==4.0.1 ; python_version >= "3.11" and python_version < "4.0"
 cffi==1.15.1 ; os_name == "nt" and implementation_name != "pypy" and python_version >= "3.11" and python_version < "4.0"
 click==8.1.7 ; python_version >= "3.11" and python_version < "4.0"
-colorama==0.4.6 ; python_version >= "3.11" and python_version < "4.0" and platform_system == "Windows"
+colorama==0.4.6 ; python_version >= "3.11" and python_version < "4.0" and (sys_platform == "win32" or platform_system == "Windows")
 fastapi-login==1.9.1 ; python_version >= "3.11" and python_version < "4.0"
 fastapi-sqlalchemy==0.2.1 ; python_version >= "3.11" and python_version < "4.0"
 fastapi==0.103.1 ; python_version >= "3.11" and python_version < "4.0"

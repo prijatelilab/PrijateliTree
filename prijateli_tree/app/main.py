@@ -8,8 +8,8 @@ from fastapi_sqlalchemy import DBSessionMiddleware
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 
-BASE_DIR= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 sys.path.append(BASE_DIR)
 
 

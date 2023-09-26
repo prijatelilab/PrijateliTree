@@ -665,6 +665,20 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
+name = "pyi18n-v2"
+version = "1.2.1"
+description = "Simple and easy to use internationalizationlibrary inspired by Ruby i18n"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyi18n-v2-1.2.1.tar.gz", hash = "sha256:c2cbdbdd4b604db9b7ea8164da67ce585b89f0f1960d544ab10f0c91713345fe"},
+    {file = "pyi18n_v2-1.2.1-py3-none-any.whl", hash = "sha256:6ffef8f1c7fc534deaa2953b8a7ae9c2b32c25b62d35df2006aba485deca44c9"},
+]
+
+[package.dependencies]
+PyYAML = ">=6.0"
+
+[[package]]
 name = "pyjwt"
 version = "2.8.0"
 description = "JSON Web Token implementation in Python"
@@ -1087,4 +1101,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ebf5b2ab0bc9bb9c260fc115dff303b323b0d2f1c441a2d9563d1a3c52e1fb02"
+content-hash = "2a7344321467071b606f24b9492f255a66ead7cf2fe2048cae7bd499e8cbd43b"

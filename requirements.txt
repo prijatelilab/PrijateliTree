@@ -11,7 +11,7 @@ colorama==0.4.6 ; python_version >= "3.11" and python_version < "4.0" and (sys_p
 fastapi-login==1.9.1 ; python_version >= "3.11" and python_version < "4.0"
 fastapi-sqlalchemy==0.2.1 ; python_version >= "3.11" and python_version < "4.0"
 fastapi==0.103.1 ; python_version >= "3.11" and python_version < "4.0"
-greenlet==2.0.2 ; python_version >= "3.11" and python_version < "4.0" and (platform_machine == "win32" or platform_machine == "WIN32" or platform_machine == "AMD64" or platform_machine == "amd64" or platform_machine == "x86_64" or platform_machine == "ppc64le" or platform_machine == "aarch64")
+greenlet==2.0.2 ; python_version >= "3.11" and python_version < "4.0" and (platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "x86_64" or platform_machine == "amd64" or platform_machine == "AMD64" or platform_machine == "win32" or platform_machine == "WIN32")
 h11==0.14.0 ; python_version >= "3.11" and python_version < "4.0"
 httptools==0.6.0 ; python_version >= "3.11" and python_version < "4.0"
 idna==3.4 ; python_version >= "3.11" and python_version < "4.0"
@@ -22,6 +22,7 @@ passlib[bcrypt]==1.7.4 ; python_version >= "3.11" and python_version < "4.0"
 psycopg2==2.9.7 ; python_version >= "3.11" and python_version < "4.0"
 pycparser==2.21 ; python_version >= "3.11" and os_name == "nt" and implementation_name != "pypy" and python_version < "4.0"
 pydantic==1.10.8 ; python_version >= "3.11" and python_version < "4.0"
+pyi18n-v2==1.2.1 ; python_version >= "3.11" and python_version < "4.0"
 pyjwt==2.8.0 ; python_version >= "3.11" and python_version < "4.0"
 python-dotenv==1.0.0 ; python_version >= "3.11" and python_version < "4.0"
 pyyaml==6.0.1 ; python_version >= "3.11" and python_version < "4.0"

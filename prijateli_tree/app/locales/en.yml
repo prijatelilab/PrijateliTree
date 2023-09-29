@@ -1,8 +1,24 @@
 en:
   first_screen:
-    login_text: "Log In"
-    facilitators_text: "Only for facilitators!"
-    school_text: "School"
+    login: "Log In"
+    facilitators: "Only for facilitators!"
+    school: "School"
     student_name: "First and Last Name"
+    student_language: "Language of Student"
+    facilitator_username: "Facilitator Username"
+    facilitator_password: "Facilitator Password"
+
+  second_screen:
+    get_ready: "Get ready to play Red or Blue!"
+    im_ready: "Im ready!"
+
+  third_screen:
+    waiting_text: "Waiting for others..."
+
+  fourth_screen:
+    how_to_play: "How to Play?" 
+    instructions: "You can replay the video as many times as you want. Not knowing the rules lowers your chances of winning. Ask your teacher if you have any questions about the game."
+    i_understand: "I understand the rules!"
+    next: "Next"
 
   

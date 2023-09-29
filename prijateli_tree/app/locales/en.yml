@@ -47,5 +47,19 @@ en:
 
   eleventh_screen:
     practice_game: "Practice Game"
+    explanation: "Explanation"
+    score: "Score"
+    feel_free: "Feel free to watch the video again to remind yourself of the rules."
+
+  thirteenth_screen:
+    round: "Round"
+    the_computer_chose: "The computer chose a bag and split the balls randomly to each player."
+    your_ball_is: "Your ball is {RED/BLUE}"
+    guess_color: "Guess the color of the bag:"
+    red: "RED"
+    blue: "BLUE"
+
+
+
 
   

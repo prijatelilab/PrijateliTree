@@ -1,1 +1,8 @@
 en:
+  first_screen:
+    login_text: "Log In"
+    facilitators_text: "Only for facilitators!"
+    school_text: "School"
+    student_name: "First and Last Name"
+
+  

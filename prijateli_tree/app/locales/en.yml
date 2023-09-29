@@ -21,4 +21,15 @@ en:
     i_understand: "I understand the rules!"
     next: "Next"
 
+  sixth_screen:
+    quick_quiz: "Quick Quiz!"
+    question: "Question"
+    instructions: "To win, you have to pick the bag the computer chose. What colors are the bags the computer chooses?"
+    red_and_blue: "Red and Blue"
+    green_and_yellow: "Green and Yellow"
+    black_and_white: "Black and White"
   
+  seventh_screen:
+    colors_in_bag: "What colors are the balls in the blue bag?"
+    four_blue_two_red: "4 blue and 2 red"
+    three_blue_four_red: "3 blue and 4 red"

@@ -13,7 +13,7 @@ en:
     im_ready: "Im ready!"
 
   third_screen:
-    waiting_text: "Waiting for others..."
+    waiting: "Waiting for others..."
 
   fourth_screen:
     how_to_play: "How to Play?" 
@@ -37,5 +37,15 @@ en:
 
   eighth_screen:
     what_will_you_observe: "What will you observe to help you learn which bag the computer chose?"
+    one_ball_few_peers: "One ball and a few peers' guesses"
+    two_balls: "Two balls"
+    one_ball_all_peers: "One ball and all peers' guesses"
+
+  tenth_screen:
+    now_you_will_play: "Now you will play 2 practice games to get used to the rules."
+    since_these_rules: "Since these are practice rounds, we will not reward anyone for their performance."
+
+  eleventh_screen:
+    practice_game: "Practice Game"
 
   

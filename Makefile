@@ -11,15 +11,11 @@ start: build
 
 .PHONY: create_db
 create_db: start
-	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini stamp head
 
 .PHONY: lint
 lint:
 	pre-commit run --all-files
-
-.PHONY: run
-run:
-	uvicorn prijateli_tree.app.main:app --reload --port 8000 --host 0.0.0.0
 
 .PHONY: stop
 stop:

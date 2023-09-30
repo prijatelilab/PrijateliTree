@@ -11,7 +11,7 @@ start: build
 
 .PHONY: create_db
 create_db: start
-	docker-compose exec web alembic -c ./prijateli_tree/migrations/alembic.ini upgrade head
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
 
 .PHONY: lint
 lint:

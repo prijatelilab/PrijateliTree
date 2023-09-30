@@ -14,7 +14,6 @@ down_revision = None
 
 
 def upgrade():
-    op.drop_table("migrate_version")
     op.create_table(
         "languages",
         sa.Column(
@@ -259,12 +258,3 @@ def downgrade():
     op.drop_table("users")
     op.drop_table("session_types")
     op.drop_table("languages")
-    op.create_table(
-        "migrate_version",
-        sa.Column(
-            "repository_id", sa.VARCHAR(length=250), autoincrement=False, nullable=False
-        ),
-        sa.Column("repository_path", sa.TEXT(), autoincrement=False, nullable=True),
-        sa.Column("version", sa.INTEGER(), autoincrement=False, nullable=True),
-        sa.PrimaryKeyConstraint("repository_id", name="migrate_version_pkey"),
-    )

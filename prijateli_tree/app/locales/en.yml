@@ -95,3 +95,25 @@ en:
     instead_of: "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
 
   thirtyfourth_screen:
+    now_you_can_observe: "Now you can choose the players you will observe in the following rounds in this game."
+    please_choose_two_players: "Please choose two players"
+    please_choose_three_players: "Please choose three players"
+    player_one: "Player 1:"
+    player_two: "Player 2:"
+    player_three: "Player 3:"
+
+  fourtieth_screen:
+    before_we_are_done: "Before we are done, we want to ask you a few short questions about how you played today."
+
+  fourtyfirst_screen:
+    survey_page: "Survey Page"
+
+  fourtythird_screen:
+    congratulations: "Congratulations!"
+    you_guessed_correctly: "You guessed correctly in {X} games, and earned {x} points, which means you made extra"
+    denars: "{X} denars!"
+    ask_your_teachers: "Ask your teachers about getting your reward!"}
+
+  fourtyfourth_screen:
+    thanks: "Thanks for playing!"
+    have_a_great_day: "Have a great day!"

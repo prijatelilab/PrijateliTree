@@ -9,9 +9,6 @@ from prijateli_tree.app.utils.constants import (
 )
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-
 # Modify later
 class BaseConfig:
     def __init__(self):

@@ -59,6 +59,14 @@ en:
     red: "RED"
     blue: "BLUE"
 
+  fifteenth_screen:
+    see_what_others_guessed: "See what some other players guessed in the last round:"
+    guessed: "{Name/Code} guessed {RED/BLUE}."
+    your_guess_was: "Your guess in the last round was {RED/BLUE}."
+
+  seventeenth_screen:
+    results: "Results"
+
 
 
 

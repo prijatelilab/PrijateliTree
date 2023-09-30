@@ -82,4 +82,16 @@ en:
     get_ready: "Get ready to win and earn money!!!"
 
 
-  
+  twentyfirst_screen:
+    if_you_win: "If you win in this game, {X} points will be added to your score and final reward."
+    game: "Game"
+
+  twentyseventh_screen:
+    added_points: "{X} points will be added to your final reward."
+
+
+  twentyninth_screen:
+    different_version: "Now, we will play a different version of the game."
+    instead_of: "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
+
+  thirtyfourth_screen:

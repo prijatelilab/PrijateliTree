@@ -54,18 +54,27 @@ en:
   thirteenth_screen:
     round: "Round"
     the_computer_chose: "The computer chose a bag and split the balls randomly to each player."
-    your_ball_is: "Your ball is {RED/BLUE}"
+    your_ball_is_red: "Your ball is RED"
+    your_ball_is_blue: "Your ball is BLUE"
     guess_color: "Guess the color of the bag:"
     red: "RED"
     blue: "BLUE"
 
   fifteenth_screen:
     see_what_others_guessed: "See what some other players guessed in the last round:"
-    guessed: "{Name/Code} guessed {RED/BLUE}."
-    your_guess_was: "Your guess in the last round was {RED/BLUE}."
+    code_guessed_red: "Code guessed RED."
+    code_guessed_blue: "Code guessed BLUE."
+    name_guessed_red: "Name guessed RED."
+    name_guessed_blue: "Name guessed BLUE."
+    your_guess_was_red: "Your guess in the last round was RED."
+    your_guess_was_blue: "Your guess in the last round was BLUE."
 
   seventeenth_screen:
     results: "Results"
+    you_won: "You won!!!"
+    better_luck: "Better luck next time!"
+    the_computer_chose_red: "The computer chose the RED bag."
+    the_computer_chose_blue: "The computer chose the BLUE bag."
 
 
 

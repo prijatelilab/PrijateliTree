@@ -6,12 +6,13 @@ build:
 	docker-compose build
 
 .PHONY: start
-start: build
+start:
 	docker-compose up -d
 
 .PHONY: create_db
-create_db: start
-	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini stamp head
+create_db:
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini revision --autogenerate
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
 
 .PHONY: lint
 lint:

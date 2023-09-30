@@ -6,15 +6,10 @@ from fastapi_sqlalchemy import DBSessionMiddleware
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 
-def create_application():
-    fast_api_app = FastAPI()
+app = FastAPI()
+print(os.getenv(KEY_DATABASE_URI))
 
-    fast_api_app.add_middleware(DBSessionMiddleware, db_url=os.getenv(KEY_DATABASE_URI))
-
-    return fast_api_app
-
-
-app = create_application()
+app.add_middleware(DBSessionMiddleware, db_url=os.getenv(KEY_DATABASE_URI))
 
 
 @app.get("/")

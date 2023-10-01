@@ -16,7 +16,7 @@ en:
     waiting: "Waiting for others..."
 
   rules_screen:
-    how_to_play: "How to Play?" 
+    how_to_play: "How to Play?"
     instructions: "You can replay the video as many times as you want. Not knowing the rules lowers your chances of winning. Ask your teacher if you have any questions about the game."
     i_understand: "I understand the rules!"
     next: "Next"
@@ -28,7 +28,7 @@ en:
     red_and_blue: "Red and Blue"
     green_and_yellow: "Green and Yellow"
     black_and_white: "Black and White"
-  
+
   quiz_balls:
     colors_in_bag: "What colors are the balls in the blue bag?"
     four_blue_two_red: "4 blue and 2 red"

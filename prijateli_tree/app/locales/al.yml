@@ -1,0 +1,110 @@
+al:
+  homepage:
+    login:
+    facilitators:
+    school:
+    student_name:
+    student_language:
+    facilitator_username:
+    facilitator_password:
+
+  ready_to_play:
+    get_ready:
+    im_ready:
+
+  waiting_screen:
+    waiting:
+
+  rules_screen:
+    how_to_play:
+    instructions:
+    i_understand:
+    next:
+
+  quiz_colors:
+    quick_quiz:
+    question:
+    instructions:
+    red_and_blue:
+    green_and_yellow:
+    black_and_white:
+  
+  quiz_balls:
+    colors_in_bag:
+    four_blue_two_red:
+    three_blue_four_red:
+    five_blue_two_red:
+
+  quiz_peers:
+    what_will_you_observe:
+    one_ball_few_peers:
+    two_balls:
+    one_ball_all_peers:
+
+  intro_practice:
+    now_you_will_play:
+    since_these_rules:
+
+  practice_game_video:
+    practice_game:
+    explanation:
+    score:
+    feel_free:
+
+  practice_game_first_round:
+    round:
+    the_computer_chose:
+    your_ball_is_red:
+    your_ball_is_blue:
+    guess_color:
+    red:
+    blue:
+
+  practice_game_other_rounds:
+    see_what_others_guessed:
+    code_guessed_red:
+    code_guessed_blue:
+    name_guessed_red:
+    name_guessed_blue:
+    your_guess_was_red:
+    your_guess_was_blue:
+
+  practice_game_results:
+    results:
+    you_won:
+    better_luck:
+    the_computer_chose_red:
+    the_computer_chose_blue:
+
+  real_game_intro:
+    now_we_practiced:
+    get_ready:
+    if_you_win:
+    game:
+    added_points:
+
+  different_game_intro:
+    different_version:
+    instead_of:
+
+  different_game_choices:
+    now_you_can_observe:
+    please_choose_two_players:
+    please_choose_three_players:
+    player_one:
+    player_two:
+    player_three:
+
+  survey:
+    before_we_are_done:
+    survey_page:
+
+  final_score:
+    congratulations:
+    you_guessed_correctly:
+    denars:
+    ask_your_teachers:
+
+  thanks_screen:
+    thanks:
+    have_a_great_day:

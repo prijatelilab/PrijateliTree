@@ -1,5 +1,5 @@
 en:
-  first_screen:
+  homepage:
     login: "Log In"
     facilitators: "Only for facilitators!"
     school: "School"
@@ -8,20 +8,20 @@ en:
     facilitator_username: "Facilitator Username"
     facilitator_password: "Facilitator Password"
 
-  second_screen:
+  ready_to_play:
     get_ready: "Get ready to play Red or Blue!"
     im_ready: "Im ready!"
 
-  third_screen:
+  waiting_screen:
     waiting: "Waiting for others..."
 
-  fourth_screen:
+  rules_screen:
     how_to_play: "How to Play?" 
     instructions: "You can replay the video as many times as you want. Not knowing the rules lowers your chances of winning. Ask your teacher if you have any questions about the game."
     i_understand: "I understand the rules!"
     next: "Next"
 
-  sixth_screen:
+  quiz_colors:
     quick_quiz: "Quick Quiz!"
     question: "Question"
     instructions: "To win, you have to pick the bag the computer chose. What colors are the bags the computer chooses?"
@@ -29,29 +29,29 @@ en:
     green_and_yellow: "Green and Yellow"
     black_and_white: "Black and White"
   
-  seventh_screen:
+  quiz_balls:
     colors_in_bag: "What colors are the balls in the blue bag?"
     four_blue_two_red: "4 blue and 2 red"
     three_blue_four_red: "3 blue and 4 red"
     five_blue_two_red: "5 blue and 2 red"
 
-  eighth_screen:
+  quiz_peers:
     what_will_you_observe: "What will you observe to help you learn which bag the computer chose?"
     one_ball_few_peers: "One ball and a few peers' guesses"
     two_balls: "Two balls"
     one_ball_all_peers: "One ball and all peers' guesses"
 
-  tenth_screen:
+  intro_practice:
     now_you_will_play: "Now you will play 2 practice games to get used to the rules."
     since_these_rules: "Since these are practice rounds, we will not reward anyone for their performance."
 
-  eleventh_screen:
+  practice_explanation:
     practice_game: "Practice Game"
     explanation: "Explanation"
     score: "Score"
     feel_free: "Feel free to watch the video again to remind yourself of the rules."
 
-  thirteenth_screen:
+  practice_game:
     round: "Round"
     the_computer_chose: "The computer chose a bag and split the balls randomly to each player."
     your_ball_is_red: "Your ball is RED"

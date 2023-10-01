@@ -45,13 +45,13 @@ en:
     now_you_will_play: "Now you will play 2 practice games to get used to the rules."
     since_these_rules: "Since these are practice rounds, we will not reward anyone for their performance."
 
-  practice_explanation:
+  practice_game_video:
     practice_game: "Practice Game"
     explanation: "Explanation"
     score: "Score"
     feel_free: "Feel free to watch the video again to remind yourself of the rules."
 
-  practice_game:
+  practice_game_first_round:
     round: "Round"
     the_computer_chose: "The computer chose a bag and split the balls randomly to each player."
     your_ball_is_red: "Your ball is RED"
@@ -60,7 +60,7 @@ en:
     red: "RED"
     blue: "BLUE"
 
-  fifteenth_screen:
+  practice_game_other_rounds:
     see_what_others_guessed: "See what some other players guessed in the last round:"
     code_guessed_red: "Code guessed RED."
     code_guessed_blue: "Code guessed BLUE."
@@ -69,7 +69,7 @@ en:
     your_guess_was_red: "Your guess in the last round was RED."
     your_guess_was_blue: "Your guess in the last round was BLUE."
 
-  seventeenth_screen:
+  practice_game_results:
     results: "Results"
     you_won: "You won!!!"
     better_luck: "Better luck next time!"
@@ -77,24 +77,19 @@ en:
     the_computer_chose_blue: "The computer chose the BLUE bag."
 
 
-  nineteenth_screen:
+  real_game_intro:
     now_we_practiced: "Now that we practiced, we will play the real games."
     get_ready: "Get ready to win and earn money!!!"
-
-
-  twentyfirst_screen:
     if_you_win: "If you win in this game, {X} points will be added to your score and final reward."
     game: "Game"
-
-  twentyseventh_screen:
     added_points: "{X} points will be added to your final reward."
 
 
-  twentyninth_screen:
+  different_game_intro:
     different_version: "Now, we will play a different version of the game."
     instead_of: "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
 
-  thirtyfourth_screen:
+  different_game_choices:
     now_you_can_observe: "Now you can choose the players you will observe in the following rounds in this game."
     please_choose_two_players: "Please choose two players"
     please_choose_three_players: "Please choose three players"
@@ -102,18 +97,16 @@ en:
     player_two: "Player 2:"
     player_three: "Player 3:"
 
-  fourtieth_screen:
+  survey:
     before_we_are_done: "Before we are done, we want to ask you a few short questions about how you played today."
-
-  fourtyfirst_screen:
     survey_page: "Survey Page"
 
-  fourtythird_screen:
+  final_score:
     congratulations: "Congratulations!"
     you_guessed_correctly: "You guessed correctly in {X} games, and earned {x} points, which means you made extra"
     denars: "{X} denars!"
-    ask_your_teachers: "Ask your teachers about getting your reward!"}
+    ask_your_teachers: "Ask your teachers about getting your reward!"
 
-  fourtyfourth_screen:
+  thanks_screen:
     thanks: "Thanks for playing!"
     have_a_great_day: "Have a great day!"

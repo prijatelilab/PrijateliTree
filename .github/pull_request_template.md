@@ -9,6 +9,6 @@
 ## Checklist Before Requesting a Review
 - [ ] The code runs successfully.
 
-```terminal
+```commandline
 HERE IS SOME COMMAND LINE OUTPUT
 ```

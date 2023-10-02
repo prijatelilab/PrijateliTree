@@ -1,31 +1,22 @@
 default: build start create_db
 
 .PHONY: build
-build: ## Build containers
+build:
 	poetry export --without-hashes --format=requirements.txt > requirements.txt
 	docker-compose build
 
 .PHONY: start
-start: build ## Run containers
+start:
 	docker-compose up -d
 
 .PHONY: create_db
-create_db: start
-	@until docker-compose exec postgres psql -h localhost -U prijateli -c '\l' postgres &>/dev/null; do \
-		echo "Postgres is unavailable - sleeping..."; \
-		sleep 1; \
-	done
-	@echo "Postgres is up"
-	## Creating database
-	docker-compose run --rm web alembic --config=./prijateli_tree/migrations/alembic.ini stamp head
+create_db:
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini revision --autogenerate
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
 
 .PHONY: lint
 lint:
 	pre-commit run --all-files
-
-.PHONY: run
-run:
-	uvicorn prijateli_tree.app.main:app --reload --port 8000 --host 0.0.0.0
 
 .PHONY: stop
 stop:

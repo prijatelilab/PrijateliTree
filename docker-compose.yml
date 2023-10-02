@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'prijateli_tree'
+
+  web:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: uvicorn prijateli_tree.app.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8000:8000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: 'postgresql://postgres:postgres@db:5432/prijateli_tree'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'prijateli_tree'
+      POSTGRES_PORT: '5432'
+      POSTGRES_SERVER: 'db'
+    depends_on:
+      - db

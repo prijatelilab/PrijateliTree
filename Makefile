@@ -17,7 +17,6 @@ create_db:
 	done
 	@echo "Postgres is up"
 	## Creating database
-	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini revision --autogenerate
 	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
 
 .PHONY: lint

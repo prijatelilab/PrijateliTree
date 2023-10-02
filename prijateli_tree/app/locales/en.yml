@@ -25,40 +25,40 @@ en:
     quick_quiz: "Quick Quiz!"
     question: "Question"
     instructions: "To win, you have to pick the bag the computer chose. What colors are the bags the computer chooses?"
-    red_and_blue: "Red and Blue"
-    green_and_yellow: "Green and Yellow"
-    black_and_white: "Black and White"
+    red_and_blue: "Red and Blue."
+    green_and_yellow: "Green and Yellow."
+    black_and_white: "Black and White."
 
   quiz_balls:
     colors_in_bag: "What colors are the balls in the blue bag?"
-    four_blue_two_red: "4 blue and 2 red"
-    three_blue_four_red: "3 blue and 4 red"
-    five_blue_two_red: "5 blue and 2 red"
+    four_blue_two_red: "4 blue and 2 red."
+    three_blue_four_red: "3 blue and 4 red."
+    five_blue_two_red: "5 blue and 2 red."
 
   quiz_peers:
     what_will_you_observe: "What will you observe to help you learn which bag the computer chose?"
-    one_ball_few_peers: "One ball and a few peers' guesses"
-    two_balls: "Two balls"
-    one_ball_all_peers: "One ball and all peers' guesses"
+    one_ball_few_peers: "One ball and a few peers' guesses."
+    two_balls: "Two balls."
+    one_ball_all_peers: "One ball and all peers' guesses."
 
   intro_practice:
     now_you_will_play: "Now you will play 2 practice games to get used to the rules."
     since_these_rules: "Since these are practice rounds, we will not reward anyone for their performance."
 
   practice_game_video:
-    practice_game: "Practice Game"
-    explanation: "Explanation"
-    score: "Score"
+    practice_game: "Practice Game."
+    explanation: "Explanation."
+    score: "Score."
     feel_free: "Feel free to watch the video again to remind yourself of the rules."
 
   practice_game_first_round:
     round: "Round"
     the_computer_chose: "The computer chose a bag and split the balls randomly to each player."
-    your_ball_is_red: "Your ball is RED"
-    your_ball_is_blue: "Your ball is BLUE"
+    your_ball_is_red: "Your ball is RED."
+    your_ball_is_blue: "Your ball is BLUE."
     guess_color: "Guess the color of the bag:"
-    red: "RED"
-    blue: "BLUE"
+    red: "RED."
+    blue: "BLUE."
 
   practice_game_other_rounds:
     see_what_others_guessed: "See what some other players guessed in the last round:"
@@ -71,7 +71,7 @@ en:
 
   practice_game_results:
     results: "Results"
-    you_won: "You won!!!"
+    you_won: "You won!"
     better_luck: "Better luck next time!"
     the_computer_chose_red: "The computer chose the RED bag."
     the_computer_chose_blue: "The computer chose the BLUE bag."
@@ -79,7 +79,7 @@ en:
 
   real_game_intro:
     now_we_practiced: "Now that we practiced, we will play the real games."
-    get_ready: "Get ready to win and earn money!!!"
+    get_ready: "Get ready to win and earn money!"
     if_you_win: "If you win in this game, {X} points will be added to your score and final reward."
     game: "Game"
     added_points: "{X} points will be added to your final reward."

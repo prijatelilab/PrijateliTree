@@ -1,3 +1,3 @@
-CREATE DATABASE ${POSTGRES_DB};
-CREATE USER ${POSTGRES_USER} with encrypted password ${POSTGRES_PASSWORD};
-GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DB} TO ${POSTGRES_USER};
+CREATE DATABASE prijateli_tree;
+CREATE USER postgres with encrypted password 'postgres';
+GRANT ALL PRIVILEGES ON DATABASE prijateli_tree TO postgres;

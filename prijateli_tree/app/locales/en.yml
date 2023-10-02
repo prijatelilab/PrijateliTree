@@ -91,8 +91,7 @@ en:
 
   different_game_choices:
     now_you_can_observe: "Now you can choose the players you will observe in the following rounds in this game."
-    please_choose_two_players: "Please choose two players"
-    please_choose_three_players: "Please choose three players"
+    please_choose_players: "Please choose {X} players"
     player_one: "Player 1:"
     player_two: "Player 2:"
     player_three: "Player 3:"

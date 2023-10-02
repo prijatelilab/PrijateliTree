@@ -23,5 +23,10 @@ services:
       - "8000:8000"
     environment:
       SQLALCHEMY_DATABASE_URI: 'postgresql://postgres:postgres@db:5432/prijateli_tree'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'prijateli_tree'
+      POSTGRES_PORT: '5432'
+      POSTGRES_SERVER: 'db'
     depends_on:
       - db

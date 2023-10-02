@@ -5,9 +5,14 @@ The games are a means to provide insights into social learning, the economics of
 ## Application Requirements
 - Python 🐍 version >= v`3.11`
 - Poetry package manager. If you need information on how to download poetry, check [here](https://python-poetry.org/docs/#installation).
+- PostgreSQL v14.
+  - For accessing the database your configuration should look roughly like this:
+  ![Database Access Configuration](misc%2FScreenshot%202023-10-02%20at%204.41.36%20PM.png)
 
 ## Steps for Running the Application
 1. Enter the `poetry shell` command from the base folder repository.
+2. Run the command `make` from the base directory.
+3. Access the application via the URL `localhost:8000`.
 
 ## Dev commands
 `make lint`: Runs the `pre-commit` processes and lints the repository.

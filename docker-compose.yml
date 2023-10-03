@@ -1,15 +1,22 @@
 version: '3.8'
 
+volumes:
+  postgres:
+    driver: local
+
 services:
-  db:
+  postgres:
     restart: always
     image: postgres:latest
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'prijateli_tree'
+    volumes:
+      - ./scripts/create_database.sql:/docker-entrypoint-initdb.d/create_database.sql
+      - postgres:/var/lib/postgresql@14/data:rw
+    ports:
+      - "51042:5432"
 
   web:
     restart: always
@@ -21,12 +28,12 @@ services:
       - .:/usr/src/app
     ports:
       - "8000:8000"
+    expose:
+      - "8000"
     environment:
-      SQLALCHEMY_DATABASE_URI: 'postgresql://postgres:postgres@db:5432/prijateli_tree'
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'prijateli_tree'
-      POSTGRES_PORT: '5432'
-      POSTGRES_SERVER: 'db'
-    depends_on:
-      - db
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@postgres/prijateli_tree"
+    links:
+      - 'postgres:postgres'

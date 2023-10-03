@@ -1,15 +1,15 @@
 """empty message
 
-Revision ID: 6b2d4bcadf98
+Revision ID: 44f42b35d858
 Revises:
-Create Date: 2023-10-02 05:13:02.793076
+Create Date: 2023-10-02 21:38:31.871571
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 
-revision = "6b2d4bcadf98"
+revision = "44f42b35d858"
 down_revision = None
 
 

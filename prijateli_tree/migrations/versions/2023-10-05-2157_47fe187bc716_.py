@@ -36,6 +36,17 @@ def upgrade():
         "session_players", sa.Column("position", sa.Integer(), nullable=False)
     )
 
+    op.execute(
+        """
+            INSERT INTO session_types
+            (network, bag)
+            VALUES
+            ('integrated', 'RRRRBB'),
+            ('segregated', 'RRRRBB'),
+            ('self-selected', 'RRRRBB')
+        """
+    )
+
 
 def downgrade():
     op.drop_column("session_players", "position")
@@ -65,3 +76,10 @@ def downgrade():
         ["id"],
     )
     op.drop_column("session_answers", "session_player_id")
+
+    op.execute(
+        """
+            DELETE FROM session_types
+            WHERE bag = 'RRRRBB';
+        """
+    )

@@ -156,6 +156,7 @@ class Player(Base):
         ForeignKey("users.id", name="session_players_player_id_fkey"),
         nullable=False,
     )
+    position = Column(Integer, nullable=False)
     name_hidden = Column(Boolean, nullable=False)
 
 
@@ -167,14 +168,9 @@ class SessionAnswer(Base):
         nullable=False,
         server_default=sql_func.now(),
     )
-    player_id = Column(
+    session_player_id = Column(
         Integer,
-        ForeignKey("users.id", name="session_answers_player_id_fkey"),
-        nullable=False,
-    )
-    session_id = Column(
-        Integer,
-        ForeignKey("sessions.id", name="session_answers_session_id_fkey"),
+        ForeignKey("session_players.id", name="session_answers_session_players_fkey"),
         nullable=False,
     )
     player_answer = Column(String(1), nullable=False)

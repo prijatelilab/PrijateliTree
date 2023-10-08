@@ -20,3 +20,13 @@ def funky():
 @app.get("/administration")
 def admin_access():
     stuff()
+
+
+@app.get("/game/{game_id}")
+def game_access(game_id: int):
+    return {"game_id": game_id}
+
+
+@app.get("/game/{game_id}/player/{player_id}")
+def game_player_access(game_id: int, player_id: int):
+    return {"game_id": game_id, "player_id": player_id}

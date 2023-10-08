@@ -7,8 +7,6 @@ import random
 
 
 class Game:
-    BAGS = ["Red", "Blue"]
-
     def __init__(self, players, max_rounds):
         self.players = players
         self.max_rounds = max_rounds
@@ -23,19 +21,6 @@ class Game:
     def setup_game(self):
         self.network_structure = self.decide_structure()
         self.bag = self.draw_bag()
-
-    def decide_structure(self):
-        if self.is_self_select():
-            # Logic for self-selection
-            pass
-        else:
-            # Randomize structure and player positions
-            pass
-        return structure
-
-    def is_self_select(self):
-        # Logic to decide self-select
-        pass
 
     def draw_bag(self):
         """

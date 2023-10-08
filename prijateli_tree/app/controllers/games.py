@@ -1,15 +1,28 @@
+"""
+Contains baseline structure for the game.
+"""
+
+# Global imports
+import random
+
+
 class Game:
+    BAGS = ["Red", "Blue"]
+
     def __init__(self, players, max_rounds):
         self.players = players
         self.max_rounds = max_rounds
         self.current_round = 0
-        self.bag = None
         self.network_structure = None
+        # Bag compositions
+        self.bags = {
+            "red": ["red", "red", "red", "red", "blue", "blue"],
+            "blue": ["blue", "blue", "blue", "blue", "red", "red"],
+        }
 
     def setup_game(self):
         self.network_structure = self.decide_structure()
         self.bag = self.draw_bag()
-        self.distribute_balls()
 
     def decide_structure(self):
         if self.is_self_select():
@@ -25,12 +38,22 @@ class Game:
         pass
 
     def draw_bag(self):
-        # Logic to draw a bag
-        pass
+        """
+        Randomly selects either a red or blue bag.
+        """
+        return random.choice(["red", "blue"])
 
     def distribute_balls(self):
-        # Logic to distribute balls based on drawn bag and network structure
-        pass
+        for player in self.players:
+            ball = self.draw_ball_from_bag()
+            player.observe(ball)  # Hypothetical method
+
+    def draw_ball_from_bag(self):
+        # Randomly draw a ball based on the bag's composition
+        ball = random.choice(self.bags[self.bag])
+        # Remove the drawn ball from the bag
+        self.bags[self.bag].remove(ball)
+        return ball
 
     def play_round(self):
         if self.current_round == 0:

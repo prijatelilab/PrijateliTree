@@ -5,10 +5,13 @@ Contains baseline structure for the game.
 # Global imports
 import random
 
+# Local imports
+from prijateli_tree.app.controllers.players import Player
+
 
 class Game:
-    def __init__(self, players, max_rounds):
-        self.players = players
+    def __init__(self, max_rounds, structure_type):
+        self.players = []
         self.max_rounds = max_rounds
         self.current_round = 0
         self.network_structure = None
@@ -17,6 +20,15 @@ class Game:
             "red": ["red", "red", "red", "red", "blue", "blue"],
             "blue": ["blue", "blue", "blue", "blue", "red", "red"],
         }
+
+    def decide_structure(self):
+        """
+        Returns a dictionary of player_id: [neighbor_ids] pairs.
+        """
+        pass
+
+    def add_player(self, player):
+        self.players.append(player)
 
     def setup_game(self):
         self.network_structure = self.decide_structure()
@@ -42,12 +54,34 @@ class Game:
 
     def play_round(self):
         if self.current_round == 0:
-            # First round logic: Players observe and make guesses
-            pass
+            # First round logic: Players simply observe and make guesses
+            for player in self.players:
+                ball = self.draw_ball_from_bag()
+                player.observe(ball)
+                guess = player.make_guess()
+                self.guesses[player.player_id] = guess
         else:
             # Players observe their ball and previous guesses of neighbors
-            pass
+            for player in self.players:
+                ball = self.draw_ball_from_bag()
+                player.observe(ball)
+                neighbor_guesses = self.get_neighbor_guesses(player)
+                player.observe_others_guesses(neighbor_guesses)
+                updated_guess = (
+                    player.update_guess()
+                )  # Assuming players might change their guess
+                self.guesses[player.player_id] = updated_guess
+
         self.current_round += 1
+
+    def get_neighbor_guesses(self, player):
+        """
+        Returns a dictionary of player_id: guess pairs for the player's neighbors.
+        """
+        neighbor_guesses = {}
+        for neighbor in self.network_structure[player.player_id]:
+            neighbor_guesses[neighbor] = self.guesses[neighbor]
+        return neighbor_guesses
 
     def play_game(self):
         self.setup_game()

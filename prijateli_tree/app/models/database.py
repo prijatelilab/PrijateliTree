@@ -224,7 +224,7 @@ class PlayerSurveyAnswer(Base):
     )
     player_id = Column(
         Integer,
-        ForeignKey("player.id", name="player_survey_answers_player_id_fkey"),
+        ForeignKey("session_players.id", name="player_survey_answers_player_id_fkey"),
         nullable=False,
     )
     survey_id = Column(
@@ -234,8 +234,6 @@ class PlayerSurveyAnswer(Base):
     )
 
     __table_args__ = (
-        UniqueConstraint(
-            "player_id", "survey_id", name="uix_session_answer"
-        ),
+        UniqueConstraint("player_id", "survey_id", name="uix_session_answer"),
         {},
     )

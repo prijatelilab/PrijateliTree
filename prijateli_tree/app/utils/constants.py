@@ -7,6 +7,6 @@ KEY_ENV_PROD = "production"
 KEY_ENV_TESTING = "testing"
 
 # Game Constants
-GAME_TYPE_INTEGRATED = "integrated"
-GAME_TYPE_SEGREGATED = "segregated"
-GAME_TYPE_SELF_SELECTED = "self-selected"
+NETWORK_TYPE_INTEGRATED = "integrated"
+NETWORK_TYPE_SEGREGATED = "segregated"
+NETWORK_TYPE_SELF_SELECTED = "self-selected"

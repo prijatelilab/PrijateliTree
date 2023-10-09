@@ -5,6 +5,20 @@ Contains baseline structure for all three game types.
 import random
 from random import shuffle
 
+from prijateli_tree.app.models.database import Session
+
+
+def integrated_game(game: Session, player_id: int):
+    return {"game_id": game.id, "player_id": player_id}
+
+
+def segregated_game(game: Session, player_id: int):
+    return {"game_id": game.id, "player_id": player_id}
+
+
+def self_selected_game(game: Session, player_id: int):
+    return {"game_id": game.id, "player_id": player_id}
+
 
 class Game:
     def __init__(self, max_rounds, network_type, correct_points):
@@ -128,7 +142,8 @@ class Game:
             return self.correct_points
         else:
             print(
-                "Better luck next time!, you would have gotten {self.correct_points} points"  # noqa: E501
+                "Better luck next time!, you would have gotten {self.correct_points} points"
+                # noqa: E501
             )
             return 0
 

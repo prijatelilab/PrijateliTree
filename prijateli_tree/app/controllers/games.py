@@ -142,8 +142,8 @@ class Game:
             return self.correct_points
         else:
             print(
-                "Better luck next time!, you would have gotten {self.correct_points} points"
-                # noqa: E501
+                f"Better luck next time!, you would have gotten {self.correct_points} "
+                "points"
             )
             return 0
 

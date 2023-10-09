@@ -46,11 +46,15 @@ class Game:
         shuffle(self.players)
         network = {}
 
+        # TO DO: Add logic to assign neighbors
+
         return network
 
     def _create_segregated_network(self):
         shuffle(self.players)
         network = {}
+
+        # TO DO: Add logic to assign neighbors
 
         return network
 
@@ -58,7 +62,9 @@ class Game:
         """
         Creates a self selected network where players choose their neighbors.
         """
-        pass
+        network = {}
+        # TO DO: Add logic to assign neighbors
+        return network
 
     def add_player(self, player):
         self.players.append(player)
@@ -116,16 +122,34 @@ class Game:
             neighbor_guesses[neighbor] = self.guesses[neighbor]
         return neighbor_guesses
 
+    def calculate_points(self, player):
+        """
+        Calculates the points for a player based on their
+        guess and the drawn bag.
+        """
+        player_guess = player.guess
+        if player_guess == self.bag:
+            print(f"Correct guess!, you will get {self.correct_points}")
+            return self.correct_points
+        else:
+            print(
+                "Better luck next time!, you would have gotten {self.correct_points} points"
+            )
+            return 0
+
+    def end_game(self):
+        """
+        Calculates the points for each player and adds them to their score.
+        """
+        for player in self.players:
+            points_won = self.calculate_points(player)
+            player.add_points(points_won)
+
     def play_game(self):
+        """
+        Executes the game pipeline.
+        """
         self.setup_game()
         while self.current_round < self.max_rounds:
             self.play_round()
         self.end_game()
-
-    def end_game(self):
-        # Logic to inform players about the drawn bag and results
-
-        for player in self.players:
-            player.add_points(self.calculate_points(player))
-
-        pass

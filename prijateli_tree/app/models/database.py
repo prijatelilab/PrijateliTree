@@ -7,10 +7,11 @@ from sqlalchemy import (
     ForeignKey,
     Identity,
     Integer,
-    PrimaryKeyConstraint,
     String,
+    UniqueConstraint,
 )
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func as sql_func
 
 
@@ -41,6 +42,8 @@ class User(Base):
         ForeignKey("languages.id", name="users_languages_id_fkey"),
         nullable=False,
     )
+    language = relationship("Language", back_populates="users")
+    denirs = relationship("Denirs", back_populates="user")
 
     __table_args__ = (
         CheckConstraint(
@@ -60,6 +63,7 @@ class Language(Base):
     )
     name = Column(String, nullable=False, unique=True)
     abbr = Column(String(2), nullable=False, unique=True)
+    users = relationship("User", back_populates="language")
 
 
 class Denirs(Base):
@@ -83,6 +87,8 @@ class Denirs(Base):
     # Used for external auditing
     external_id = Column(String, nullable=True, unique=True)
     amount = Column(Integer, nullable=False)
+    user = relationship("User", back_populates="denirs")
+
     __table_args__ = (
         CheckConstraint(
             "created_by_session_id IS NOT NULL OR created_by_user_id IS NOT NULL",
@@ -102,6 +108,7 @@ class SessionType(Base):
     network = Column(String, nullable=False, unique=True)
     # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
     bag = Column(String, nullable=False)
+    sessions = relationship("Session", back_populates="session_type")
 
     __table_args__ = (
         CheckConstraint(
@@ -131,6 +138,8 @@ class Session(Base):
     )
     rounds = Column(Integer, nullable=False)
     practice = Column(Boolean, default=False, nullable=False)
+    session_type = relationship("SessionType", back_populates="sessions")
+    players = relationship("Player", back_populates="session")
 
 
 class Player(Base):
@@ -158,6 +167,16 @@ class Player(Base):
     )
     position = Column(Integer, nullable=False)
     name_hidden = Column(Boolean, nullable=False)
+    session = relationship(
+        "Session",
+        foreign_keys="[Player.player_id, Player.session_id]",
+        back_populates="players",
+    )
+    answers = relationship(
+        "SessionAnswer",
+        foreign_keys="[Player.player_id, Player.session_id]",
+        back_populates="player",
+    )
 
 
 class SessionAnswer(Base):
@@ -176,6 +195,7 @@ class SessionAnswer(Base):
     player_answer = Column(String(1), nullable=False)
     correct_answer = Column(String(1), nullable=False)
     round = Column(Integer, nullable=False)
+    player = relationship("Player", back_populates="answers")
 
 
 class Survey(Base):
@@ -196,6 +216,7 @@ class Survey(Base):
 
 class PlayerSurveyAnswer(Base):
     __tablename__ = "player_survey_answers"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
@@ -211,7 +232,15 @@ class PlayerSurveyAnswer(Base):
         ForeignKey("surveys.id", name="player_survey_answers_survey_id_fkey"),
         nullable=False,
     )
+    session_id = Column(
+        Integer,
+        ForeignKey("sessions.id", name="player_survey_answers_session_id_fkey"),
+        nullable=False,
+    )
+
     __table_args__ = (
-        PrimaryKeyConstraint(player_id, survey_id),
+        UniqueConstraint(
+            "player_id", "survey_id", "session_id", name="uix_session_answer"
+        ),
         {},
     )

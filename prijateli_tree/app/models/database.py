@@ -235,7 +235,7 @@ class PlayerSurveyAnswer(Base):
 
     __table_args__ = (
         UniqueConstraint(
-            "player_id", "survey_id", "session_id", name="uix_session_answer"
+            "player_id", "survey_id", name="uix_session_answer"
         ),
         {},
     )

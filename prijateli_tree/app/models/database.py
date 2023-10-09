@@ -105,7 +105,7 @@ class GameType(Base):
         nullable=False,
         server_default=sql_func.now(),
     )
-    network = Column(String, nullable=False, unique=True)
+    network = Column(String, nullable=False)
     # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
     bag = Column(String, nullable=False)
     games = relationship("Game", back_populates="game_type")

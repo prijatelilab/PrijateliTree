@@ -1,14 +1,9 @@
 """
-Contains baseline structure for the game.
+Contains baseline structure for all three game types.
 """
 
-# Global imports
 import random
 from random import shuffle
-
-
-# Local imports
-# from prijateli_tree.app.controllers.players import Player
 
 
 class Game:

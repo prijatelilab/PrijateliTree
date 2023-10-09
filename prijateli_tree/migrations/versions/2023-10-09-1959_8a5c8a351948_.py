@@ -36,7 +36,6 @@ def upgrade():
             name="network_options",
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("network"),
     )
     op.create_table(
         "games",
@@ -149,6 +148,19 @@ def upgrade():
         ["id"],
     )
     op.drop_column("denirs", "created_by_session_id")
+    op.execute(
+        """
+            INSERT INTO game_types
+            (network, bag)
+            VALUES
+            ('integrated', 'RRRRBB'),
+            ('segregated', 'RRRRBB'),
+            ('self-selected', 'RRRRBB'),
+            ('integrated', 'BBBBRR'),
+            ('segregated', 'BBBBRR'),
+            ('self-selected', 'BBBBRR')
+        """
+    )
 
 
 def downgrade():

@@ -12,11 +12,12 @@ from prijateli_tree.app.controllers.players import Player
 
 
 class Game:
-    def __init__(self, max_rounds, structure_type):
+    def __init__(self, max_rounds, network_type, correct_points):
         self.players = []
         self.max_rounds = max_rounds
         self.current_round = 0
-        self.network_structure = None
+        self.network_type = network_type
+        self.correct_points = correct_points
         # Bag compositions
         self.bags = {
             "red": ["red", "red", "red", "red", "blue", "blue"],
@@ -123,4 +124,8 @@ class Game:
 
     def end_game(self):
         # Logic to inform players about the drawn bag and results
+
+        for player in self.players:
+            player.add_points(self.calculate_points(player))
+
         pass

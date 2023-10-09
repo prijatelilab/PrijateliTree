@@ -4,11 +4,10 @@ Contains baseline structure for the game.
 
 # Global imports
 import random
-from random import shuffle, choice
-
+from random import shuffle
 
 # Local imports
-from prijateli_tree.app.controllers.players import Player
+# from prijateli_tree.app.controllers.players import Player
 
 
 class Game:
@@ -133,7 +132,7 @@ class Game:
             return self.correct_points
         else:
             print(
-                "Better luck next time!, you would have gotten {self.correct_points} points"
+                "Better luck next time!, you would have gotten {self.correct_points} points"  # noqa: E501
             )
             return 0
 

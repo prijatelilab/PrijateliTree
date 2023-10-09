@@ -108,7 +108,7 @@ class GameType(Base):
     network = Column(String, nullable=False, unique=True)
     # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
     bag = Column(String, nullable=False)
-    sessions = relationship("Session", back_populates="game_type")
+    games = relationship("Game", back_populates="game_type")
 
     __table_args__ = (
         CheckConstraint(

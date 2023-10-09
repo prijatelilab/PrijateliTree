@@ -58,3 +58,8 @@ def game_player_access(game_id: int, player_id: int):
         segregated_game(game, player_id)
     else:
         self_selected_game(game, player_id)
+
+
+@app.post("game/{game_id}/player/{player_id}/answer")
+def add_answer(game_id: int, player_id: int):
+    pass

@@ -35,6 +35,9 @@ def admin_access():
 
 @app.get("/game/{game_id}")
 def game_access(game_id: int):
+    game = Game.query().filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
     return {"game_id": game_id}
 
 

@@ -160,7 +160,7 @@ class Player(Base):
         ForeignKey("sessions.id", name="session_players_session_id_fkey"),
         nullable=False,
     )
-    player_id = Column(
+    user_id = Column(
         Integer,
         ForeignKey("users.id", name="session_players_player_id_fkey"),
         nullable=False,
@@ -169,12 +169,12 @@ class Player(Base):
     name_hidden = Column(Boolean, nullable=False)
     session = relationship(
         "Session",
-        foreign_keys="[Player.player_id, Player.session_id]",
+        foreign_keys="[Player.user_id, Player.session_id]",
         back_populates="players",
     )
     answers = relationship(
         "SessionAnswer",
-        foreign_keys="[Player.player_id, Player.session_id]",
+        foreign_keys="[Player.user_id, Player.session_id]",
         back_populates="player",
     )
 
@@ -224,17 +224,12 @@ class PlayerSurveyAnswer(Base):
     )
     player_id = Column(
         Integer,
-        ForeignKey("users.id", name="player_survey_answers_player_id_fkey"),
+        ForeignKey("player.id", name="player_survey_answers_player_id_fkey"),
         nullable=False,
     )
     survey_id = Column(
         Integer,
         ForeignKey("surveys.id", name="player_survey_answers_survey_id_fkey"),
-        nullable=False,
-    )
-    session_id = Column(
-        Integer,
-        ForeignKey("sessions.id", name="player_survey_answers_session_id_fkey"),
         nullable=False,
     )
 

@@ -36,31 +36,31 @@ class Game:
         """
         shuffle(self.players)
         network = {}
-        for i, player in enumerate(self.players):
-            # Every player observes a player from their own nationality
-            # and one from the other nationality
-            same_nationality = [
-                p for p in self.players if p.language == player.language and p != player
-            ]
-            other_nationality = [
-                p for p in self.players if p.language != player.language
-            ]
-            network[player.name] = [
-                choice(same_nationality).name,
-                choice(other_nationality).name,
-            ]
+        # for i, player in enumerate(self.players):
+        #     # Every player observes a player from their own nationality
+        #     # and one from the other nationality
+        #     same_nationality = [
+        #         p for p in self.players if p.language == player.language and p != player
+        #     ]
+        #     other_nationality = [
+        #         p for p in self.players if p.language != player.language
+        #     ]
+        #     network[player.name] = [
+        #         choice(same_nationality).name,
+        #         choice(other_nationality).name,
+        #     ]
         return network
 
     def _create_segregated_network(self):
         shuffle(self.players)
         network = {}
-        for i, player in enumerate(self.players):
-            same_nationality = [
-                p for p in self.players if p.language == player.language and p != player
-            ]
-            network[player.name] = [choice(same_nationality).name] + [
-                p.name for p in same_nationality if p.name != network[player.name][0]
-            ]
+        # for i, player in enumerate(self.players):
+        #     same_nationality = [
+        #         p for p in self.players if p.language == player.language and p != player
+        #     ]
+        #     network[player.name] = [choice(same_nationality).name] + [
+        #         p.name for p in same_nationality if p.name != network[player.name][0]
+        #     ]
         return network
 
     def _create_self_select_network(self):

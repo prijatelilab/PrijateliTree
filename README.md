@@ -16,3 +16,7 @@ The games are a means to provide insights into social learning, the economics of
 
 ## Dev commands
 `make lint`: Runs the `pre-commit` processes and lints the repository.
+
+## Data Migrations
+To run a data migration, you need to run the following steps:
+1. 

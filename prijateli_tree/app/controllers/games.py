@@ -5,18 +5,18 @@ Contains baseline structure for all three game types.
 import random
 from random import shuffle
 
-from prijateli_tree.app.models.database import Session
+from prijateli_tree.app.models.database import Game
 
 
-def integrated_game(game: Session, player_id: int):
+def integrated_game(game: Game, player_id: int):
     return {"game_id": game.id, "player_id": player_id}
 
 
-def segregated_game(game: Session, player_id: int):
+def segregated_game(game: Game, player_id: int):
     return {"game_id": game.id, "player_id": player_id}
 
 
-def self_selected_game(game: Session, player_id: int):
+def self_selected_game(game: Game, player_id: int):
     return {"game_id": game.id, "player_id": player_id}
 
 

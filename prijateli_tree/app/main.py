@@ -10,7 +10,7 @@ from prijateli_tree.app.controllers.games import (
     segregated_game,
     self_selected_game,
 )
-from prijateli_tree.app.models.database import Session
+from prijateli_tree.app.models.database import Game
 from prijateli_tree.app.utils.constants import (
     KEY_DATABASE_URI,
     NETWORK_TYPE_INTEGRATED,
@@ -40,7 +40,7 @@ def game_access(game_id: int):
 
 @app.get("/game/{game_id}/player/{player_id}")
 def game_player_access(game_id: int, player_id: int):
-    game = Session.query().filter_by(id=game_id).one_or_none()
+    game = Game.query().filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 

@@ -22,15 +22,28 @@ def integrated_game(game: Game, player_id: int):
     # network = create_integrated_network(game.players)
 
     # Randomly select a bag
-    #
+    # bag = game.draw_bag()
+
+    # Distribute balls to players
+    # player_ball = game.distribute_balls()
 
     # In the first round, players observe their own ball and make a guess
+
+    # player.guess = player.make_guess()
+
     # In the following rounds, players observe their own ball and the guesses
     # of their neighbors
-    # If players want to change their guess, they can do so
+
+    # Display neighbors' guesses to player
+    # neighbor_guesses = game.get_neighbor_guesses(player)
+
+    # if change_guess:
+    #   player.guess = player.update_guess()
 
     # When the game ends, calculate the points for each player
     # Add the points to the player's score
+
+    # points_won = game.calculate_points(player)
     # database.update_score(player, points_won)
 
     # Update the database with any changes

@@ -1,13 +1,23 @@
 """
-Contains baseline structure for the game.
+Contains baseline structure for all three game types.
 """
 
-# Global imports
 import random
 from random import shuffle
 
-# Local imports
-# from prijateli_tree.app.controllers.players import Player
+from prijateli_tree.app.models.database import Game
+
+
+def integrated_game(game: Game, player_id: int):
+    return {"game_id": game.id, "player_id": player_id}
+
+
+def segregated_game(game: Game, player_id: int):
+    return {"game_id": game.id, "player_id": player_id}
+
+
+def self_selected_game(game: Game, player_id: int):
+    return {"game_id": game.id, "player_id": player_id}
 
 
 class Game:
@@ -132,7 +142,8 @@ class Game:
             return self.correct_points
         else:
             print(
-                "Better luck next time!, you would have gotten {self.correct_points} points"  # noqa: E501
+                f"Better luck next time!, you would have gotten {self.correct_points} "
+                "points"
             )
             return 0
 

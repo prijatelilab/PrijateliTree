@@ -4,17 +4,17 @@ from http import HTTPStatus
 from fastapi import FastAPI, HTTPException
 from fastapi_sqlalchemy import DBSessionMiddleware
 
-from prijateli_tree.app.controllers.administration import stuff
-from prijateli_tree.app.controllers.games import (
-    integrated_game,
-    segregated_game,
-    self_selected_game,
-)
 from prijateli_tree.app.models.database import Game
 from prijateli_tree.app.utils.constants import (
     KEY_DATABASE_URI,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
+)
+from prijateli_tree.app.views.administration import stuff
+from prijateli_tree.app.views.games import (
+    integrated_game,
+    segregated_game,
+    self_selected_game,
 )
 
 

@@ -8,7 +8,35 @@ from random import shuffle
 from prijateli_tree.app.models.database import Game
 
 
+# We may need to create a database class
+# to handle all database interactions
+
+
 def integrated_game(game: Game, player_id: int):
+    # Fetch a game and player from the database
+
+    # game = database.fetch_game_by_id(game_id)
+    # player = database.fetch_player_by_id(player_id)
+
+    # Create integrated network
+    # network = create_integrated_network(game.players)
+
+    # Randomly select a bag
+    #
+
+    # In the first round, players observe their own ball and make a guess
+    # In the following rounds, players observe their own ball and the guesses
+    # of their neighbors
+    # If players want to change their guess, they can do so
+
+    # When the game ends, calculate the points for each player
+    # Add the points to the player's score
+    # database.update_score(player, points_won)
+
+    # Update the database with any changes
+    # database.update_game(game)
+    # database.update_player(player)
+
     return {"game_id": game.id, "player_id": player_id}
 
 

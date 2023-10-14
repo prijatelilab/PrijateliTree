@@ -21,9 +21,11 @@ def integrated_game(game: Game, player_id: int):
     game_id = 1
     user_id = 1
     game_type_id = 1
+    num_rounds = 5
+    practice = False
 
     # Create game in database
-    database.create_game(game)
+    database.create_game(game_id, user_id, game_type_id, num_rounds, practice)
 
     # game = database.fetch_game_by_id(game_id)
     # player = database.fetch_player_by_id(player_id)

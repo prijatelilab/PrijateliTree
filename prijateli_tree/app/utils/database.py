@@ -38,3 +38,4 @@ class DatabaseHandler:
 
         cursor.execute(QUERY)
         self.connection.commit()
+        print(f"Game {game_id} created successfully in PostgreSQL")

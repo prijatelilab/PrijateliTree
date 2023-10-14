@@ -17,14 +17,17 @@ class DatabaseHandler:
             port=DB_CREDS["port"],
         )
 
-    def fetch_game_by_id(self, game_id):
+    def create_game(self, game_id, user_id, game_type, rounds, practice):
         """
         Function used to create and handle game
         states and data.
         """
 
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM games WHERE id = %s", (game_id,))
-        game = cursor.fetchone()
-        cursor.close()
-        return game
+        QUERY = f"""
+            INSERT INTO games (id, created_by, game_type_id, rounds, practice)
+            VALUES ({game_id}, {user_id}, {game_type}, {rounds}, {practice});
+        """
+
+        cursor.execute(QUERY)
+        self.connection.commit()

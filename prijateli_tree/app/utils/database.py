@@ -39,3 +39,20 @@ class DatabaseHandler:
         cursor.execute(QUERY)
         self.connection.commit()
         print(f"Game {game_id} created successfully in PostgreSQL")
+
+    def add_player_to_game(self, player_id, game_id, user_id, position, name_hidden):
+        """
+        Function used to add a player to a game.
+        """
+
+        cursor = self.connection.cursor()
+        QUERY = f"""
+            INSERT INTO game_players (id, created_at, created_by, game_id, user_id,
+            position, name_hidden)
+            VALUES ({player_id}, '{datetime.now()}', {user_id}, {game_id}, {user_id},
+            {position}, {name_hidden});
+        """
+
+        cursor.execute(QUERY)
+        self.connection.commit()
+        print(f"Player {player_id} added to game {game_id} successfully in PostgreSQL")

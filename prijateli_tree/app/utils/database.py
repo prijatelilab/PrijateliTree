@@ -25,15 +25,23 @@ class DatabaseHandler:
         """
         cursor = self.connection.cursor()
         created_at = datetime.now()
-        QUERY = f"""
+        QUERY = """
             INSERT INTO games (id, created_at, created_by, game_type_id, rounds,
-            practice)
-            VALUES ({game_id}, '{created_at}', {user_id}, {game_type}, 
-            {rounds}, {practice});
+            practice) VALUES (%s, %s, %s, %s, %s, %s);
         """
+        try:
+            cursor.execute(
+                QUERY, (game_id, created_at, user_id, game_type, rounds, practice)
+            )
+            self.connection.commit()
 
-        cursor.execute(QUERY)
-        self.connection.commit()
+        except Exception as e:
+            self.connection.rollback()  # Rollback any changes if an error occurred
+            print(f"Error while creating game {game_id}: {e}")
+
+        finally:
+            cursor.close()
+
         print(f"Game {game_id} created successfully in PostgreSQL")
 
     def add_player_to_game(self, player_id, game_id, user_id, position, name_hidden):
@@ -42,13 +50,21 @@ class DatabaseHandler:
         """
 
         cursor = self.connection.cursor()
-        QUERY = f"""
-            INSERT INTO game_players (id, created_at, created_by, game_id, user_id,
-            position, name_hidden)
-            VALUES ({player_id}, '{datetime.now()}', {user_id}, {game_id}, {user_id},
-            {position}, {name_hidden});
-        """
+        QUERY = """ INSERT INTO game_players (id, created_at, created_by, game_id, 
+                user_id, position, name_hidden) VALUES (%s, %s, %s, %s, %s, %s, %s);
+                """
+        try:
+            cursor.execute(
+                QUERY,
+                (player_id, datetime.now(), user_id, game_id, user_id, position, False),
+            )
+            self.connection.commit()
 
-        cursor.execute(QUERY)
-        self.connection.commit()
+        except Exception as e:
+            self.connection.rollback()
+            print(f"Error while adding player {player_id} to game {game_id}: {e}")
+
+        finally:
+            cursor.close()
+
         print(f"Player {player_id} added to game {game_id} successfully in PostgreSQL")

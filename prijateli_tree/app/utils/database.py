@@ -18,7 +18,7 @@ class DatabaseHandler:
             port=DB_CREDS["port"],
         )
 
-    def create_game(self, game_id, user_id, game_type, rounds, practice):
+    def create_new_game(self, game_id, user_id, game_type, rounds, practice):
         """
         Function used to create and handle game
         states and data.

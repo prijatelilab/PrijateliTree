@@ -10,6 +10,7 @@ from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
 )
+from prijateli_tree.app.utils.database import DatabaseHandler
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
     integrated_game,
@@ -31,6 +32,16 @@ def funky():
 @app.get("/administration")
 def admin_access():
     stuff()
+
+
+@app.post("/create-game/")
+def create_game_endpoint(game_type: int, user_id: int, num_rounds: int, practice: bool):
+    try:
+        database = DatabaseHandler()
+        new_game_id = database.create_new_game(game_type, user_id, num_rounds, practice)
+        return {"status": "success", "game_id": new_game_id}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/game/{game_id}")

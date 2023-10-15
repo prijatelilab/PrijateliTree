@@ -1,6 +1,7 @@
 """
 Contains baseline structure for all three game types.
 """
+from datetime import datetime
 from prijateli_tree.app.models.database import Game
 from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_INTEGRATED,
@@ -8,6 +9,38 @@ from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_SELF_SELECTED,
 )
 from prijateli_tree.app.utils.database import DatabaseHandler
+
+
+def create_new_game(game_type, user_id, num_rounds, practice):
+    """
+    Uses the database handler to create a new game and return the game ID.
+    """
+    database = DatabaseHandler()
+    game_id = database.get_next_game_id()
+    # Insert the new game into the database
+    database.create_game(game_id, user_id, game_type, num_rounds, practice)
+
+    return game_id
+
+
+def add_player_to_game(game_id, user_id, position, name_hidden=False):
+    """
+    Uses the database handler to add a player to a game and return the player ID.
+    """
+    database = DatabaseHandler()
+    if not database.game_exists(game_id):
+        raise ValueError(f"No game found with ID {game_id}")
+
+    # Check if the user is already a player in the game
+    if database.is_player_in_game(game_id, user_id):
+        raise ValueError(f"User {user_id} is already a player in game {game_id}")
+
+    # Logic to add the player
+    player_id = database.get_next_player_id()
+
+    database.add_player_to_game(player_id, game_id, user_id, position, name_hidden)
+
+    return player_id
 
 
 def integrated_game(game: Game, player_id: int):

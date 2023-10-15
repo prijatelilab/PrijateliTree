@@ -18,7 +18,33 @@ class DatabaseHandler:
             port=DB_CREDS["port"],
         )
 
-    def create_new_game(self, game_id, user_id, game_type, rounds, practice):
+    def get_next_game_id(self):
+        """Get the next game ID by incrementing the highest current ID."""
+        cursor = self.connection.cursor()
+        QUERY = "SELECT MAX(id) FROM games;"
+        cursor.execute(QUERY)
+        max_id = (
+            cursor.fetchone()[0] or 0
+        )  # or 0 handles the case when the table is empty
+        return max_id + 1
+
+    def get_next_player_id(self):
+        """Get the next player ID by incrementing the highest current ID."""
+        cursor = self.connection.cursor()
+        QUERY = "SELECT MAX(id) FROM game_players;"
+        cursor.execute(QUERY)
+        max_id = cursor.fetchone()[0] or 0
+        return max_id + 1
+
+    def game_exists(self, game_id):
+        """Check if a game exists in the database."""
+        cursor = self.connection.cursor()
+        QUERY = "SELECT EXISTS(SELECT 1 FROM games WHERE id = %s);"
+        cursor.execute(QUERY, (game_id,))
+        exists = cursor.fetchone()[0]
+        return exists
+
+    def create_game(self, game_id, user_id, game_type, rounds, practice):
         """
         Function used to create and handle game
         states and data.

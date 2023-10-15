@@ -56,10 +56,6 @@ def integrated_game(game: Game, game_id: int, player_id: int):
     if not game or not player:
         raise ValueError("Game or player not found!")
 
-    # Check if the game is of type 'integrated'
-    if game.session_type.network != NETWORK_TYPE_INTEGRATED:
-        raise ValueError("This is not an integrated game!")
-
     return {"game_id": game.id, "player_id": player_id}
 
 

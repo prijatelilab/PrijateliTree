@@ -8,7 +8,25 @@ from prijateli_tree.app.utils.constants import (
 
 
 class Game:
-    def __init__(self, network_type: str):
+    def __init__(
+        self,
+        id,
+        created_at,
+        created_by,
+        game_type_id,
+        rounds,
+        practice,
+        current_round=0,
+        network_type=NETWORK_TYPE_INTEGRATED,
+    ):
+        self.id = id
+        self.created_at = created_at
+        self.created_by = created_by
+        self.game_type_id = game_type_id
+        self.rounds = rounds
+        self.practice = practice
+        self.current_round = current_round
+        self.network_type = network_type
         self.network_type = network_type
         if network_type == NETWORK_TYPE_INTEGRATED:
             self.neighbors = {
@@ -38,8 +56,17 @@ class Game:
                 6: [],
             }
 
-    def is_neighboring_position(self, position: int, test_position: int) -> bool:
+    def is_neighboring_position(self, position: int, test_position: int):
         if position in self.neighbors:
             return test_position in self.neighbors[position]
 
         return False
+
+    def start_new_round(self):
+        """
+        Advance the game to the next round.
+        """
+        self.current_round += 1
+
+    def is_ending(self):
+        return self.current_round == self.rounds

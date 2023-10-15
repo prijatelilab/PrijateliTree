@@ -44,6 +44,15 @@ class DatabaseHandler:
         exists = cursor.fetchone()[0]
         return exists
 
+    def is_player_in_game(self, game_id, user_id):
+        """Check if a player is already in a game."""
+        cursor = self.connection.cursor()
+        QUERY = """SELECT EXISTS(SELECT 1 FROM game_players WHERE game_id = %s 
+                AND user_id = %s);"""
+        cursor.execute(QUERY, (game_id, user_id))
+        exists = cursor.fetchone()[0]
+        return exists
+
     def create_game(self, game_id, user_id, game_type, rounds, practice):
         """
         Function used to create and handle game

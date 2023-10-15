@@ -27,6 +27,15 @@ def integrated_game(game: Game, player_id: int):
     # Create game in database
     database.create_game(game_id, user_id, game_type_id, num_rounds, practice)
 
+    # Add player to game table in database
+    player_id = 1
+    user_id = 1
+    game_id = 1
+    position = 1
+    name_hidden = False
+
+    database.add_player_to_game(player_id, game_id, user_id, position, name_hidden)
+
     # game = database.fetch_game_by_id(game_id)
     # player = database.fetch_player_by_id(player_id)
     # neighbors = database.fetch_neighbors_for_player_in_game(game_id, player_id)

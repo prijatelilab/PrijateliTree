@@ -23,10 +23,6 @@ class DatabaseHandler:
         Function used to create and handle game
         states and data.
         """
-
-        now = datetime.now()
-        created_at = now.strftime("%Y-%m-%d %H:%M:%S")
-
         cursor = self.connection.cursor()
         created_at = datetime.now()
         QUERY = f"""

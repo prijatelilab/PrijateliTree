@@ -1,7 +1,6 @@
 """
 Contains baseline structure for all three game types.
 """
-from datetime import datetime
 from prijateli_tree.app.models.database import Game
 from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_INTEGRATED,
@@ -43,11 +42,15 @@ def add_player_to_game(game_id, user_id, position, name_hidden=False):
     return player_id
 
 
-def integrated_game(game: Game, player_id: int):
+def integrated_game(game: Game, game_id: int, player_id: int):
     # Fetch a game and player from the database with their
     # respective neighbors
 
     database = DatabaseHandler()
+
+    # 1. Fetch the current game state and related data
+    game = database.fetch_game_by_id(game_id)
+    player = database.fetch_player_by_id(player_id)
 
     # Create integrated network game
     # game = database.fetch_game_by_id(game_id)

@@ -10,7 +10,6 @@ from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
 )
-from prijateli_tree.app.utils.database import DatabaseHandler
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
     create_new_game,

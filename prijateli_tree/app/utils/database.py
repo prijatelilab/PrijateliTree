@@ -53,6 +53,22 @@ class DatabaseHandler:
         exists = cursor.fetchone()[0]
         return exists
 
+    def fetch_game_by_id(self, game_id):
+        """Fetch a game by its ID."""
+        cursor = self.connection.cursor()
+        QUERY = "SELECT * FROM games WHERE id = %s;"
+        cursor.execute(QUERY, (game_id,))
+        game = cursor.fetchone()
+        return game
+
+    def fetch_player_by_id(self, player_id):
+        """Fetch a player by its ID."""
+        cursor = self.connection.cursor()
+        QUERY = "SELECT * FROM game_players WHERE id = %s;"
+        cursor.execute(QUERY, (player_id,))
+        player = cursor.fetchone()
+        return player
+
     def create_game(self, game_id, user_id, game_type, rounds, practice):
         """
         Function used to create and handle game

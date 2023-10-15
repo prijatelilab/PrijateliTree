@@ -13,6 +13,8 @@ from prijateli_tree.app.utils.constants import (
 from prijateli_tree.app.utils.database import DatabaseHandler
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
+    create_new_game,
+    add_player_to_game,
     integrated_game,
     segregated_game,
     self_selected_game,
@@ -37,10 +39,20 @@ def admin_access():
 @app.post("/create-game/")
 def create_game_endpoint(game_type: int, user_id: int, num_rounds: int, practice: bool):
     try:
-        database = DatabaseHandler()
-        new_game_id = database.create_new_game(game_type, user_id, num_rounds, practice)
+        new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
         return {"status": "success", "game_id": new_game_id}
     except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/game/{game_id}/add-player/")
+def add_player_endpoint(
+    game_id: int, user_id: int, position: int, name_hidden: bool = False
+):
+    try:
+        new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
+        return {"status": "success", "player_id": new_player_id}
+    except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 

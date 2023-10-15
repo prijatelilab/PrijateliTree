@@ -43,18 +43,28 @@ def add_player_to_game(game_id, user_id, position, name_hidden=False):
 
 
 def integrated_game(game: Game, game_id: int, player_id: int):
-    # Fetch a game and player from the database with their
-    # respective neighbors
+    """
+    Function that handles the logic for integrated games.
+    """
 
     database = DatabaseHandler()
 
     # 1. Fetch the current game state and related data
-    game = database.fetch_game_by_id(game_id)
-    player = database.fetch_player_by_id(player_id)
+    game_record = database.fetch_game_by_id(game_id)
+    player_record = database.fetch_player_by_id(player_id)
 
     # Check if the game or player doesn't exist
-    if not game or not player:
+    if not game_record or not player_record:
         raise ValueError("Game or player not found!")
+
+    game = Game(
+        id=game_record[0],
+        created_at=game_record[1],
+        created_by=game_record[2],
+        game_type_id=game_record[3],
+        rounds=game_record[4],
+        practice=game_record[5],
+    )
 
     return {"game_id": game.id, "player_id": player_id}
 

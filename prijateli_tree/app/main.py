@@ -1,28 +1,34 @@
-import os
 from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException
-from fastapi_sqlalchemy import DBSessionMiddleware
 
-from prijateli_tree.app.models.database import Game
+from prijateli_tree.app.database import Base, Game, SessionLocal, engine
 from prijateli_tree.app.utils.constants import (
-    KEY_DATABASE_URI,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
 )
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
-    create_new_game,
     add_player_to_game,
+    create_new_game,
     integrated_game,
     segregated_game,
     self_selected_game,
 )
 
 
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 
-app.add_middleware(DBSessionMiddleware, db_url=os.getenv(KEY_DATABASE_URI))
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @app.get("/")
@@ -35,7 +41,7 @@ def admin_access():
     stuff()
 
 
-@app.post("/create-game/")
+@app.post("/game/")
 def create_game_endpoint(game_type: int, user_id: int, num_rounds: int, practice: bool):
     try:
         new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
@@ -44,7 +50,7 @@ def create_game_endpoint(game_type: int, user_id: int, num_rounds: int, practice
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/game/{game_id}/add-player/")
+@app.post("/game/{game_id}/player/")
 def add_player_endpoint(
     game_id: int, user_id: int, position: int, name_hidden: bool = False
 ):
@@ -83,5 +89,5 @@ def game_player_access(game_id: int, player_id: int):
 
 
 @app.post("game/{game_id}/player/{player_id}/answer")
-def add_answer(game_id: int, player_id: int):
+def add_answer(game_id: int, player_id: int, player_answer: str):
     pass

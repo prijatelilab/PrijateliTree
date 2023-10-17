@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
@@ -9,11 +11,19 @@ from sqlalchemy import (
     Integer,
     String,
     UniqueConstraint,
+    create_engine,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.sql import func as sql_func
 
+from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
+
+
+engine = create_engine(
+    os.getenv(KEY_DATABASE_URI), connect_args={"check_same_thread": False}
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 

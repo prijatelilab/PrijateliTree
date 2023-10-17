@@ -1,12 +1,7 @@
 """
 Contains baseline structure for all three game types.
 """
-from prijateli_tree.app.models.database import Game
-from prijateli_tree.app.utils.constants import (
-    NETWORK_TYPE_INTEGRATED,
-    NETWORK_TYPE_SEGREGATED,
-    NETWORK_TYPE_SELF_SELECTED,
-)
+from prijateli_tree.app.database import Game
 from prijateli_tree.app.utils.database import DatabaseHandler
 
 

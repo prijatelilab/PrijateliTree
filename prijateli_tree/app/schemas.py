@@ -44,7 +44,7 @@ class GameType(BaseModel):
     created_at: datetime
     network: str
     bag: str
-    games: Game
+    games: List[Game]
 
 
 class Game(BaseModel):

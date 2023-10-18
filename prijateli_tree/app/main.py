@@ -43,22 +43,16 @@ def admin_access():
 
 @app.post("/game/")
 def create_game_endpoint(game_type: int, user_id: int, num_rounds: int, practice: bool):
-    try:
-        new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
-        return {"status": "success", "game_id": new_game_id}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
+    return {"status": "success", "game_id": new_game_id}
 
 
 @app.post("/game/{game_id}/player/")
 def add_player_endpoint(
     game_id: int, user_id: int, position: int, name_hidden: bool = False
 ):
-    try:
-        new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
-        return {"status": "success", "player_id": new_player_id}
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
+    return {"status": "success", "player_id": new_player_id}
 
 
 @app.get("/game/{game_id}")

@@ -1,8 +1,10 @@
 """This script defines the schemas for our API"""
 from __future__ import annotations
+
 from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel
-from typing import List, Optional
 
 
 class User(BaseModel):
@@ -31,9 +33,9 @@ class Language(BaseModel):
 class Denirs(BaseModel):
     id: int
     created_at: datetime
-    created_by_game_id: int
-    created_by_user_id: int
-    external_id: str
+    created_by_game_id: Optional[int]
+    created_by_user_id: Optional[int]
+    external_id: Optional[str]
     user: User
 
 

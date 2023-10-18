@@ -148,7 +148,7 @@ class Game(Base):
     )
     rounds = Column(Integer, nullable=False)
     practice = Column(Boolean, default=False, nullable=False)
-    game_type = relationship("SessionType", back_populates="games")
+    game_type = relationship("GameType", back_populates="games")
     players = relationship("Player", back_populates="game")
 
 

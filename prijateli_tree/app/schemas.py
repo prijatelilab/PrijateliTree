@@ -1,6 +1,9 @@
 """This script defines the schemas for our API"""
-from pydantic import BaseModel
+from __future__ import annotations
+
 from datetime import datetime
+
+from pydantic import BaseModel
 
 
 class User(BaseModel):

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -19,7 +19,7 @@ class User(BaseModel):
     role: str
     language_id: int
     language: Language
-    denirs: Denirs
+    denirs: List[Denirs]
 
 
 class Language(BaseModel):
@@ -27,7 +27,7 @@ class Language(BaseModel):
     created_at: datetime
     name: str
     abbr: str
-    users: User
+    users: List[User]
 
 
 class Denirs(BaseModel):
@@ -55,7 +55,7 @@ class Game(BaseModel):
     rounds: int
     practice: bool
     game_type: GameType
-    players: Player
+    players: List[Player]
 
 
 class Player(BaseModel):
@@ -67,7 +67,7 @@ class Player(BaseModel):
     position: int
     name_hidden: bool
     session: Game
-    answers: GameAnswer
+    answers: List[GameAnswer]
 
 
 class GameAnswer(BaseModel):

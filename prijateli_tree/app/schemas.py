@@ -64,3 +64,27 @@ class Player(BaseModel):
     name_hidden: bool
     session: Game
     answers: GameAnswer
+
+
+class GameAnswer(BaseModel):
+    id: int
+    created_at: datetime
+    game_player_id: int
+    player_answer: str
+    correct_answer: str
+    round: int
+    player: Player
+
+
+class Survey(BaseModel):
+    id: int
+    created_at: datetime
+    created_by: int
+    url: str
+
+
+class PlayerSurveyAnswer(BaseModel):
+    id: int
+    created_at: datetime
+    player_id: int
+    survey_id: int

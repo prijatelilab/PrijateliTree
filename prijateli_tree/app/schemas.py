@@ -67,7 +67,7 @@ class Player(BaseModel):
     user_id: int
     position: int
     name_hidden: bool
-    session: Game
+    game: Game
     answers: List[GameAnswer]
 
 

@@ -1,64 +1,64 @@
 al:
   homepage:
-    login:
-    facilitators:
-    school:
-    student_name:
-    student_language:
-    facilitator_username:
-    facilitator_password:
+    login: "Kyçu"
+    facilitators: "Vetëm për trajnues!"
+    school: "Shkolla"
+    student_name: "Emri dhe mbiemri"
+    student_language: "Gjuha e nxënësit"
+    facilitator_username: "Emri i përdoruesit i trajnuesit"
+    facilitator_password: "Fjalëkalimi i trajnuesit"
 
   ready_to_play:
-    get_ready:
-    im_ready:
+    get_ready: "Bëhuni gati për të luajtur E kuqe ose E kaltër!"
+    im_ready: "Jam gati!"
 
   waiting_screen:
-    waiting:
+    waiting: "Në pritje të të tjerëve..."
 
   rules_screen:
-    how_to_play:
-    instructions:
-    i_understand:
-    next:
+    how_to_play: "Si të luani?"
+    instructions: "Mund ta rishikoni videon sa herë të dëshironi. Mosnjohja e rregullave ul shansat për të fituar. Pyesni mësimdhënësin tuaj nëse keni ndonjë pyetje në lidhje me lojën."
+    i_understand: "I kuptoj rregullat!"
+    next: "Vazhdo"
 
   quiz_colors:
-    quick_quiz:
-    question:
-    instructions:
-    red_and_blue:
-    green_and_yellow:
-    black_and_white:
+    quick_quiz: "Kuiz i shpejtë!"
+    question: "Pyetje"
+    instructions: "Për të fituar, duhet të zgjidhni çantën që ka zgjedhur kompjutori. Çfarë ngjyrash janë çantat që zgjedh kompjutori?"
+    red_and_blue: "E kuqe dhe e kaltër."
+    green_and_yellow: "E gjelbër dhe e verdhë."
+    black_and_white: "E zezë dhe e bardhë."
 
   quiz_balls:
-    colors_in_bag:
-    four_blue_two_red:
-    three_blue_four_red:
-    five_blue_two_red:
+    colors_in_bag: "Çfarë ngjyrash janë topat në çantën e kaltër?"
+    four_blue_two_red: "4 të kaltra dhe 2 të kuqe."
+    three_blue_four_red: "3 të kaltra dhe 4 të kuqe."
+    five_blue_two_red: "5 të kaltra dhe 2 të kuqe."
 
   quiz_peers:
-    what_will_you_observe:
-    one_ball_few_peers:
-    two_balls:
-    one_ball_all_peers:
+    what_will_you_observe: "Çfarë do të vëzhgoni për t'ju ndihmuar të mësoni se cilën çantë ka zgjedhur kompjutori?"
+    one_ball_few_peers: "Një top dhe disa supozime të bashkëmoshatarëve."
+    two_balls: "Dy topa."
+    one_ball_all_peers: "Një top dhe të gjitha supozimet e bashkëmoshatarëve."
 
   intro_practice:
-    now_you_will_play:
-    since_these_rules:
+    now_you_will_play: "Tani do të luani 2 lojëra për ushtrim për t'i mësuar rregullat."
+    since_these_rules: "Pasiqë këto janë raunde ushtruese, nuk do të shpërblejmë askënd për performancën e tyre."
 
   practice_game_video:
-    practice_game:
-    explanation:
-    score:
-    feel_free:
+    practice_game: "Lojë per ushtrim."
+    explanation: "Sqairm."
+    score: "Rezultati."
+    feel_free: "Ndjehuni të lirë ta shikoni videon përsëri për t'i përkujtuar rregullat."
 
   practice_game_first_round:
-    round:
-    the_computer_chose:
-    your_ball_is_red:
-    your_ball_is_blue:
-    guess_color:
-    red:
-    blue:
+    round: "Raundi"
+    the_computer_chose: "Kompjutori zgjodhi një çantë dhe ndau topat në mënyrë të rastësishme për secilin lojtar."
+    your_ball_is_red: "Topi juaj është I KUQ."
+    your_ball_is_blue: "Topi juaj është I KALTËR."
+    guess_color: "Gjeni ngjyrën e çantës:"
+    red: "E KUQE."
+    blue: "E KALTËR."
 
   practice_game_other_rounds:
     see_what_others_guessed:
@@ -70,11 +70,11 @@ al:
     your_guess_was_blue:
 
   practice_game_results:
-    results:
-    you_won:
-    better_luck:
-    the_computer_chose_red:
-    the_computer_chose_blue:
+    results: "Rezultatet"
+    you_won: "Fituat!"
+    better_luck: "Fat më të mirë herën tjetër!"
+    the_computer_chose_red: "Kompjutori zgjodhi çantën TË KUQE."
+    the_computer_chose_blue: "Kompjutori zgjodhi çantën TË KALTËR."
 
   real_game_intro:
     now_we_practiced:

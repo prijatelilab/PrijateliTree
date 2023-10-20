@@ -10,7 +10,7 @@ en:
 
   ready_to_play:
     get_ready: "Get ready to play Red or Blue!"
-    im_ready: "Im ready!"
+    im_ready: "I'm ready!"
 
   waiting_screen:
     waiting: "Waiting for others..."

@@ -188,7 +188,9 @@ def upgrade():
         sa.ForeignKeyConstraint(
             ["survey_id"], ["surveys.id"], name="player_survey_answers_survey_id_fkey"
         ),
-        sa.PrimaryKeyConstraint("player_id", "survey_id"),
+        sa.PrimaryKeyConstraint(
+            "player_id", "survey_id", name="player_survey_answers_pkey"
+        ),
     )
     op.create_table(
         "session_answers",

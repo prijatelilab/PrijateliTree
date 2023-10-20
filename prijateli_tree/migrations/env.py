@@ -4,7 +4,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-import prijateli_tree.app.models.database as models
+import prijateli_tree.app.database as models
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 

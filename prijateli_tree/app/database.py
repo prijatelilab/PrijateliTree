@@ -177,7 +177,7 @@ class Player(Base):
     )
     position = Column(Integer, nullable=False)
     name_hidden = Column(Boolean, nullable=False)
-    session = relationship(
+    game = relationship(
         "Game",
         foreign_keys="[Player.user_id, Player.game_id]",
         back_populates="players",

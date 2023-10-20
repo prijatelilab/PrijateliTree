@@ -89,8 +89,7 @@ al:
 
   different_game_choices:
     now_you_can_observe:
-    please_choose_two_players:
-    please_choose_three_players:
+    please_choose_players:
     player_one:
     player_two:
     player_three:

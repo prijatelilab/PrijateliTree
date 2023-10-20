@@ -37,18 +37,18 @@ def funky():
 
 
 @app.get("/administration")
-def admin_access():
+def route_admin_access():
     stuff()
 
 
 @app.post("/game/")
-def create_game_endpoint(game_type: int, user_id: int, num_rounds: int, practice: bool):
+def route_create_game(game_type: int, user_id: int, num_rounds: int, practice: bool):
     new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
     return {"status": "success", "game_id": new_game_id}
 
 
 @app.post("/game/{game_id}/player/")
-def add_player_endpoint(
+def route_add_player(
     game_id: int, user_id: int, position: int, name_hidden: bool = False
 ):
     new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
@@ -56,7 +56,7 @@ def add_player_endpoint(
 
 
 @app.get("/game/{game_id}")
-def game_access(game_id: int):
+def route_game_access(game_id: int):
     game = Game.query().filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
@@ -64,7 +64,7 @@ def game_access(game_id: int):
 
 
 @app.get("/game/{game_id}/player/{player_id}")
-def game_player_access(game_id: int, player_id: int):
+def route_game_player_access(game_id: int, player_id: int):
     game = Game.query().filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
@@ -83,5 +83,5 @@ def game_player_access(game_id: int, player_id: int):
 
 
 @app.post("game/{game_id}/player/{player_id}/answer")
-def add_answer(game_id: int, player_id: int, player_answer: str):
+def route_add_answer(game_id: int, player_id: int, player_answer: str):
     pass

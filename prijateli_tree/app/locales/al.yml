@@ -61,13 +61,13 @@ al:
     blue: "E KALTËR."
 
   practice_game_other_rounds:
-    see_what_others_guessed:
-    code_guessed_red:
-    code_guessed_blue:
-    name_guessed_red:
-    name_guessed_blue:
-    your_guess_was_red:
-    your_guess_was_blue:
+    see_what_others_guessed: "Shihni çfarë supozuan disa lojtarë të tjerë në raundin e fundit:"
+    code_guessed_red: "Kodi qëlloi E KUQE."
+    code_guessed_blue: "Kodi qëlloi E KALTËR."
+    name_guessed_red: "Emri qëlloi E KUQE."
+    name_guessed_blue: "Emri qëlloi E KALTËR."
+    your_guess_was_red: "Supozimi juaj në raundin e fundit ishte E KUQE."
+    your_guess_was_blue: "Supozimi juaj në raundin e fundit ishte E KALTËR."
 
   practice_game_results:
     results: "Rezultatet"
@@ -77,33 +77,33 @@ al:
     the_computer_chose_blue: "Kompjutori zgjodhi çantën TË KALTËR."
 
   real_game_intro:
-    now_we_practiced:
-    get_ready:
-    if_you_win:
-    game:
-    added_points:
+    now_we_practiced: "Tani që ushtruam, do të luajmë lojërat e vërteta."
+    get_ready: "Bëhuni gati për ta fituar lojën dhe për të fituar para!"
+    if_you_win: "Nëse fitoni në këtë lojë, {X} pikë do t'i shtohen rezultatit tuaj dhe shpërblimit përfundimtar."
+    game: "Lojë"
+    added_points: "{X} pikë do t'i shtohen shpërblimit tuaj përfundimtar."
 
   different_game_intro:
-    different_version:
-    instead_of:
+    different_version: "Now we will play a different version of the game."
+    instead_of: "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
 
   different_game_choices:
-    now_you_can_observe:
-    please_choose_players:
-    player_one:
-    player_two:
-    player_three:
+    now_you_can_observe: "Tani mund të zgjidhni lojtarët që do ti vëzhgoni në raundet vijuese në këtë lojë."
+    please_choose_players: "Zgjidh {X} lojtarë."
+    player_one: "Lojtari 1:"
+    player_two: "Lojtari 2:"
+    player_three: "Lojtari 3:"
 
   survey:
-    before_we_are_done:
-    survey_page:
+    before_we_are_done: "Para se të përfundojmë, duam t'ju parashtrojmë disa pyetje të shkurtra se si keni luajtur sot."
+    survey_page: "Faqe për hulumtim"
 
   final_score:
-    congratulations:
-    you_guessed_correctly:
-    denars:
-    ask_your_teachers:
+    congratulations: "Urime!"
+    you_guessed_correctly: "Keni qëlluar saktë në {X} lojëra dhe keni fituar {x} pikë, që do të thotë se keni fituar ekstra"
+    denars: "{X} denarë!"
+    ask_your_teachers: "Pyetni mësimdhënësin tuaj për marrjen e shpërblimit tuaj!"
 
   thanks_screen:
-    thanks:
-    have_a_great_day:
+    thanks: "Ju faleminderit që luajtët!"
+    have_a_great_day: "Kalofshi një ditë të mirë!"

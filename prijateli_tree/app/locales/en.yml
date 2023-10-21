@@ -10,7 +10,7 @@ en:
 
   ready_to_play:
     get_ready: "Get ready to play Red or Blue!"
-    im_ready: "Im ready!"
+    im_ready: "I'm ready!"
 
   waiting_screen:
     waiting: "Waiting for others..."
@@ -102,7 +102,7 @@ en:
 
   final_score:
     congratulations: "Congratulations!"
-    you_guessed_correctly: "You guessed correctly in {X} games, and earned {x} points, which means you made extra"
+    you_guessed_correctly: "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
     denars: "{X} denars!"
     ask_your_teachers: "Ask your teachers about getting your reward!"
 

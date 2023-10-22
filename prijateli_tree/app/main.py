@@ -4,7 +4,8 @@ import os
 from http import HTTPStatus
 from typing import Annotated, List
 
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Response
+from fastapi.responses import JSONResponse
 from fastapi_localization import TranslateJsonResponse
 
 from prijateli_tree.app.config import config
@@ -60,7 +61,7 @@ def get_db():
     response_class=TranslateJsonResponse,
     response_model=List[LanguageTranslatableSchema],
 )
-def set_language(accept_language: Annotated[str | None, Header()] = None):
+def set_language(accept_language: Annotated[str | None, Header()] = None) -> Response:
     if accept_language in [
         LANGUAGE_ENGLISH,
         LANGUAGE_TURKISH,
@@ -71,7 +72,7 @@ def set_language(accept_language: Annotated[str | None, Header()] = None):
     else:
         config.LANGUAGE = LANGUAGE_ENGLISH
 
-    return HTTPStatus.OK
+    return JSONResponse(content={"message": "It done worked"})
 
 
 @app.get("/")

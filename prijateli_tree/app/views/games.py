@@ -1,18 +1,7 @@
 """
 Contains baseline structure for all three game types.
 """
-from sqlalchemy.orm import Session
 from prijateli_tree.app.database import Game
-
-
-session = Session()
-
-
-def add_player_to_game(game_id, user_id, position, name_hidden=False):
-    """
-    Uses the database handler to add a player to a game and return the player ID.
-    """
-    pass
 
 
 def integrated_game(game: Game, game_id: int, player_id: int):

@@ -5,7 +5,13 @@ from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
 
+from fastapi_localization import TranslatableStringField
 from pydantic import BaseModel
+
+
+class LanguageTranslatableSchema(BaseModel):
+    code: str
+    title: TranslatableStringField
 
 
 class User(BaseModel):

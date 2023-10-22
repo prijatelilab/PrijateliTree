@@ -134,20 +134,6 @@ tests = ["attrs[tests-no-zope]", "zope-interface"]
 tests-no-zope = ["cloudpickle", "hypothesis", "mypy (>=1.1.1)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "pytest-xdist[psutil]"]
 
 [[package]]
-name = "babel"
-version = "2.13.0"
-description = "Internationalization utilities"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "Babel-2.13.0-py3-none-any.whl", hash = "sha256:fbfcae1575ff78e26c7449136f1abbefc3c13ce542eeb13d43d50d8b047216ec"},
-    {file = "Babel-2.13.0.tar.gz", hash = "sha256:04c3e2d28d2b7681644508f836be388ae49e0cfe91465095340395b60d00f210"},
-]
-
-[package.extras]
-dev = ["freezegun (>=1.0,<2.0)", "pytest (>=6.0)", "pytest-cov"]
-
-[[package]]
 name = "bcrypt"
 version = "4.0.1"
 description = "Modern password hashing for your software and your servers"
@@ -289,6 +275,20 @@ typing-extensions = ">=4.5.0"
 
 [package.extras]
 all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=2.11.2)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.5)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
+
+[[package]]
+name = "fastapi-localization"
+version = "0.0a2.dev3"
+description = "Language localization fastapi"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "fastapi-localization-0.0a2.dev3.tar.gz", hash = "sha256:ade508d602083d948a90a5fdf259c24f7b55609437c2180cc26da23df41e05c3"},
+    {file = "fastapi_localization-0.0a2.dev3-py3-none-any.whl", hash = "sha256:512160db955a2cdc077c11e682f09f113c2a4cca3f8d570627a5d8ed1f341417"},
+]
+
+[package.dependencies]
+fastapi = "*"
 
 [[package]]
 name = "fastapi-login"
@@ -1205,4 +1205,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c3227a99c3f7e027a44010bb298a9e5eab8199c8f515114e22a4bdbea77eee5a"
+content-hash = "a9615ef52c6739e2b44b4b90b0c5114f92dfd7bf2ebc285e0c3bbd052f4853cc"

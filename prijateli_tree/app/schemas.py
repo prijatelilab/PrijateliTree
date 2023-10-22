@@ -69,10 +69,10 @@ class Game(BaseModel):
     rounds: int
     practice: bool
     game_type: GameType
-    players: List[Player]
+    players: List[PlayerSchema]
 
 
-class Player(BaseModel):
+class PlayerSchema(BaseModel):
     id: int
     created_at: datetime
     created_by: int
@@ -91,7 +91,7 @@ class GameAnswer(BaseModel):
     player_answer: str
     correct_answer: str
     round: int
-    player: Player
+    player: PlayerSchema
 
 
 class Survey(BaseModel):

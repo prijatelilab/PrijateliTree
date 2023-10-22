@@ -62,7 +62,8 @@ def route_create_game(
 def route_add_player(
     game_id: int, user_id: int, position: int, name_hidden: bool = False
 ):
-    new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
+    # new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
+
     return {"status": "success", "player_id": new_player_id}
 
 

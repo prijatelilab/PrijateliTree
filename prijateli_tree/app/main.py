@@ -1,8 +1,10 @@
 from http import HTTPStatus
 
-from fastapi import FastAPI, HTTPException, Depends, Session
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import Base, Game, SessionLocal, engine
+from prijateli_tree.app.schemas import GameCreate
 from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
@@ -14,9 +16,6 @@ from prijateli_tree.app.views.games import (
     segregated_game,
     self_selected_game,
 )
-
-from prijateli_tree.app.schemas import GameCreate
-
 
 Base.metadata.create_all(bind=engine)
 

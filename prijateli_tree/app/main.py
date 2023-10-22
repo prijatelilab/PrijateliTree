@@ -40,8 +40,6 @@ config = config[os.getenv(KEY_ENV)]
 
 active_language = LANGUAGE_ENGLISH
 
-app.mount("/languages", StaticFiles(directory="./languages"), name="languages")
-
 languages = {}
 for lang in glob.glob("languages/*.json"):
     lang_code = lang.split("\\")[1].split(".")[0]

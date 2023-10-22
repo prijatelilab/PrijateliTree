@@ -8,14 +8,6 @@ from prijateli_tree.app.database import Game
 session = Session()
 
 
-def create_new_game(game_type, user_id, num_rounds, practice):
-    """
-    Uses the database handler to create a new game and return the game ID.
-    """
-
-    pass
-
-
 def add_player_to_game(game_id, user_id, position, name_hidden=False):
     """
     Uses the database handler to add a player to a game and return the player ID.

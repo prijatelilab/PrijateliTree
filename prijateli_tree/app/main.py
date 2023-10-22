@@ -10,7 +10,6 @@ from prijateli_tree.app.utils.constants import (
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
     add_player_to_game,
-    create_new_game,
     integrated_game,
     segregated_game,
     self_selected_game,
@@ -43,8 +42,13 @@ def route_admin_access():
 
 @app.post("/game/")
 def route_create_game(game_type: int, user_id: int, num_rounds: int, practice: bool):
-    new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
-    return {"status": "success", "game_id": new_game_id}
+    new_game = Game(
+        created_by=user_id, game_type_id=game_type, rounds=num_rounds, practice=practice
+    )
+    db.add(new_game)
+    db.commit()
+    db.refresh(new_game)
+    return {"status": "success", "game_id": new_game.id}
 
 
 @app.post("/game/{game_id}/player/")

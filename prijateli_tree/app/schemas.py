@@ -15,6 +15,12 @@ class GameCreate(BaseModel):
     practice: bool
 
 
+class PlayerCreate(BaseModel):
+    user_id: int
+    position: int
+    name_hidden: bool
+
+
 class User(BaseModel):
     id: int
     created_at: datetime

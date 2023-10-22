@@ -6,6 +6,10 @@ KEY_ENV_DEV = "development"
 KEY_ENV_PROD = "production"
 KEY_ENV_TESTING = "testing"
 
+# File Constants
+FILE_MODE_READ = "r"
+STANDARD_ENCODING = "utf-8"
+
 # Game Constants
 NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"

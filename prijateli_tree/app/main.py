@@ -15,6 +15,8 @@ from prijateli_tree.app.views.games import (
     self_selected_game,
 )
 
+from prijateli_tree.app.schemas import GameCreate
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -42,14 +44,14 @@ def route_admin_access():
 
 @app.post("/game/")
 def route_create_game(
-    game_type: int,
-    user_id: int,
-    num_rounds: int,
-    practice: bool,
+    game_data: GameCreate,
     db: Session = Depends(get_db),
 ):
     new_game = Game(
-        created_by=user_id, game_type_id=game_type, rounds=num_rounds, practice=practice
+        created_by=game_data.created_by,
+        game_type_id=game_data.game_type_id,
+        rounds=game_data.rounds,
+        practice=game_data.practice,
     )
     db.add(new_game)
     db.commit()

@@ -11,6 +11,12 @@ NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"
 
+# Language Constants
+LANGUAGE_ALBANIAN = "al"
+LANGUAGE_ENGLISH = "en"
+LANGUAGE_MACEDONIAN = "mk"
+LANGUAGE_TURKISH = "tr"
+
 # Validating Regex Constants
 REGEX_EMAIL = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
 # Source link: https://stackoverflow.com/a/51829465

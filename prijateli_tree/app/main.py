@@ -3,15 +3,14 @@ from http import HTTPStatus
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import Base, Game, SessionLocal, engine
-from prijateli_tree.app.schemas import GameCreate
+from prijateli_tree.app.database import Base, Game, Player, SessionLocal, engine
+from prijateli_tree.app.schemas import GameCreate, PlayerCreate
 from prijateli_tree.app.utils.constants import (
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
 )
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
-    add_player_to_game,
     integrated_game,
     segregated_game,
     self_selected_game,
@@ -60,11 +59,26 @@ def route_create_game(
 
 @app.post("/game/{game_id}/player/")
 def route_add_player(
-    game_id: int, user_id: int, position: int, name_hidden: bool = False
+    game_id: int, player_data: PlayerCreate, db: Session = Depends(get_db)
 ):
-    # new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
+    # Fetch game data from db
+    game = Game.query().filter_by(id=game_id).one_or_none()
+    if not game:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
-    return {"status": "success", "player_id": new_player_id}
+    new_player = Player(
+        created_by=player_data.user_id,
+        game_id=game_id,
+        user_id=player_data.user_id,
+        position=player_data.position,
+        name_hidden=player_data.name_hidden,
+    )
+
+    db.add(new_player)
+    db.commit()
+    db.refresh(new_player)
+
+    return {"status": "success", "player_id": new_player}
 
 
 @app.get("/game/{game_id}")

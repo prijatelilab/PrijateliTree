@@ -5,7 +5,6 @@ from http import HTTPStatus
 from typing import Annotated, List
 
 from fastapi import FastAPI, Header, HTTPException
-from fastapi.staticfiles import StaticFiles
 from fastapi_localization import TranslateJsonResponse
 
 from prijateli_tree.app.config import config

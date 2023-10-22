@@ -41,7 +41,13 @@ def route_admin_access():
 
 
 @app.post("/game/")
-def route_create_game(game_type: int, user_id: int, num_rounds: int, practice: bool):
+def route_create_game(
+    game_type: int,
+    user_id: int,
+    num_rounds: int,
+    practice: bool,
+    db=get_db,
+):
     new_game = Game(
         created_by=user_id, game_type_id=game_type, rounds=num_rounds, practice=practice
     )

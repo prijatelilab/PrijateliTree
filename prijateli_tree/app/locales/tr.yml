@@ -1,0 +1,109 @@
+tr:
+  homepage:
+    login: "Giriş Yap"
+    facilitators: "Sadece eğitimciler için!"
+    school: "Okul"
+    student_name: "Ad ve soyad"
+    student_language: "Öğrencinin dili"
+    facilitator_username: "Eğitimcinin kullanıcı adı"
+    facilitator_password: "Eğitimcinin Şifresi"
+
+  ready_to_play:
+    get_ready: "Kırmızı mı Mavi mi oynamaya hazır olun!"
+    im_ready: "Ben hazırım!"
+
+  waiting_screen:
+    waiting: "Başkalarını bekliyorum..."
+
+  rules_screen:
+    how_to_play: "Nasıl oynanır?"
+    instructions: "Videoyu istediğiniz kadar tekrar oynatabilirsiniz. Kuralları bilmemek kazanma şansınızı azaltır. Oyunla ilgili sorularınız varsa öğretmeninize sorun."
+    i_understand: "Kuralları anlıyorum!"
+    next: "Sonraki"
+
+  quiz_colors:
+    quick_quiz: "Hızlı sınav!"
+    question: "Soru"
+    instructions: "Kazanmak için bilgisayarın seçtiği torbayı seçmelisiniz. Bilgisayarın seçtiği torbalar ne renkler?"
+    red_and_blue: "Kırmızı ve Mavi."
+    green_and_yellow: "Yeşil ve Sarı."
+    black_and_white: "Siyah ve Beyaz."
+
+  quiz_balls:
+    colors_in_bag: "Mavi torbadaki toplar hangi renktir?"
+    four_blue_two_red: "4 mavi ve 2 kırmızı."
+    three_blue_four_red: "3 mavi ve 4 kırmızı."
+    five_blue_two_red: "5 mavi ve 2 kırmızı."
+
+  quiz_peers:
+    what_will_you_observe: "Bilgisayarın hangi torbayı seçtiğini öğrenmenize yardımcı olacak neyi gözlemleyeceksiniz?"
+    one_ball_few_peers: "Bir top ve birkaç akran tahminleri."
+    two_balls: "İki top."
+    one_ball_all_peers: "Bir top ve tüm akranların tahminleri."
+
+  intro_practice:
+    now_you_will_play: "Şimdi kurallara alışmak için 2 alıştırma oyunu oynayacaksınız."
+    since_these_rules: "Bunlar alıştırma turları olduğu için kimseyi performansından dolayı ödüllendirmeyeceğiz."
+
+  practice_game_video:
+    practice_game: "Practice Game."
+    explanation: "Açıklama."
+    score: "Skor."
+    feel_free: "Kuralları kendinize hatırlatmak için videoyu tekrar izlemekten çekinmeyin."
+
+  practice_game_first_round:
+    round: "Yuvarlak"
+    the_computer_chose: "Bilgisayar bir torba seçti ve topları her oyuncuya rastgele bölüştürdü."
+    your_ball_is_red: "Topunuz KIRMIZI."
+    your_ball_is_blue: "Topunuz MAVİ."
+    guess_color: "Torbanın rengini tahmin edin:"
+    red: "KIRMIZI."
+    blue: "MAVİ."
+
+  practice_game_other_rounds:
+    see_what_others_guessed: "Son turda diğer bazı oyuncuların neler tahmin ettiğini görün:"
+    code_guessed_red: "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yaptı."
+    code_guessed_blue: "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yaptı."
+    name_guessed_red: "Ad, KIRMIZI tahminini yaptı."
+    name_guessed_blue: "Ad, MAVI tahminini yaptı."
+    your_guess_was_red: "Your guess in the last round was RED."
+    your_guess_was_blue: "Your guess in the last round was BLUE."
+
+  practice_game_results:
+    results: "Results"
+    you_won: "Kazandın!"
+    better_luck: "Bir dahaki sefere iyi şanslar!"
+    the_computer_chose_red: "Bilgisayar KIRMIZI çantayı seçti."
+    the_computer_chose_blue: "Bilgisayar MAVİ çantayı seçti."
+
+  real_game_intro:
+    now_we_practiced: "Artık antrenman yaptığımıza göre gerçek oyunları oynayacağız."
+    get_ready: "Kazanmaya ve para kazanmaya hazır olun!"
+    if_you_win: "Bu oyunu kazanırsanız puanınıza ve son ödülünüze {X} puan eklenecek."
+    game: "Oyun"
+    added_points: "Son ödülünüze {X} puan eklenecek."
+
+  different_game_intro:
+    different_version: "Şimdi oyunun farklı bir versiyonunu oynayacağız."
+    instead_of: "Gözlemlediğiniz oyuncuları size rastgele atamak yerine, gözlemlediğiniz oyuncuları seçmenize izin vereceğiz."
+
+  different_game_choices:
+    now_you_can_observe: "Artık bu oyunda ilerleyen turlarda gözlemleyeceğiniz oyuncuları seçebilirsiniz."
+    please_choose_players: "Lütfen {X} oyuncu seçin."
+    player_one: "Oyuncu 1:"
+    player_two: "Oyuncu 2:"
+    player_three: "Oyuncu 3:"
+
+  survey:
+    before_we_are_done: "Bitirmeden önce size bugün nasıl oynadığınıza dair birkaç kısa soru sormak istiyoruz."
+    survey_page: "Anket Sayfası"
+
+  final_score:
+    congratulations: "Tebrikler!"
+    you_guessed_correctly: "{X} oyunda doğru tahmin ettiniz ve {x} puan kazandınız, bu da ekstra kazandığınız anlamına geliyors."
+    denars: "{X} dinar!"
+    ask_your_teachers: "Öğretmenlerinize ödülünüzü nasıl alacağınızı sorun!"
+
+  thanks_screen:
+    thanks: "Oynadığınız için teşekkürler!"
+    have_a_great_day: "İyi günler!"

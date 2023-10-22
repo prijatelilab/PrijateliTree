@@ -1,9 +1,14 @@
+import glob
+import json
 from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from prijateli_tree.app.database import Base, Game, SessionLocal, engine
 from prijateli_tree.app.utils.constants import (
+    LANGUAGE_ENGLISH,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
 )
@@ -21,8 +26,19 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+DEFAULT_LANGUAGE = LANGUAGE_ENGLISH
 
-# Dependency
+app.mount("/languages", StaticFiles(directory="languages"), name="languages")
+templates = Jinja2Templates(directory="templates")
+
+languages = {}
+for lang in glob.glob("languages/*.json"):
+    lang_code = lang.split("\\")[1].split(".")[0]
+
+    with open(lang, "r", encoding="utf8") as file:
+        languages[lang_code] = json.load(file)
+
+
 def get_db():
     db = SessionLocal()
     try:

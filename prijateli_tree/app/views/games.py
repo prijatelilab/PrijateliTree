@@ -1,13 +1,18 @@
 """
 Contains baseline structure for all three game types.
 """
+from sqlalchemy.orm import Session
 from prijateli_tree.app.database import Game
+
+
+session = Session()
 
 
 def create_new_game(game_type, user_id, num_rounds, practice):
     """
     Uses the database handler to create a new game and return the game ID.
     """
+
     pass
 
 

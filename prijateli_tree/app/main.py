@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 
 from prijateli_tree.app.database import Base, Game, SessionLocal, engine
 from prijateli_tree.app.utils.constants import (
@@ -46,7 +46,7 @@ def route_create_game(
     user_id: int,
     num_rounds: int,
     practice: bool,
-    db=get_db,
+    db: Session = Depends(get_db),
 ):
     new_game = Game(
         created_by=user_id, game_type_id=game_type, rounds=num_rounds, practice=practice

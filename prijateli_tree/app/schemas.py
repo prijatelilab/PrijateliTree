@@ -8,6 +8,13 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
+class GameCreate(BaseModel):
+    created_by: int
+    game_type_id: int
+    rounds: int
+    practice: bool
+
+
 class User(BaseModel):
     id: int
     created_at: datetime

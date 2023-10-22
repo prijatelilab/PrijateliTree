@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Session
 
 from prijateli_tree.app.database import Base, Game, SessionLocal, engine
 from prijateli_tree.app.utils.constants import (

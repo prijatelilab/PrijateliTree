@@ -22,7 +22,6 @@ from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 engine = create_engine(
     os.getenv(KEY_DATABASE_URI),
-    connect_args={"check_same_thread": False},
     echo=True,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

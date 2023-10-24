@@ -19,6 +19,7 @@ psycopg2 = "^2.9.9"
 python-dotenv = "^1.0.0"
 pyi18n-v2 = "^1.2.1"
 pydantic = "^2.4.2"
+fastapi-localization = "^0.0a2.dev3"
 
 
 [build-system]

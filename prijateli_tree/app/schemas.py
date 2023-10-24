@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
 
+from fastapi_localization import TranslatableStringField
 from pydantic import BaseModel
 
 
@@ -19,6 +20,11 @@ class PlayerCreate(BaseModel):
     user_id: int
     position: int
     name_hidden: bool
+
+
+class LanguageTranslatableSchema(BaseModel):
+    code: str
+    title: TranslatableStringField
 
 
 class User(BaseModel):

@@ -9,6 +9,19 @@ from fastapi_localization import TranslatableStringField
 from pydantic import BaseModel
 
 
+class GameCreate(BaseModel):
+    created_by: int
+    game_type_id: int
+    rounds: int
+    practice: bool
+
+
+class PlayerCreate(BaseModel):
+    user_id: int
+    position: int
+    name_hidden: bool
+
+
 class LanguageTranslatableSchema(BaseModel):
     code: str
     title: TranslatableStringField
@@ -62,10 +75,10 @@ class Game(BaseModel):
     rounds: int
     practice: bool
     game_type: GameType
-    players: List[Player]
+    players: List[PlayerSchema]
 
 
-class Player(BaseModel):
+class PlayerSchema(BaseModel):
     id: int
     created_at: datetime
     created_by: int
@@ -84,7 +97,7 @@ class GameAnswer(BaseModel):
     player_answer: str
     correct_answer: str
     round: int
-    player: Player
+    player: PlayerSchema
 
 
 class Survey(BaseModel):

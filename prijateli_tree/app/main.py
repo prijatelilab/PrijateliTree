@@ -4,13 +4,18 @@ import os
 from http import HTTPStatus
 from typing import Annotated, List
 
-from fastapi import FastAPI, Header, HTTPException, Response
+from fastapi import Depends, FastAPI, Header, HTTPException, Response
 from fastapi.responses import JSONResponse
 from fastapi_localization import TranslateJsonResponse
+from sqlalchemy.orm import Session
 
 from prijateli_tree.app.config import config
-from prijateli_tree.app.database import Base, Game, SessionLocal, engine
-from prijateli_tree.app.schemas import LanguageTranslatableSchema
+from prijateli_tree.app.database import Base, Game, Player, SessionLocal, engine
+from prijateli_tree.app.schemas import (
+    GameCreate,
+    LanguageTranslatableSchema,
+    PlayerCreate,
+)
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     KEY_ENV,
@@ -24,8 +29,6 @@ from prijateli_tree.app.utils.constants import (
 )
 from prijateli_tree.app.views.administration import stuff
 from prijateli_tree.app.views.games import (
-    add_player_to_game,
-    create_new_game,
     integrated_game,
     segregated_game,
     self_selected_game,
@@ -86,17 +89,44 @@ def route_admin_access():
 
 
 @app.post("/game/")
-def route_create_game(game_type: int, user_id: int, num_rounds: int, practice: bool):
-    new_game_id = create_new_game(game_type, user_id, num_rounds, practice)
-    return {"status": "success", "game_id": new_game_id}
+def route_create_game(
+    game_data: GameCreate,
+    db: Session = Depends(get_db),
+):
+    new_game = Game(
+        created_by=game_data.created_by,
+        game_type_id=game_data.game_type_id,
+        rounds=game_data.rounds,
+        practice=game_data.practice,
+    )
+    db.add(new_game)
+    db.commit()
+    db.refresh(new_game)
+    return {"status": "success", "game_id": new_game.id}
 
 
 @app.post("/game/{game_id}/player/")
 def route_add_player(
-    game_id: int, user_id: int, position: int, name_hidden: bool = False
+    game_id: int, player_data: PlayerCreate, db: Session = Depends(get_db)
 ):
-    new_player_id = add_player_to_game(game_id, user_id, position, name_hidden)
-    return {"status": "success", "player_id": new_player_id}
+    # Fetch game data from db
+    game = Game.query().filter_by(id=game_id).one_or_none()
+    if not game:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    new_player = Player(
+        created_by=player_data.user_id,
+        game_id=game_id,
+        user_id=player_data.user_id,
+        position=player_data.position,
+        name_hidden=player_data.name_hidden,
+    )
+
+    db.add(new_player)
+    db.commit()
+    db.refresh(new_player)
+
+    return {"status": "success", "player_id": new_player}
 
 
 @app.get("/game/{game_id}")

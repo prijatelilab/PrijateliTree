@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import Base, Game, Player, SessionLocal, engine
@@ -15,6 +15,7 @@ from prijateli_tree.app.views.games import (
     segregated_game,
     self_selected_game,
 )
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -43,7 +44,7 @@ def route_admin_access():
 @app.post("/game/")
 def route_create_game(
     game_data: GameCreate,
-    db: Session = Depends(get_db),
+    db: Session = get_db,
 ):
     new_game = Game(
         created_by=game_data.created_by,
@@ -58,9 +59,7 @@ def route_create_game(
 
 
 @app.post("/game/{game_id}/player/")
-def route_add_player(
-    game_id: int, player_data: PlayerCreate, db: Session = Depends(get_db)
-):
+def route_add_player(game_id: int, player_data: PlayerCreate, db: Session = get_db):
     # Fetch game data from db
     game = Game.query().filter_by(id=game_id).one_or_none()
     if not game:

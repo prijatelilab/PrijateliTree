@@ -16,6 +16,7 @@ from prijateli_tree.app.views.games import (
     self_selected_game,
 )
 
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()

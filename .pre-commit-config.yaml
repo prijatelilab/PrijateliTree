@@ -43,16 +43,6 @@ repos:
           - --lines-after-imports=2
           - --profile=black
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.286
-    hooks:
-      - id: ruff
-        types_or: [python, pyi, jupyter]
-        args:
-          - --fix
-          - --target-version=py311
-          - --select=B,C,E,F,W
-
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:

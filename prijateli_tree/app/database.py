@@ -180,12 +180,10 @@ class Player(Base):
     name_hidden = Column(Boolean, nullable=False)
     game = relationship(
         "Game",
-        foreign_keys="[Player.user_id, Player.game_id]",
         back_populates="players",
     )
     answers = relationship(
         "GameAnswer",
-        foreign_keys="[Player.user_id, Player.game_id]",
         back_populates="player",
     )
 

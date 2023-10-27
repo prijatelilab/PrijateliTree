@@ -40,6 +40,12 @@ class User(BaseModel):
     language_id: int
     language: Language
     denirs: List[Denirs]
+    high_school: HighSchool
+
+
+class HighSchool(BaseModel):
+    id: int
+    name: str
 
 
 class Language(BaseModel):

@@ -79,6 +79,7 @@ def integrated_game(game_id: int, player_id: int):
 
     # Get game type data
     game_type = GameType.query().filter_by(id=game_type_id).one_or_none()
+    bag = game_type.bag
     if not game_type:
         raise HTTPException(status_code=400, detail="Game type not found")
 
@@ -88,6 +89,9 @@ def integrated_game(game_id: int, player_id: int):
         current_round = 1
     else:
         current_round = game_answer.round
+
+    if current_round > num_rounds:
+        raise HTTPException(status_code=400, detail="Game is over")
 
 
 @router.post("{game_id}/player/{player_id}/answer")

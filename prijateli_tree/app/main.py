@@ -21,6 +21,7 @@ from prijateli_tree.app.utils.constants import (
     STANDARD_ENCODING,
 )
 
+
 Base.metadata.create_all(bind=engine)
 
 config = config[os.getenv(KEY_ENV)]

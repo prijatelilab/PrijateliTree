@@ -4,10 +4,9 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import SessionLocal, Game, GameAnswer, Player
+from prijateli_tree.app.database import SessionLocal, Game, GameAnswer, GameType, Player
 from prijateli_tree.app.schemas import (
     GameCreate,
-    GameType,
     PlayerCreate,
 )
 
@@ -46,8 +45,10 @@ def route_game_access(game_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/{game_id}/player/{player_id}")
-def route_game_player_access(game_id: int, player_id: int):
-    game = Game.query().filter_by(id=game_id).one_or_none()
+def route_game_player_access(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
@@ -57,11 +58,11 @@ def route_game_player_access(game_id: int, player_id: int):
         )
 
 
-def integrated_game(game_id: int, player_id: int):
+def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Logic for handling the integrated game
     """
-    game = Game.query().filter_by(id=game_id).one_or_none()
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
@@ -69,19 +70,19 @@ def integrated_game(game_id: int, player_id: int):
     game_type_id = game.game_type_id
     # Check if the player is in the game
     existing_player = (
-        Player.query().filter_by(game_id=game_id, user_id=player_id).one_or_none()
+        db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
     )
     if not existing_player:
         raise HTTPException(status_code=400, detail="Player is not in the game")
 
     # Get game type data
-    game_type = GameType.query().filter_by(id=game_type_id).one_or_none()
+    game_type = db.query(GameType).filter_by(id=game_type_id).one_or_none()
     bag = game_type.bag
     if not game_type:
         raise HTTPException(status_code=400, detail="Game type not found")
 
     # Get current round
-    game_answer = GameAnswer.query().filter_by(id=game_id).one_or_none()
+    game_answer = db.query(GameAnswer).filter_by(id=game_id).one_or_none()
     if not game_answer:
         current_round = 1
     else:

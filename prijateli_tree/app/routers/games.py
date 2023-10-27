@@ -1,3 +1,4 @@
+import random
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -6,13 +7,12 @@ from sqlalchemy.orm import Session
 from prijateli_tree.app.database import SessionLocal
 from prijateli_tree.app.schemas import (
     Game,
-    GameCreate,
     GameAnswer,
+    GameCreate,
     GameType,
     PlayerCreate,
     PlayerSchema,
 )
-
 
 router = APIRouter()
 
@@ -92,6 +92,9 @@ def integrated_game(game_id: int, player_id: int):
 
     if current_round > num_rounds:
         raise HTTPException(status_code=400, detail="Game is over")
+
+    # Pick a random letter from the bag and show it to the player
+    ball = random.choice(bag)
 
 
 @router.post("{game_id}/player/{player_id}/answer")

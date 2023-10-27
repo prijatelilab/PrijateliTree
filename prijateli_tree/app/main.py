@@ -9,6 +9,7 @@ from fastapi_localization import TranslateJsonResponse
 
 from prijateli_tree.app.config import config
 from prijateli_tree.app.database import Base, engine
+from prijateli_tree.app.routers import administration, games
 from prijateli_tree.app.schemas import LanguageTranslatableSchema
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
@@ -19,7 +20,6 @@ from prijateli_tree.app.utils.constants import (
     LANGUAGE_TURKISH,
     STANDARD_ENCODING,
 )
-from prijateli_tree.routers import administration, games
 
 
 Base.metadata.create_all(bind=engine)

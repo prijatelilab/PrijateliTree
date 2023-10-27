@@ -30,7 +30,7 @@ def route_create_game(
 def route_add_player(
     game_id: int, player_data: PlayerCreate, db: Session = Depends(get_db)
 ):
-    return {"status": "success", "player_id": new_player}
+    return {"status": "success"}
 
 
 @router.get("/{game_id}")

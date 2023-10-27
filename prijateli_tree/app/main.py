@@ -25,7 +25,7 @@ from prijateli_tree.app.utils.constants import (
 Base.metadata.create_all(bind=engine)
 
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
 config = config[os.getenv(KEY_ENV)]
 

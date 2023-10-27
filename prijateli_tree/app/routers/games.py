@@ -93,8 +93,10 @@ def integrated_game(game_id: int, player_id: int):
     if current_round > num_rounds:
         raise HTTPException(status_code=400, detail="Game is over")
 
-    # Pick a random letter from the bag and show it to the player
-    ball = random.choice(bag)
+    if current_round == 1:
+        # Pick a random letter from the bag and show it to the player
+        ball = random.choice(bag)
+        print(ball)
 
 
 @router.post("{game_id}/player/{player_id}/answer")

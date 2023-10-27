@@ -4,7 +4,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import SessionLocal
-from prijateli_tree.app.schemas import Game, GameCreate, PlayerCreate, PlayerSchema
+from prijateli_tree.app.schemas import (
+    Game,
+    GameCreate,
+    GameAnswer,
+    GameType,
+    PlayerCreate,
+    PlayerSchema,
+)
 
 
 router = APIRouter()
@@ -61,12 +68,26 @@ def integrated_game(game_id: int, player_id: int):
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
+    num_rounds = game.rounds
+    game_type_id = game.game_type_id
     # Check if the player is in the game
     existing_player = (
         PlayerSchema.query().filter_by(game_id=game_id, user_id=player_id).one_or_none()
     )
     if not existing_player:
         raise HTTPException(status_code=400, detail="Player is not in the game")
+
+    # Get game type data
+    game_type = GameType.query().filter_by(id=game_type_id).one_or_none()
+    if not game_type:
+        raise HTTPException(status_code=400, detail="Game type not found")
+
+    # Get current round
+    game_answer = GameAnswer.query().filter_by(id=game_id).one_or_none()
+    if not game_answer:
+        current_round = 1
+    else:
+        current_round = game_answer.round
 
 
 @router.post("{game_id}/player/{player_id}/answer")

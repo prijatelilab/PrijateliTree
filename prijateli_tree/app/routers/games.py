@@ -41,14 +41,14 @@ def route_add_player(
 
 
 @router.get("/{game_id}")
-def route_game_access(game_id: int):
-    game = Game.query().filter_by(id=game_id).one_or_none()
+def route_game_access(game_id: int, db: Session = Depends(get_db)):
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
     return {"game_id": game_id}
 
 
-@router.get("{game_id}/player/{player_id}")
+@router.get("/{game_id}/player/{player_id}")
 def route_game_player_access(game_id: int, player_id: int):
     game = Game.query().filter_by(id=game_id).one_or_none()
     if game is None:
@@ -99,6 +99,6 @@ def integrated_game(game_id: int, player_id: int):
         print(ball)
 
 
-@router.post("{game_id}/player/{player_id}/answer")
+@router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(game_id: int, player_id: int, player_answer: str):
     pass

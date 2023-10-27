@@ -21,13 +21,11 @@ from prijateli_tree.app.utils.constants import (
     STANDARD_ENCODING,
 )
 
-
 Base.metadata.create_all(bind=engine)
 
-
-app = FastAPI()
-
 config = config[os.getenv(KEY_ENV)]
+
+app = FastAPI(debug=config.DEBUG)
 
 languages = {}
 for lang in glob.glob("languages/*.json"):

@@ -144,7 +144,7 @@ class Game(Base):
     )
     game_type_id = Column(
         Integer,
-        ForeignKey("users.id", name="games_game_type_id_fkey"),
+        ForeignKey("game_types.id", name="games_game_type_id_fkey"),
         nullable=False,
     )
     rounds = Column(Integer, nullable=False)

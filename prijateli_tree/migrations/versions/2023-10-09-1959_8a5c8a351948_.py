@@ -59,7 +59,7 @@ def upgrade():
             ["created_by"], ["users.id"], name="sessions_created_by_fkey"
         ),
         sa.ForeignKeyConstraint(
-            ["game_type_id"], ["users.id"], name="games_game_type_id_fkey"
+            ["game_type_id"], ["game_types.id"], name="games_game_type_id_fkey"
         ),
         sa.PrimaryKeyConstraint("id"),
     )

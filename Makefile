@@ -16,7 +16,7 @@ create_db:
 		sleep 1; \
 	done
 	@echo "Postgres is up"
-	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
+	docker-compose run --rm web alembic --config=./prijateli_tree/migrations/alembic.ini stamp head
 
 .PHONY: lint
 lint:
@@ -31,5 +31,5 @@ clean: stop ## Remove all containers
 	docker-compose rm -f
 
 .PHONY: clean_all
-clean_all: clean stop ## Wipe database
+clean_all: clean stop ## Wipe database link
 	docker-compose down -v

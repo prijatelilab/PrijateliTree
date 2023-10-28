@@ -34,12 +34,19 @@ class User(BaseModel):
     first_name: str
     last_name: str
     email: Optional[str]
-    phone_number: Optional[str]
     birth_date: Optional[datetime]
     role: str
     language_id: int
     language: Language
+    high_school_id: Optional[int]
+    qualtrics_id: Optional[str]
     denirs: List[Denirs]
+    high_school: Optional[HighSchool]
+
+
+class HighSchool(BaseModel):
+    id: int
+    name: str
 
 
 class Language(BaseModel):

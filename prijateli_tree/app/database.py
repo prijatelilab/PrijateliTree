@@ -45,9 +45,10 @@ class User(Base):
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=True, unique=True)
-    phone_number = Column(String, nullable=True, unique=True)
     birth_date = Column(Date, nullable=True)
+    qualtrics_id = Column(String, nullable=True)
     role = Column(String, nullable=False)
+    grade_level = Column(Integer, nullable=True)
     language_id = Column(
         Integer,
         ForeignKey("languages.id", name="users_languages_id_fkey"),
@@ -55,6 +56,12 @@ class User(Base):
     )
     language = relationship("Language", back_populates="users")
     denirs = relationship("Denirs", back_populates="user")
+    high_school_id = Column(
+        Integer,
+        ForeignKey("high_schools.id", name="users_high_schools_id_fkey"),
+        nullable=True,
+    )
+    high_school = relationship("HighSchool", back_populates="users")
 
     __table_args__ = (
         CheckConstraint(
@@ -62,6 +69,18 @@ class User(Base):
             name="role_options",
         ),
     )
+
+
+class HighSchool(Base):
+    __tablename__ = "high_schools"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    name = Column(String, nullable=False, unique=True)
+    users = relationship("User", back_populates="high_school")
 
 
 class Language(Base):
@@ -180,10 +199,12 @@ class Player(Base):
     name_hidden = Column(Boolean, nullable=False)
     game = relationship(
         "Game",
+        foreign_keys="[game_players.user_id, game_players.game_id]",
         back_populates="players",
     )
     answers = relationship(
         "GameAnswer",
+        foreign_keys="[game_players.user_id, game_players.game_id]",
         back_populates="player",
     )
 

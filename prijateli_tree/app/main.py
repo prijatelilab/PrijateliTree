@@ -11,6 +11,7 @@ from prijateli_tree.app.config import config
 from prijateli_tree.app.database import Base, engine
 from prijateli_tree.app.routers import administration, games
 from prijateli_tree.app.schemas import LanguageTranslatableSchema
+from fastapi.staticfiles import StaticFiles
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     KEY_ENV,
@@ -27,6 +28,8 @@ Base.metadata.create_all(bind=engine)
 config = config[os.getenv(KEY_ENV)]
 
 app = FastAPI(debug=config.DEBUG)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 languages = {}
 for lang in glob.glob("languages/*.json"):

@@ -1,10 +1,11 @@
 import glob
 import json
 import os
+from pathlib import Path
 from typing import Annotated, List
 
-from fastapi import FastAPI, Header, Response
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Header, Request, Response
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_localization import TranslateJsonResponse
@@ -30,8 +31,12 @@ config = config[os.getenv(KEY_ENV)]
 
 app = FastAPI(debug=config.DEBUG)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = Path(__file__).resolve().parent
+
+app.mount(
+    "/static", StaticFiles(directory=str(Path(BASE_DIR, "static"))), name="static"
+)
+templates = Jinja2Templates(directory=str(Path(BASE_DIR, "templates")))
 
 languages = {}
 for lang in glob.glob("languages/*.json"):
@@ -71,6 +76,6 @@ def set_language(accept_language: Annotated[str | None, Header()] = None) -> Res
     return JSONResponse(content={"message": "It done worked"})
 
 
-@app.get("/")
-def funky():
-    return {"Hello": "World"}
+@app.get("/", response_class=HTMLResponse)
+def funky(request: Request):
+    return templates.TemplateResponse("base.html", {"request": request})

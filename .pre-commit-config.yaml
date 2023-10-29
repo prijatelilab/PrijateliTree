@@ -57,7 +57,7 @@ repos:
       - id: djlint-reformat
         pass_filenames: false
         args:
-          - prijateli_tree/_templates
+          - prijateli_tree/app/templates
           - --format-css
           - --profile=jinja
           - --indent=2
@@ -66,7 +66,7 @@ repos:
         require_serial: true
         pass_filenames: false
         args:
-          - prijateli_tree/_templates
+          - prijateli_tree/app/templates
           - --profile=jinja
           - --use-gitignore
           - --ignore=H006,T028,H031,H021,H013,H011

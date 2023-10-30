@@ -86,11 +86,9 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=400, detail="Game type not found")
 
     # Get current round
-    game_answer = db.query(GameAnswer).filter_by(id=game_id).one_or_none()
-    if not game_answer:
-        current_round = 1
-    else:
-        current_round = game_answer.round
+    total_players = db.query(Player).filter_by(game_id=game_id).count()
+    total_answers = db.query(GameAnswer).filter_by(game_id=game_id).count()
+    current_round = total_answers // total_players + 1
 
     if current_round > game.rounds:
         raise HTTPException(status_code=400, detail="Game is over")
@@ -105,6 +103,12 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         }
 
         # Record the player's answer
+
+    else:
+        # Show the player the previous round's answer
+        # Show the neighbor's answers from the previous round
+        # Update the player's answer if they want to
+        pass
 
 
 @router.get("/round-progress/{game_id}/{current_round}")

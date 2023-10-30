@@ -145,7 +145,11 @@ def check_round_progress(
 
 @router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(
-    game_id: int, player_id: int, player_answer: str, db: Depends(get_db)
+    game_id: int,
+    player_id: int,
+    player_answer: str,
+    db: Depends(get_db),
+    current_round: int,
 ):
     """
     Function that updates the player's guess in the database
@@ -159,13 +163,6 @@ def route_add_answer(
     bag = game_type.bag
 
     correct_answer = get_bag_color(bag)
-
-    # Check round progress
-    game_answer = db.query(GameAnswer).filter_by(id=game_id).one_or_none()
-    if not game_answer:
-        current_round = 1
-    else:
-        current_round = game_answer.round
 
     # Record the answer
     new_answer = GameAnswer(

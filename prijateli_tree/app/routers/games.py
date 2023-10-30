@@ -106,6 +106,22 @@ def route_add_answer(
     return {"status": "New answer recorded"}
 
 
+@router.get("/{game_id}/player/{player_id}/answer")
+def get_previous_answers(game_id: int, player_id: int, db: Session = Depends(get_db)):
+    """
+    Function that returns the player's previous answer
+    from the last round, along with the answers of their neighbors
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    previous_answer = (
+        db.query(GameAnswer)
+        .filter_by(game_id=game_id, player_id=player_id)
+        .one_or_none()
+    )
+
+    return
+
+
 @router.post("/{game_id}/player/{player_id}/integrated")
 def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """

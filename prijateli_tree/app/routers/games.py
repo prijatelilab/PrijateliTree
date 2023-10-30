@@ -56,48 +56,6 @@ def route_game_player_access(
         )
 
 
-@router.post("/guess")
-def make_guess(game_id: int, player_id: int, guess: str, db: Session = Depends(get_db)):
-    """
-    Function that updates the player's guess in the database
-    """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
-
-        # Get game type data
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    bag = game_type.bag
-
-    # Check if bag is red or blue
-    balls_counter = Counter(bag)
-    if balls_counter["R"] > balls_counter["B"]:
-        correct_answer = "R"
-    elif balls_counter["R"] < balls_counter["B"]:
-        correct_answer = "B"
-
-    # Query last answer
-    last_answer = db.query(GameAnswer).filter_by(game_player_id=player_id, id=game_id)
-    if last_answer is None:
-        current_round = 1
-    else:
-        current_round = last_answer.round + 1
-
-    # Record the answer
-    new_answer = GameAnswer(
-        game_player_id=player_id,
-        player_answer=guess,
-        correct_answer=correct_answer,
-        round=current_round,
-    )
-
-    db.add(new_answer)
-    db.commit()
-    db.refresh(new_answer)
-
-    return {"status": "Guess recorded"}
-
-
 @router.post("/{game_id}/player/{player_id}/integrated")
 def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
@@ -140,11 +98,54 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(bag)
-        print(ball)
+        return {
+            "message": f"It's the first round! Here's the ball: {ball}. Make your guess now!",
+            "ball": ball,
+            "round": current_round,
+        }
 
         # Record the player's answer
 
 
 @router.post("/{game_id}/player/{player_id}/answer")
-def route_add_answer(game_id: int, player_id: int, player_answer: str):
-    pass
+def route_add_answer(
+    game_id: int, player_id: int, player_answer: str, db: Depends(get_db)
+):
+    """
+    Function that updates the player's guess in the database
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+        # Get game type data
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    bag = game_type.bag
+
+    # Check if bag is red or blue
+    balls_counter = Counter(bag)
+    if balls_counter["R"] > balls_counter["B"]:
+        correct_answer = "R"
+    elif balls_counter["R"] < balls_counter["B"]:
+        correct_answer = "B"
+
+    # Query last answer
+    last_answer = db.query(GameAnswer).filter_by(game_player_id=player_id, id=game_id)
+    if last_answer is None:
+        current_round = 1
+    else:
+        current_round = last_answer.round + 1
+
+    # Record the answer
+    new_answer = GameAnswer(
+        game_player_id=player_id,
+        player_answer=player_answer,
+        correct_answer=correct_answer,
+        round=current_round,
+    )
+
+    db.add(new_answer)
+    db.commit()
+    db.refresh(new_answer)
+
+    return {"status": "New answer recorded"}

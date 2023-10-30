@@ -107,6 +107,28 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         # Record the player's answer
 
 
+@router.get("/round-progress/{game_id}/{current_round}")
+def check_round_progress(
+    game_id: int, current_round: int, db: Session = Depends(get_db)
+):
+    total_players = db.query(Player).filter_by(game_id=game_id).count()
+    players_answered = (
+        db.query(GameAnswer).filter_by(game_id=game_id, round=current_round).count()
+    )
+
+    # Check if all players have provided their answers
+    if players_answered == total_players:
+        return {
+            "status": "ready_for_next_round",
+            "message": "All players have answered! Proceeding to the next round.",
+        }
+    else:
+        return {
+            "status": "waiting_for_players",
+            "message": f"Waiting for {total_players - players_answered} players to answer.",
+        }
+
+
 @router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(
     game_id: int, player_id: int, player_answer: str, db: Depends(get_db)

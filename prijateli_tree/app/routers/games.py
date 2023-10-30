@@ -19,6 +19,20 @@ def get_db():
         db.close()
 
 
+def get_bag_color(bag):
+    """
+    Gets color of the bag based on the number of red and blue balls
+    """
+    # Check if bag is red or blue
+    balls_counter = Counter(bag)
+    if balls_counter["R"] > balls_counter["B"]:
+        correct_answer = "R"
+    elif balls_counter["R"] < balls_counter["B"]:
+        correct_answer = "B"
+
+    return correct_answer
+
+
 @router.post("/")
 def route_create_game(
     game_data: GameCreate,
@@ -76,11 +90,7 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     bag = game_type.bag
 
     # Check if bag is red or blue
-    balls_counter = Counter(bag)
-    if balls_counter["R"] > balls_counter["B"]:
-        bag_color = "R"
-    elif balls_counter["R"] < balls_counter["B"]:
-        bag_color = "B"
+    correct_answer = get_bag_color(bag)
 
     if not game_type:
         raise HTTPException(status_code=400, detail="Game type not found")
@@ -148,12 +158,7 @@ def route_add_answer(
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     bag = game_type.bag
 
-    # Check if bag is red or blue
-    balls_counter = Counter(bag)
-    if balls_counter["R"] > balls_counter["B"]:
-        correct_answer = "R"
-    elif balls_counter["R"] < balls_counter["B"]:
-        correct_answer = "B"
+    correct_answer = get_bag_color(bag)
 
     # Check round progress
     game_answer = db.query(GameAnswer).filter_by(id=game_id).one_or_none()

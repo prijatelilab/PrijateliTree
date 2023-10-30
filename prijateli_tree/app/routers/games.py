@@ -70,6 +70,42 @@ def route_game_player_access(
         )
 
 
+@router.post("/{game_id}/player/{player_id}/answer")
+def route_add_answer(
+    game_id: int,
+    player_id: int,
+    player_answer: str,
+    db: Depends(get_db),
+    current_round: int,
+):
+    """
+    Function that updates the player's guess in the database
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+        # Get game type data
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    bag = game_type.bag
+
+    correct_answer = get_bag_color(bag)
+
+    # Record the answer
+    new_answer = GameAnswer(
+        game_player_id=player_id,
+        player_answer=player_answer,
+        correct_answer=correct_answer,
+        round=current_round,
+    )
+
+    db.add(new_answer)
+    db.commit()
+    db.refresh(new_answer)
+
+    return {"status": "New answer recorded"}
+
+
 @router.post("/{game_id}/player/{player_id}/integrated")
 def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
@@ -119,61 +155,3 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         # Show the neighbor's answers from the previous round
         # Update the player's answer if they want to
         pass
-
-
-@router.get("/round-progress/{game_id}/{current_round}")
-def check_round_progress(
-    game_id: int, current_round: int, db: Session = Depends(get_db)
-):
-    total_players = db.query(Player).filter_by(game_id=game_id).count()
-    players_answered = (
-        db.query(GameAnswer).filter_by(game_id=game_id, round=current_round).count()
-    )
-
-    # Check if all players have provided their answers
-    if players_answered == total_players:
-        return {
-            "status": "ready_for_next_round",
-            "message": "All players have answered! Proceeding to the next round.",
-        }
-    else:
-        return {
-            "status": "waiting_for_players",
-            "message": f"Waiting for {total_players - players_answered} players to answer.",
-        }
-
-
-@router.post("/{game_id}/player/{player_id}/answer")
-def route_add_answer(
-    game_id: int,
-    player_id: int,
-    player_answer: str,
-    db: Depends(get_db),
-    current_round: int,
-):
-    """
-    Function that updates the player's guess in the database
-    """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
-
-        # Get game type data
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    bag = game_type.bag
-
-    correct_answer = get_bag_color(bag)
-
-    # Record the answer
-    new_answer = GameAnswer(
-        game_player_id=player_id,
-        player_answer=player_answer,
-        correct_answer=correct_answer,
-        round=current_round,
-    )
-
-    db.add(new_answer)
-    db.commit()
-    db.refresh(new_answer)
-
-    return {"status": "New answer recorded"}

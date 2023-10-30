@@ -1,4 +1,5 @@
 import random
+from collections import Counter
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -6,7 +7,6 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, SessionLocal
 from prijateli_tree.app.schemas import GameCreate, PlayerCreate
-
 
 router = APIRouter()
 
@@ -56,6 +56,48 @@ def route_game_player_access(
         )
 
 
+@router.post("/guess")
+def make_guess(game_id: int, player_id: int, guess: str, db: Session = Depends(get_db)):
+    """
+    Function that updates the player's guess in the database
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+        # Get game type data
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    bag = game_type.bag
+
+    # Check if bag is red or blue
+    balls_counter = Counter(bag)
+    if balls_counter["R"] > balls_counter["B"]:
+        correct_answer = "R"
+    elif balls_counter["R"] < balls_counter["B"]:
+        correct_answer = "B"
+
+    # Query last answer
+    last_answer = db.query(GameAnswer).filter_by(game_player_id=player_id, id=game_id)
+    if last_answer is None:
+        current_round = 1
+    else:
+        current_round = last_answer.round + 1
+
+    # Record the answer
+    new_answer = GameAnswer(
+        game_player_id=player_id,
+        player_answer=guess,
+        correct_answer=correct_answer,
+        round=current_round,
+    )
+
+    db.add(new_answer)
+    db.commit()
+    db.refresh(new_answer)
+
+    return {"status": "Guess recorded"}
+
+
 @router.post("/{game_id}/player/{player_id}/integrated")
 def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
@@ -76,6 +118,11 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     bag = game_type.bag
 
     # Check if bag is red or blue
+    balls_counter = Counter(bag)
+    if balls_counter["R"] > balls_counter["B"]:
+        bag_color = "R"
+    elif balls_counter["R"] < balls_counter["B"]:
+        bag_color = "B"
 
     if not game_type:
         raise HTTPException(status_code=400, detail="Game type not found")
@@ -94,7 +141,8 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(bag)
         print(ball)
-        # Ask player to guess the ball
+
+        # Record the player's answer
 
 
 @router.post("/{game_id}/player/{player_id}/answer")

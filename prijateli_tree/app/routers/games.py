@@ -56,6 +56,7 @@ def route_game_player_access(
         )
 
 
+@router.post("/{game_id}/player/{player_id}/integrated")
 def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Logic for handling the integrated game
@@ -63,9 +64,6 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
-
-    num_rounds = game.rounds
-    game_type_id = game.game_type_id
     # Check if the player is in the game
     existing_player = (
         db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
@@ -74,8 +72,11 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=400, detail="Player is not in the game")
 
     # Get game type data
-    game_type = db.query(GameType).filter_by(id=game_type_id).one_or_none()
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     bag = game_type.bag
+
+    # Check if bag is red or blue
+
     if not game_type:
         raise HTTPException(status_code=400, detail="Game type not found")
 
@@ -86,13 +87,14 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     else:
         current_round = game_answer.round
 
-    if current_round > num_rounds:
+    if current_round > game.rounds:
         raise HTTPException(status_code=400, detail="Game is over")
 
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(bag)
         print(ball)
+        # Ask player to guess the ball
 
 
 @router.post("/{game_id}/player/{player_id}/answer")

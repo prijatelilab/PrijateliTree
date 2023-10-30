@@ -151,12 +151,12 @@ def route_add_answer(
     elif balls_counter["R"] < balls_counter["B"]:
         correct_answer = "B"
 
-    # Query last answer
-    last_answer = db.query(GameAnswer).filter_by(game_player_id=player_id, id=game_id)
-    if last_answer is None:
+    # Check round progress
+    game_answer = db.query(GameAnswer).filter_by(id=game_id).one_or_none()
+    if not game_answer:
         current_round = 1
     else:
-        current_round = last_answer.round + 1
+        current_round = game_answer.round
 
     # Record the answer
     new_answer = GameAnswer(

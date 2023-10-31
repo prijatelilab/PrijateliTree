@@ -4,17 +4,18 @@ import os
 from pathlib import Path
 from typing import Annotated, List
 
-from fastapi import FastAPI, Header, Request, Response
+from fastapi import Depends, FastAPI, Header, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_localization import TranslateJsonResponse
 from fastapi_login import LoginManager
+from sqlalchemy.orm import Session
 
 from prijateli_tree.app.config import config
-from prijateli_tree.app.database import Base, engine
+from prijateli_tree.app.database import Base, engine, get_db
 from prijateli_tree.app.routers import administration, games
-from prijateli_tree.app.schemas import LanguageTranslatableSchema
+from prijateli_tree.app.schemas import LanguageTranslatableSchema, User
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     KEY_ENV,
@@ -43,8 +44,13 @@ templates = Jinja2Templates(directory=str(Path(BASE_DIR, "templates")))
 
 login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/login")
 
+
 @login_manager.user_loader()
-def query_user(user_id: str):
+def query_user(
+    first_name: str, last_name: str, email: str, db: Session = Depends(get_db)
+):
+    user = User.query.filter_by()
+
 
 languages = {}
 for lang in glob.glob("languages/*.json"):

@@ -10,12 +10,13 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_localization import TranslateJsonResponse
 from fastapi_login import LoginManager
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.config import config
-from prijateli_tree.app.database import Base, engine, get_db
+from prijateli_tree.app.database import Base, User, engine, get_db
 from prijateli_tree.app.routers import administration, games
-from prijateli_tree.app.schemas import LanguageTranslatableSchema, User
+from prijateli_tree.app.schemas import LanguageTranslatableSchema
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     KEY_ENV,
@@ -46,10 +47,13 @@ login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/login")
 
 
 @login_manager.user_loader()
-def query_user(
-    first_name: str, last_name: str, email: str, db: Session = Depends(get_db)
-):
-    user = User.query.filter_by()
+def query_user(id: int, db: Session = Depends(get_db)):
+    return (
+        db.query(User)
+        .filter_by(id=id)
+        .filter(or_(User.role == "admin", User.role == "super-admin"))
+        .one_or_none()
+    )
 
 
 languages = {}

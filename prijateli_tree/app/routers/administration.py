@@ -1,7 +1,5 @@
 from fastapi import APIRouter
 
-from prijateli_tree.app.database import SessionLocal
-
 
 router = APIRouter()
 

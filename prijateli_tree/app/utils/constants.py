@@ -5,6 +5,7 @@ KEY_ENV = "ENV"
 KEY_ENV_DEV = "development"
 KEY_ENV_PROD = "production"
 KEY_ENV_TESTING = "testing"
+KEY_LOGIN_SECRET = "LOGIN_SECRET_KEY"
 
 # File Constants
 FILE_MODE_READ = "r"

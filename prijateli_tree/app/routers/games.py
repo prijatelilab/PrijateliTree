@@ -3,8 +3,7 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import SessionLocal
-from prijateli_tree.app.database import get_db
+from prijateli_tree.app.database import SessionLocal, get_db
 from prijateli_tree.app.schemas import Game, GameCreate, PlayerCreate
 
 

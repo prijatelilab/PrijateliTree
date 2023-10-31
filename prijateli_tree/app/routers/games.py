@@ -103,7 +103,7 @@ def route_add_answer(
     db.commit()
     db.refresh(new_answer)
 
-    return {"status": "New answer recorded"}
+    return {"status": "New answer recorded", "round": current_round}
 
 
 @router.get("/{game_id}/player/{player_id}/answer")
@@ -158,15 +158,10 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(bag)
-        return {
-            "message": f"It's the first round! Here's the ball: {ball}. Make your guess now!",
-            "ball": ball,
-            "round": current_round,
-        }
-
-        # Record the player's answer
+        route_add_answer(game_id, player_id, ball, db, current_round)
 
     else:
+        get_previous_answers(game_id, player_id, db)
         # Show the player the previous round's answer
         # Show the neighbor's answers from the previous round
         # Update the player's answer if they want to

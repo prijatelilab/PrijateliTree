@@ -13,8 +13,10 @@ repos:
       - id: check-xml
       - id: check-yaml
       - id: end-of-file-fixer
+        exclude: /prijateli_tree/app/static
       - id: check-symlinks
       - id: mixed-line-ending
+        exclude: /prijateli_tree/app/static
       - id: sort-simple-yaml
       - id: fix-encoding-pragma
         args:

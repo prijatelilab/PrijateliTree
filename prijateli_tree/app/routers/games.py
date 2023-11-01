@@ -108,7 +108,7 @@ def route_add_answer(
     return {"status": "New answer recorded", "round": current_round}
 
 
-@router.get("/{game_id}/player/{player_id}/answer")
+@router.get("/{game_id}/player/{player_id}/previous_answers")
 def get_previous_answers(
     game_id: int, player_id: int, game_type: str, db: Session = Depends(get_db)
 ):
@@ -210,9 +210,10 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         ball = random.choice(bag)
         route_add_answer(game_id, player_id, ball, db, current_round)
 
-    else:
+    elif current_round < game.rounds:
         get_previous_answers(game_id, player_id, db)
-        # Show the player the previous round's answer
-        # Show the neighbor's answers from the previous round
-        # Update the player's answer if they want to
+        # Update the player's answer if they want to - HOW?!
+    else:
+        # Final round
+        get_previous_answers(game_id, player_id, db)
         pass

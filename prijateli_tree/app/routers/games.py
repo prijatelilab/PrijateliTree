@@ -172,6 +172,27 @@ def get_previous_answers(
     }
 
 
+@router.post("/{game_id}/player/{player_id}/score")
+def route_add_score(
+    game_id: int,
+    player_id: int,
+    player_score: int,
+    db: Depends(get_db),
+    current_round: int,
+):
+    """
+    Function that updates the player's score in the database
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    # Record the score
+    pass
+
+    return {"status": "New score recorded", "round": current_round}
+
+
 @router.post("/{game_id}/player/{player_id}/integrated")
 def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """

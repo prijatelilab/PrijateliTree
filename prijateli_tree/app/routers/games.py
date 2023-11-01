@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, SessionLocal
 from prijateli_tree.app.schemas import GameCreate, PlayerCreate
+from prijateli_tree.app.utils.games import Game as GameUtil
 
 
 router = APIRouter()
@@ -108,7 +109,9 @@ def route_add_answer(
 
 
 @router.get("/{game_id}/player/{player_id}/answer")
-def get_previous_answers(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def get_previous_answers(
+    game_id: int, player_id: int, game_type: str, db: Session = Depends(get_db)
+):
     """
     Function that returns the player's previous answer
     from the last round, along with the answers of their neighbors
@@ -141,10 +144,31 @@ def get_previous_answers(game_id: int, player_id: int, db: Session = Depends(get
     )
     player_position = player.position
 
+    # Use game utils to get the player's neighbors
+    game_util = GameUtil(game_type)
+    neighbors = game_util.neighbors[player_position]
+
+    # Get the neighbors' previous answers
+    neighbor_1_answer_obj = (
+        db.query(GameAnswer)
+        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
+        .one_or_none()
+    )
+
+    neighbor_1_answer = neighbor_1_answer_obj.player_answer
+
+    neighbor_2_answer_obj = (
+        db.query(GameAnswer)
+        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
+        .one_or_none()
+    )
+
+    neighbor_2_answer = neighbor_2_answer_obj.player_answer
+
     return {
         "your_previous_answer": player_answer,
-        "neighbor_1_previous_answer": "",
-        "neighbor_2_previous_answer": "",
+        "neighbor_1_previous_answer": neighbor_1_answer,
+        "neighbor_2_previous_answer": neighbor_2_answer,
     }
 
 

@@ -114,13 +114,38 @@ def get_previous_answers(game_id: int, player_id: int, db: Session = Depends(get
     from the last round, along with the answers of their neighbors
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
-    previous_answer = (
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+    total_players = db.query(Player).filter_by(game_id=game_id).count()
+    total_answers = db.query(GameAnswer).filter_by(game_id=game_id).count()
+    current_round = total_answers // total_players + 1
+
+    if current_round == 1:
+        raise HTTPException(status_code=400, detail="No previous answers")
+
+    else:
+        last_round = current_round - 1
+
+    # Get the player's previous answer
+    player_answer_obj = (
         db.query(GameAnswer)
-        .filter_by(game_id=game_id, player_id=player_id)
+        .filter_by(game_id=game_id, player_id=player_id, round=last_round)
         .one_or_none()
     )
 
-    return
+    player_answer = player_answer_obj.player_answer
+
+    # Get the player's neighbors
+    player = (
+        db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
+    )
+    player_position = player.position
+
+    return {
+        "your_previous_answer": player_answer,
+        "neighbor_1_previous_answer": "",
+        "neighbor_2_previous_answer": "",
+    }
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")

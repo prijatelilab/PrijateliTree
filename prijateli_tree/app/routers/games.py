@@ -229,12 +229,18 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(bag)
-        route_add_answer(game_id, player_id, ball, db, current_round)
+        # Player answers and we record it
+        route_add_answer(game_id, player_id, "", db, current_round)
 
     elif current_round < game.rounds:
         get_previous_answers(game_id, player_id, db)
         # Update the player's answer if they want to - HOW?!
+        route_add_answer(game_id, player_id, "", db, current_round)
     else:
         # Final round
         get_previous_answers(game_id, player_id, db)
-        pass
+        # Update the player's answer if they want to - HOW?!
+        route_add_answer(game_id, player_id, "", db, current_round)
+        # Calculate the score
+        # Update the player's score
+        route_add_score(game_id, player_id, "", db, current_round)

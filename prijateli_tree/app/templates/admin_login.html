@@ -2,17 +2,27 @@
 {% block title %}
   PrijateliTree - Admin Login
 {% endblock title %}
+{% block helper_script %}
+  <script>
+   document.addEventListener('DOMContentLoaded', function() {
+     const elem = document.querySelector('#birth_date');
+     const instance = M.Timepicker.init(elem, {
+       autoClose: true,
+       defaultDate:Date.now(),
+       format: 'mm/dd/yyyy'
+     });
+   });
+  </script>
+{% endblock helper_script %}
 {% block content %}
-<form class="mui-form">
-  <legend>First Name</legend>
-  <div class="mui-textfield">
-    <input type="email">
-    <label>First Name</label>
-  </div>
-  <legend>Last Name</legend>
-  <div class="mui-textfield">
-    <textarea placeholder="Textarea"></textarea>
-  </div>
-  <button type="submit" class="mui-btn mui-btn--raised">Submit</button>
-</form>
+  <form class="row" style="gap: 1em;" method="post">
+    <div class="s12 m6 input-field outlined">
+      <input id="email" type="email" placeholder=" " maxlength="40">
+      <label for="email">Email Address</label>
+    </div>
+    <div class="s12 m6 input-field outlined">
+      <input id="birth_date" type="text" class="datepicker">
+      <label for="birth_date">Birthdate</label>
+    </div>
+  </form>
 {% endblock content %}

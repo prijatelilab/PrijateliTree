@@ -15,10 +15,17 @@
         Prijateli Tree
       {% endblock title %}
     </title>
-    <link href="{{ url_for('static', path='/materialize.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/materialize.min.css') }}"
+          rel="stylesheet">
+    <link href="{{ url_for('static', path='/custom.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', path='/materialize.min.js') }}">
   </head>
   <body role="document">
+    <nav>
+      <div class="nav-wrapper">
+        <div id="app-logo"></div>
+      </div>
+    </nav>
     {% block content %}
     {% endblock content %}
   </body>

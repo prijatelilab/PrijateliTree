@@ -17,6 +17,8 @@ BALL_RED = "R"
 NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"
+ROLE_ADMIN = "admin"
+ROLE_SUPER_ADMIN = "super-admin"
 
 # Language Constants
 LANGUAGE_ALBANIAN = "al"

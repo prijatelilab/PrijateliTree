@@ -15,9 +15,7 @@
   </script>
 {% endblock helper_script %}
 {% block content %}
-  <form class="row"
-        method="post"
-        action="{{ url_for('confirm_login' }}">
+  <form class="row" method="post" action="{{ url_for('confirm_login' }}">
     <div class="s12 m6 input-field outlined">
       <input id="email" name="email" type="email" placeholder=" " maxlength="40">
       <label for="email">Email Address</label>

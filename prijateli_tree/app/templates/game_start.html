@@ -7,6 +7,15 @@
     <h2 style="color:red;">Red</h2>
     <h3>or</h3>
     <h2 style="color:blue;">Blue!</h2>
-    <button class="button" onclick="startGame()">I'm Ready!</button>
+    <form class="row"
+    method="post"
+    action="{{ url_for('confirm_ready') }}">
+    <button class="btn icon-right waves-effect waves-light"
+            type="submit"
+            value="submit">
+    I'm Ready!<i class="material-icons right">send</i>
+    </button>
+    </form>
+    
 
 {% endblock content %}

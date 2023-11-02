@@ -11,6 +11,8 @@ FILE_MODE_READ = "r"
 STANDARD_ENCODING = "utf-8"
 
 # Game Constants
+BALL_BLUE = "B"
+BALL_RED = "R"
 NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"

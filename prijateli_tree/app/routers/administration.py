@@ -1,7 +1,9 @@
 from datetime import datetime
+from http import HTTPStatus
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
@@ -22,12 +24,14 @@ def get_db():
 router = APIRouter()
 
 
-@router.get("/")
-def admin_page():
+@router.get("/", response_class=HTMLResponse)
+def admin_page(user=Depends(login_manager.optional)):
+    if user is None:
+        return RedirectResponse("admin_login", status_code=HTTPStatus.UNAUTHORIZED)
     return {"message": "Admin getting schwifty"}
 
 
-@router.get("/login")
+@router.get("/login", response_class=HTMLResponse)
 def admin_login():
     return templates.TemplateResponse("admin_login.html")
 
@@ -45,7 +49,7 @@ def confirm_login(
         .filter(or_(User.role == ROLE_ADMIN, User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
-    if not user:
+    if user is None:
         raise InvalidCredentialsException
 
     access_token = login_manager.create_access_token(data={"sub": email})

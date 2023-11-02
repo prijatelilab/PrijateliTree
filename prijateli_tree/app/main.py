@@ -47,10 +47,10 @@ login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/login")
 
 
 @login_manager.user_loader()
-def query_user(id: int, db: Session = Depends(get_db)):
+def query_user(user_id: int, db: Session = Depends(get_db)):
     return (
         db.query(User)
-        .filter_by(id=id)
+        .filter_by(id=user_id)
         .filter(or_(User.role == "admin", User.role == "super-admin"))
         .one_or_none()
     )

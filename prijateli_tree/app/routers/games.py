@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, SessionLocal
 from prijateli_tree.app.schemas import GameCreate, PlayerCreate
 from prijateli_tree.app.utils.games import Game as GameUtil
-
+from prijateli_tree.app.utils.constants import WINNING_SCORE
 
 router = APIRouter()
 
@@ -216,9 +216,8 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
 def route_add_score(
     game_id: int,
     player_id: int,
-    player_score: int,
+    player_answer: str,
     db: Depends(get_db),
-    current_round: int,
 ):
     """
     Function that updates the player's score in the database
@@ -227,10 +226,28 @@ def route_add_score(
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
-    # Record the score
-    pass
+    # Find out the correct answer
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    bag = game_type.bag
 
-    return {"status": "New score recorded", "round": current_round}
+    # Check if bag is red or blue
+    correct_answer = get_bag_color(bag)
+
+    # Get the player's previous answer
+    latest_answers = get_previous_answers(game_id, player_id, db)
+    player_answer = latest_answers["your_previous_answer"]
+
+    if player_answer == correct_answer:
+        # Create a new DENIR object
+        # TODO - Calculate DENIR based on score and update
+        return {"status": f"Congratulations! You won, your score is {WINNING_SCORE}"}
+
+    else:
+        # Create a new DENIR object
+        # Update with 0 denirs
+        return {
+            "status": f"Better luck next time! Your score would've been {WINNING_SCORE}"
+        }
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")
@@ -248,13 +265,6 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     if not existing_player:
         raise HTTPException(status_code=400, detail="Player is not in the game")
 
-    # Get game type data
-    # game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    # bag = game_type.bag
-
-    # Check if bag is red or blue
-    # correct_answer = get_bag_color(bag)
-
     # Get current round
     current_round = get_current_round(game_id, db)
 
@@ -271,5 +281,4 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         # Update the player's answer if they want to - HOW?!
         route_add_answer(game_id, player_id, "", db, current_round)
         # Calculate the score
-        # Update the player's score
         route_add_score(game_id, player_id, "", db, current_round)

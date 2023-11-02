@@ -9,7 +9,6 @@ from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, Sess
 from prijateli_tree.app.schemas import GameCreate, PlayerCreate
 from prijateli_tree.app.utils.games import Game as GameUtil
 
-
 router = APIRouter()
 
 
@@ -33,6 +32,17 @@ def get_bag_color(bag):
         correct_answer = "B"
 
     return correct_answer
+
+
+def get_current_round(game_id: int, db: Session = Depends(get_db)):
+    """
+    Gets the game's current round given the game id
+    """
+    total_players = db.query(Player).filter_by(game_id=game_id).count()
+    total_answers = db.query(GameAnswer).filter_by(game_id=game_id).count()
+    current_round = total_answers // total_players + 1
+
+    return current_round
 
 
 @router.post("/")
@@ -119,9 +129,9 @@ def get_previous_answers(
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
-    total_players = db.query(Player).filter_by(game_id=game_id).count()
-    total_answers = db.query(GameAnswer).filter_by(game_id=game_id).count()
-    current_round = total_answers // total_players + 1
+
+    # Get current round
+    current_round = get_current_round(game_id, db)
 
     if current_round == 1:
         raise HTTPException(status_code=400, detail="No previous answers")
@@ -172,6 +182,35 @@ def get_previous_answers(
     }
 
 
+@router.get("/{game_id}/player/{player_id}/round")
+def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
+    """
+    Function that returns the current round
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    # Get current round
+    current_round = get_current_round(game_id, db)
+
+    # Get game type data
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    if not game_type:
+        raise HTTPException(status_code=400, detail="Game type not found")
+
+    bag = game_type.bag
+
+    if current_round == 1:
+        # Pick a random letter from the bag and show it to the player
+        ball = random.choice(bag)
+        return {"round": current_round, "ball": ball}
+    else:
+        # Show the player their previous answer and the answers of their neighbors
+        previous_answers = get_previous_answers(game_id, player_id, db)
+        return {"round": current_round, "previous_answers": previous_answers}
+
+
 @router.post("/{game_id}/player/{player_id}/score")
 def route_add_score(
     game_id: int,
@@ -209,36 +248,25 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=400, detail="Player is not in the game")
 
     # Get game type data
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    bag = game_type.bag
+    # game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    # bag = game_type.bag
 
     # Check if bag is red or blue
-    correct_answer = get_bag_color(bag)
-
-    if not game_type:
-        raise HTTPException(status_code=400, detail="Game type not found")
+    # correct_answer = get_bag_color(bag)
 
     # Get current round
-    total_players = db.query(Player).filter_by(game_id=game_id).count()
-    total_answers = db.query(GameAnswer).filter_by(game_id=game_id).count()
-    current_round = total_answers // total_players + 1
+    current_round = get_current_round(game_id, db)
 
     if current_round > game.rounds:
         raise HTTPException(status_code=400, detail="Game is over")
 
-    if current_round == 1:
-        # Pick a random letter from the bag and show it to the player
-        ball = random.choice(bag)
-        # Player answers and we record it
-        route_add_answer(game_id, player_id, "", db, current_round)
-
-    elif current_round < game.rounds:
-        get_previous_answers(game_id, player_id, db)
+    if current_round < game.rounds:
+        view_round(game_id, player_id, db)
         # Update the player's answer if they want to - HOW?!
         route_add_answer(game_id, player_id, "", db, current_round)
     else:
         # Final round
-        get_previous_answers(game_id, player_id, db)
+        view_round(game_id, player_id, db)
         # Update the player's answer if they want to - HOW?!
         route_add_answer(game_id, player_id, "", db, current_round)
         # Calculate the score

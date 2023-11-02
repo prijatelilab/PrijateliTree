@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, SessionLocal
 from prijateli_tree.app.main import templates
 from prijateli_tree.app.schemas import GameCreate, PlayerCreate
-from prijateli_tree.app.utils.constants import WINNING_SCORE
+from prijateli_tree.app.utils.constants import WINNING_SCORE, BALL_BLUE, BALL_RED
 from prijateli_tree.app.utils.games import Game as GameUtil
 
 
@@ -31,10 +31,11 @@ def get_bag_color(bag):
     """
     # Check if bag is red or blue
     balls_counter = Counter(bag)
-    if balls_counter["R"] > balls_counter["B"]:
-        correct_answer = "R"
-    elif balls_counter["R"] < balls_counter["B"]:
-        correct_answer = "B"
+    correct_answer = False
+    if balls_counter[BALL_RED] > balls_counter[BALL_BLUE]:
+        correct_answer = BALL_RED
+    elif balls_counter[BALL_RED] < balls_counter[BALL_BLUE]:
+        correct_answer = BALL_BLUE
 
     return correct_answer
 

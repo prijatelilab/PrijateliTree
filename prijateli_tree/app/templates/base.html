@@ -15,17 +15,19 @@
         Prijateli Tree
       {% endblock title %}
     </title>
-    <link href="{{ url_for('static', path='/materialize.min.css') }}"
+    <link href="{{ url_for('static', path='/bootstrap.min.css') }}"
           rel="stylesheet">
     <link href="{{ url_for('static', path='/custom.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', path='/materialize.min.js') }}">
+    <link href="{{ url_for('static', path='/bootstrap.bundle.min.js') }}">
     {% block helper_script %}
     {% endblock helper_script %}
   </head>
   <body role="document">
-    <nav>
-      <div class="nav-wrapper">
-        <div id="app-logo"></div>
+    <nav class="navbar bg-body-tertiary">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <img src="/images/logo.png" alt="UChicago" width="30" height="24">
+        </a>
       </div>
     </nav>
     {% block content %}

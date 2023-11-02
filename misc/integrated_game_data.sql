@@ -22,11 +22,11 @@ VALUES
 
 /* Add users to game */
 INSERT INTO game_players
-    (created_by, game_id, user_id, position, name_hidden)
+    (created_by, game_id, user_id, position, name_hidden, ready)
 VALUES
-    (1, 1, 2, 1, FALSE),
-    (1, 1, 3, 2, FALSE),
-    (1, 1, 4, 3, FALSE),
-    (1, 1, 5, 4, FALSE),
-    (1, 1, 6, 3, FALSE),
-    (1, 1, 7, 4, FALSE);
+    (1, 1, 2, 1, FALSE, FALSE),
+    (1, 1, 3, 2, FALSE, FALSE),
+    (1, 1, 4, 3, FALSE, FALSE),
+    (1, 1, 5, 4, FALSE, FALSE),
+    (1, 1, 6, 3, FALSE, FALSE),
+    (1, 1, 7, 4, FALSE, FALSE);

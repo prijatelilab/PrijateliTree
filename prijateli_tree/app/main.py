@@ -25,6 +25,8 @@ from prijateli_tree.app.utils.constants import (
     LANGUAGE_ENGLISH,
     LANGUAGE_MACEDONIAN,
     LANGUAGE_TURKISH,
+    ROLE_ADMIN,
+    ROLE_SUPER_ADMIN,
     STANDARD_ENCODING,
 )
 
@@ -43,7 +45,7 @@ app.mount(
 templates = Jinja2Templates(directory=str(Path(BASE_DIR, "templates")))
 
 
-login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/login")
+login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/admin/login")
 
 
 @login_manager.user_loader()
@@ -51,7 +53,7 @@ def query_user(user_id: int, db: Session = Depends(get_db)):
     return (
         db.query(User)
         .filter_by(id=user_id)
-        .filter(or_(User.role == "admin", User.role == "super-admin"))
+        .filter(or_(User.role == ROLE_ADMIN, User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
 

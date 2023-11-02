@@ -12,6 +12,8 @@ FILE_MODE_READ = "r"
 STANDARD_ENCODING = "utf-8"
 
 # Game Constants
+BALL_BLUE = "B"
+BALL_RED = "R"
 NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"
@@ -29,3 +31,6 @@ REGEX_PHONE_NUMBER = (
     r"^(?:\d{8}(?:\d{2}(?:\d{2})?)?|\(\+?\d{2,3}\)\s?(?:\d{4}[\s*.-]?\d{4}"
     r"|\d{3}[\s*.-]?\d{3}|\d{2}([\s*.-]?)\d{2}\1\d{2}(?:\1\d{2})?))$"
 )
+
+# SCORE CONSTANT
+WINNING_SCORE = 100

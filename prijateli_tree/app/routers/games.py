@@ -6,15 +6,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, SessionLocal
+from prijateli_tree.app.main import templates
 from prijateli_tree.app.schemas import GameCreate, PlayerCreate
 from prijateli_tree.app.utils.constants import WINNING_SCORE
 from prijateli_tree.app.utils.games import Game as GameUtil
-from prijateli_tree.app.main import templates
 
 
 router = APIRouter()
 
 lol = templates
+
 
 def get_db():
     db = SessionLocal()

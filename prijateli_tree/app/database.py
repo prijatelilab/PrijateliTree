@@ -197,6 +197,7 @@ class Player(Base):
     )
     position = Column(Integer, nullable=False)
     name_hidden = Column(Boolean, nullable=False)
+    ready = Column(Boolean, nullable=False, default=False)
     game = relationship(
         "Game",
         foreign_keys="[game_players.user_id, game_players.game_id]",

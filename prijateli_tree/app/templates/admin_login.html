@@ -15,14 +15,17 @@
   </script>
 {% endblock helper_script %}
 {% block content %}
-  <form class="row" style="gap: 1em;" method="post">
+  <form class="row"
+        style="gap: 1em"
+        method="post"
+        action="{{ url_for('confirm_login' }}">
     <div class="s12 m6 input-field outlined">
-      <input id="email" type="email" placeholder=" " maxlength="40">
+      <input id="email" name="email" type="email" placeholder=" " maxlength="40">
       <label for="email">Email Address</label>
     </div>
     <div class="s12 m6 input-field outlined">
-      <input id="birth_date" type="text" class="datepicker">
-      <label for="birth_date">Birthdate</label>
+      <input id="birthdate" name="birthdate_str" type="text" class="datepicker">
+      <label for="birthdate">Birthdate</label>
     </div>
   </form>
 {% endblock content %}

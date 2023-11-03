@@ -22,12 +22,13 @@
     {% block helper_script %}
     {% endblock helper_script %}
   </head>
-  <body role="document">
+  <body role="document" data-bs-theme="dark">
     <nav class="navbar bg-body-tertiary">
-      <div class="container">
-        <a class="navbar-brand" href="#">
-          <img src="/images/logo.png" alt="UChicago" width="30" height="24">
-        </a>
+      <div class="container-fluid">
+        <div class="navbar-brand">
+          <img src="../static/images/logo.png" alt="UChicago" height="35">
+          <span>Prijateli Tree</span>
+        </div>
       </div>
     </nav>
     {% block content %}

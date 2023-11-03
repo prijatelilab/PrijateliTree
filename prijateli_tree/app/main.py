@@ -37,12 +37,12 @@ config = config[os.getenv(KEY_ENV)]
 
 app = FastAPI(debug=config.DEBUG)
 
-BASE_DIR = Path(__file__).resolve().parent
+base_dir = Path(__file__).resolve().parent
 
 app.mount(
-    "/static", StaticFiles(directory=str(Path(BASE_DIR, "static"))), name="static"
+    "/static", StaticFiles(directory=str(Path(base_dir, "static"))), name="static"
 )
-templates = Jinja2Templates(directory=str(Path(BASE_DIR, "templates")))
+templates = Jinja2Templates(directory=str(Path(base_dir, "templates")))
 
 
 login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/admin/login")

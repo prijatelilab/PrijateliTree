@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
@@ -6,13 +7,17 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import SessionLocal, User
-from prijateli_tree.app.main import login_manager
-from prijateli_tree.app.utils.constants import ROLE_ADMIN, ROLE_SUPER_ADMIN
+from prijateli_tree.app.utils.constants import (
+    KEY_LOGIN_SECRET,
+    ROLE_ADMIN,
+    ROLE_SUPER_ADMIN,
+)
 
 
 base_dir = Path(__file__).resolve().parent
@@ -28,6 +33,18 @@ def get_db():
 
 
 router = APIRouter()
+
+login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/login")
+
+
+@login_manager.user_loader()
+def query_user(user_id: int, db: Session = Depends(get_db)):
+    return (
+        db.query(User)
+        .filter_by(id=user_id)
+        .filter(or_(User.role == ROLE_ADMIN, User.role == ROLE_SUPER_ADMIN))
+        .one_or_none()
+    )
 
 
 @router.get("/", response_class=HTMLResponse)

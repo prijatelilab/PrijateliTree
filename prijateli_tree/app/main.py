@@ -4,29 +4,23 @@ import os
 from pathlib import Path
 from typing import Annotated, List
 
-from fastapi import Depends, FastAPI, Header, Request, Response
+from fastapi import FastAPI, Header, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_localization import TranslateJsonResponse
-from fastapi_login import LoginManager
-from sqlalchemy import or_
-from sqlalchemy.orm import Session
 
 from prijateli_tree.app.config import config
-from prijateli_tree.app.database import Base, User, engine, get_db
+from prijateli_tree.app.database import Base, engine
 from prijateli_tree.app.routers import administration, games
 from prijateli_tree.app.schemas import LanguageTranslatableSchema
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     KEY_ENV,
-    KEY_LOGIN_SECRET,
     LANGUAGE_ALBANIAN,
     LANGUAGE_ENGLISH,
     LANGUAGE_MACEDONIAN,
     LANGUAGE_TURKISH,
-    ROLE_ADMIN,
-    ROLE_SUPER_ADMIN,
     STANDARD_ENCODING,
 )
 
@@ -43,19 +37,6 @@ app.mount(
     "/static", StaticFiles(directory=str(Path(base_dir, "static"))), name="static"
 )
 templates = Jinja2Templates(directory=str(Path(base_dir, "templates")))
-
-
-login_manager = LoginManager(os.getenv(KEY_LOGIN_SECRET), "/admin/login")
-
-
-@login_manager.user_loader()
-def query_user(user_id: int, db: Session = Depends(get_db)):
-    return (
-        db.query(User)
-        .filter_by(id=user_id)
-        .filter(or_(User.role == ROLE_ADMIN, User.role == ROLE_SUPER_ADMIN))
-        .one_or_none()
-    )
 
 
 languages = {}

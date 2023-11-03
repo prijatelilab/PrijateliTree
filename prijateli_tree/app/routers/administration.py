@@ -4,7 +4,7 @@ from http import HTTPStatus
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
@@ -55,8 +55,8 @@ def admin_page(user=Depends(login_manager.optional)):
 
 
 @router.get("/login", response_class=HTMLResponse)
-def admin_login():
-    return templates.TemplateResponse("admin_login.html")
+def admin_login(request: Request):
+    return templates.TemplateResponse("admin_login.html", {"request": request})
 
 
 @router.post("/login")

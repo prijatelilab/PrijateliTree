@@ -1,8 +1,10 @@
 import random
 from collections import Counter
 from http import HTTPStatus
+from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import Game, GameAnswer, GameType, Player, SessionLocal
@@ -19,6 +21,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+base_dir = Path(__file__).resolve().parent
+templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
 
 
 def get_bag_color(bag):
@@ -69,7 +75,7 @@ def route_game_player_access(
         )
 
 
-@router.post("/{game_id}/player/{player_id}/answer")
+# @router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(
     game_id: int,
     player_id: int,
@@ -190,7 +196,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         return {"round": current_round, "previous_answers": previous_answers}
 
 
-@router.post("/{game_id}/player/{player_id}/score")
+# @router.post("/{game_id}/player/{player_id}/score")
 def route_add_score(
     game_id: int,
     player_id: int,

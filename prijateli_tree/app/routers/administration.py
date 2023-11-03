@@ -1,13 +1,11 @@
 from datetime import datetime
 from http import HTTPStatus
-from typing import Annotated
 from pathlib import Path
-
-from fastapi import APIRouter
-from fastapi.templating import Jinja2Templates
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
@@ -15,6 +13,7 @@ from sqlalchemy.orm import Session
 from prijateli_tree.app.database import SessionLocal, User
 from prijateli_tree.app.main import login_manager
 from prijateli_tree.app.utils.constants import ROLE_ADMIN, ROLE_SUPER_ADMIN
+
 
 base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))

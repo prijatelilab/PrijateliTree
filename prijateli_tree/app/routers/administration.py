@@ -50,8 +50,11 @@ def query_user(user_id: int, db: Session = Depends(get_db)):
 @router.get("/", response_class=HTMLResponse)
 def admin_page(user=Depends(login_manager.optional)):
     if user is None:
-        return RedirectResponse("admin_login", status_code=HTTPStatus.UNAUTHORIZED)
-    return {"message": "Admin getting schwifty"}
+        return RedirectResponse(
+            "admin_login", status_code=HTTPStatus.UNAUTHORIZED
+        )
+    else:
+        return RedirectResponse("dashboard", status_code=HTTPStatus.FOUND)
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -75,5 +78,14 @@ def confirm_login(
     if user is None:
         raise InvalidCredentialsException
 
-    access_token = login_manager.create_access_token(data={"sub": email})
-    return {"access_token": access_token}
+    token = login_manager.create_access_token(data={"sub": email})
+    response = RedirectResponse(url="/protected", status_code=HTTPStatus.FOUND)
+    login_manager.set_cookie(response, token)
+    return response
+
+
+@router.get("/dashboard")
+def dashboard(request: Request, user=Depends(login_manager)):
+    return templates.TemplateResponse(
+        "admin_dashboard.html", {"request": request}
+    )

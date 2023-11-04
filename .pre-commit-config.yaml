@@ -80,3 +80,4 @@ repos:
         args:
           - --safe
           - --target-version=py311
+          - --line-length=80

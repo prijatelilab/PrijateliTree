@@ -263,7 +263,9 @@ class PlayerSurveyAnswer(Base):
     )
     player_id = Column(
         Integer,
-        ForeignKey("game_players.id", name="player_survey_answers_player_id_fkey"),
+        ForeignKey(
+            "game_players.id", name="player_survey_answers_player_id_fkey"
+        ),
         nullable=False,
     )
     survey_id = Column(

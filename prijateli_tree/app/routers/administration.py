@@ -77,7 +77,7 @@ def confirm_login(
     if user is None:
         raise InvalidCredentialsException
 
-    token = login_manager.create_access_token(data={"sub": user.uuid})
+    token = login_manager.create_access_token(data={"sub": str(user.uuid)})
     response = RedirectResponse(url="dashboard", status_code=HTTPStatus.FOUND)
     login_manager.set_cookie(response, token)
     return response

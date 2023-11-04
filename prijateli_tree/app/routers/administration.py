@@ -40,8 +40,8 @@ login_manager = LoginManager(
 
 
 @login_manager.user_loader(db_session=SessionLocal())
-def query_user(user_id: int, db_session: Session):
-    return db_session.query(User).filter_by(id=user_id).one_or_none()
+def query_user(user_uuid: int, db_session: Session):
+    return db_session.query(User).filter_by(uuid=user_uuid).one_or_none()
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -77,7 +77,7 @@ def confirm_login(
     if user is None:
         raise InvalidCredentialsException
 
-    token = login_manager.create_access_token(data={"sub": user.id})
+    token = login_manager.create_access_token(data={"sub": user.uuid})
     response = RedirectResponse(url="dashboard", status_code=HTTPStatus.FOUND)
     login_manager.set_cookie(response, token)
     return response

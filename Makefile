@@ -1,4 +1,4 @@
-default: build start create_db
+default: build create_db start
 
 .PHONY: build
 build:
@@ -16,7 +16,7 @@ create_db:
 		sleep 1; \
 	done
 	@echo "Postgres is up"
-	docker-compose run --rm web alembic --config=./prijateli_tree/migrations/alembic.ini stamp head
+	docker-compose run --rm web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
 
 .PHONY: lint
 lint:

@@ -12,7 +12,9 @@ from sqlalchemy import (
     String,
     UniqueConstraint,
     create_engine,
+    text,
 )
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.sql import func as sql_func
@@ -57,6 +59,11 @@ class User(Base):
     qualtrics_id = Column(String, nullable=True)
     role = Column(String, nullable=False)
     grade_level = Column(Integer, nullable=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        unique=True,
+        server_default=text("gen_random_uuid()"),
+    )
     language_id = Column(
         Integer,
         ForeignKey("languages.id", name="users_languages_id_fkey"),
@@ -176,7 +183,9 @@ class Game(Base):
     )
     rounds = Column(Integer, nullable=False)
     practice = Column(Boolean, default=False, nullable=False)
-    game_type = relationship("GameType", back_populates="games")
+    game_type = relationship(
+        "GameType", foreign_keys="Game.game_type_id", back_populates="games"
+    )
     players = relationship("Player", back_populates="game")
 
 
@@ -208,12 +217,10 @@ class Player(Base):
     ready = Column(Boolean, nullable=False, default=False)
     game = relationship(
         "Game",
-        foreign_keys="[game_players.user_id, game_players.game_id]",
         back_populates="players",
     )
     answers = relationship(
         "GameAnswer",
-        foreign_keys="[game_players.user_id, game_players.game_id]",
         back_populates="player",
     )
 
@@ -234,7 +241,10 @@ class GameAnswer(Base):
     player_answer = Column(String(1), nullable=False)
     correct_answer = Column(String(1), nullable=False)
     round = Column(Integer, nullable=False)
-    player = relationship("Player", back_populates="answers")
+    player = relationship(
+        "Player",
+        back_populates="answers",
+    )
 
 
 class Survey(Base):

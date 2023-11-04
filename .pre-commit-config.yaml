@@ -44,6 +44,7 @@ repos:
         args:
           - --lines-after-imports=2
           - --profile=black
+          - --line-length=80
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0

@@ -14,7 +14,9 @@ down_revision = "5489fb45e45e"
 
 
 def upgrade():
-    op.add_column("game_players", sa.Column("ready", sa.Boolean(), nullable=False))
+    op.add_column(
+        "game_players", sa.Column("ready", sa.Boolean(), nullable=False)
+    )
 
 
 def downgrade():

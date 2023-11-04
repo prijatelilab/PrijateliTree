@@ -31,9 +31,15 @@ def upgrade():
         sa.Column("name", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.add_column("users", sa.Column("qualtrics_id", sa.String(), nullable=True))
-    op.add_column("users", sa.Column("grade_level", sa.Integer(), nullable=True))
-    op.add_column("users", sa.Column("high_school_id", sa.Integer(), nullable=True))
+    op.add_column(
+        "users", sa.Column("qualtrics_id", sa.String(), nullable=True)
+    )
+    op.add_column(
+        "users", sa.Column("grade_level", sa.Integer(), nullable=True)
+    )
+    op.add_column(
+        "users", sa.Column("high_school_id", sa.Integer(), nullable=True)
+    )
     op.drop_constraint("users_phone_number_key", "users", type_="unique")
     op.create_foreign_key(
         "users_high_schools_id_fkey",
@@ -58,10 +64,16 @@ def upgrade():
 def downgrade():
     op.add_column(
         "users",
-        sa.Column("phone_number", sa.VARCHAR(), autoincrement=False, nullable=True),
+        sa.Column(
+            "phone_number", sa.VARCHAR(), autoincrement=False, nullable=True
+        ),
     )
-    op.drop_constraint("users_high_schools_id_fkey", "users", type_="foreignkey")
-    op.create_unique_constraint("users_phone_number_key", "users", ["phone_number"])
+    op.drop_constraint(
+        "users_high_schools_id_fkey", "users", type_="foreignkey"
+    )
+    op.create_unique_constraint(
+        "users_phone_number_key", "users", ["phone_number"]
+    )
     op.drop_column("users", "high_school_id")
     op.drop_column("users", "grade_level")
     op.drop_column("users", "qualtrics_id")

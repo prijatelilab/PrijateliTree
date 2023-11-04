@@ -33,9 +33,12 @@ app = FastAPI(debug=config.DEBUG)
 base_dir = Path(__file__).resolve().parent
 
 app.mount(
-    "/static", StaticFiles(directory=str(Path(base_dir, "static"))), name="static"
+    "/static",
+    StaticFiles(directory=str(Path(base_dir, "static"))),
+    name="static",
 )
 templates = Jinja2Templates(directory=str(Path(base_dir, "templates")))
+
 
 languages = {}
 for lang in glob.glob("languages/*.json"):
@@ -60,7 +63,9 @@ app.include_router(
     "/language",
     response_class=TranslateJsonResponse,
 )
-def set_language(accept_language: Annotated[str | None, Header()] = None) -> Response:
+def set_language(
+    accept_language: Annotated[str | None, Header()] = None
+) -> Response:
     if accept_language in [
         LANGUAGE_ENGLISH,
         LANGUAGE_TURKISH,

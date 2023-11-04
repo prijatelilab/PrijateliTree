@@ -25,7 +25,6 @@ def upgrade():
         ),
     )
     op.create_unique_constraint(None, "users", ["uuid"])
-    # ### end Alembic commands ###
 
 
 def downgrade():

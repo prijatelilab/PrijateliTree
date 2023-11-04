@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+  PrijateliTree - Admin Login
+{% endblock title %}
+{% block content %}
+  <div class="container-sm">
+    <div class="row">
+      <div class="form-container bg-light-subtle col-xs-12 offset-md-1 col-md-10 offset-lg-1 col col-lg-10 offset-xl-3 col col-xl-6">
+        <form method="post" action='{{ url_for("confirm_login") }}'>
+          <div class="mb-3 row">
+            <label for="first_name" class="col-sm-3 col-form-label">First Name:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="first_name" name="first_name">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="last_name" class="col-sm-3 col-form-label">Last Name:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="last_name" name="last_name">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="email" class="col-sm-3 col-form-label">Email:</label>
+            <div class="col-sm-9">
+              <input type="email" class="form-control" id="email" name="email">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

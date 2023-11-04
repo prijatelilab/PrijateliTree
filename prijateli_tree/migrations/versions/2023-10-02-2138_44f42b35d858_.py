@@ -114,7 +114,9 @@ def upgrade():
             ["created_by"], ["users.id"], name="sessions_created_by_fkey"
         ),
         sa.ForeignKeyConstraint(
-            ["session_type_id"], ["users.id"], name="sessions_session_type_id_fkey"
+            ["session_type_id"],
+            ["users.id"],
+            name="sessions_session_type_id_fkey",
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -167,7 +169,9 @@ def upgrade():
             name="denirs_created_by_session_id_fkey",
         ),
         sa.ForeignKeyConstraint(
-            ["created_by_user_id"], ["users.id"], name="denirs_created_by_user_id_fkey"
+            ["created_by_user_id"],
+            ["users.id"],
+            name="denirs_created_by_user_id_fkey",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("external_id"),
@@ -183,10 +187,14 @@ def upgrade():
         sa.Column("player_id", sa.Integer(), nullable=False),
         sa.Column("survey_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["player_id"], ["users.id"], name="player_survey_answers_player_id_fkey"
+            ["player_id"],
+            ["users.id"],
+            name="player_survey_answers_player_id_fkey",
         ),
         sa.ForeignKeyConstraint(
-            ["survey_id"], ["surveys.id"], name="player_survey_answers_survey_id_fkey"
+            ["survey_id"],
+            ["surveys.id"],
+            name="player_survey_answers_survey_id_fkey",
         ),
         sa.PrimaryKeyConstraint(
             "player_id", "survey_id", name="player_survey_answers_pkey"
@@ -215,7 +223,9 @@ def upgrade():
             ["player_id"], ["users.id"], name="session_answers_player_id_fkey"
         ),
         sa.ForeignKeyConstraint(
-            ["session_id"], ["sessions.id"], name="session_answers_session_id_fkey"
+            ["session_id"],
+            ["sessions.id"],
+            name="session_answers_session_id_fkey",
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -244,7 +254,9 @@ def upgrade():
             ["player_id"], ["users.id"], name="session_players_player_id_fkey"
         ),
         sa.ForeignKeyConstraint(
-            ["session_id"], ["sessions.id"], name="session_players_session_id_fkey"
+            ["session_id"],
+            ["sessions.id"],
+            name="session_players_session_id_fkey",
         ),
         sa.PrimaryKeyConstraint("id"),
     )

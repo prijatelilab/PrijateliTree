@@ -1,3 +1,10 @@
+/* Create languages */
+INSERT INTO languages
+	(id, created_at, name, abbr)
+VALUES
+	()
+
+
 /* Create users */
 INSERT INTO users
     (first_name, last_name, email, birth_date, role, language_id, high_school_id)

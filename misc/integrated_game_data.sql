@@ -4,8 +4,17 @@ INSERT INTO languages
 VALUES
 	(1, '01/01/2000', 'English', 'en'),
 	(2, '01/01/2000', 'Macedonian', 'mk'),
-	(3, '01/01/2000', 'English', 'al'),
-	(4, '01/01/2000', 'English', 'tr'),
+	(3, '01/01/2000', 'Albanian', 'al'),
+	(4, '01/01/2000', 'Turkish', 'tr');
+
+
+/* Create highschools */
+INSERT INTO high_schools
+    (id, created_at, name)
+VALUES
+    (1, '01/01/2000', 'school 1'),
+    (2, '01/01/2000', 'school 2'),
+    (3, '01/01/2000', 'school 3');
 
 
 

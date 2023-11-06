@@ -2,7 +2,11 @@
 INSERT INTO languages
 	(id, created_at, name, abbr)
 VALUES
-	()
+	(1, '01/01/2000', 'English', 'en'),
+	(2, '01/01/2000', 'Macedonian', 'mk'),
+	(3, '01/01/2000', 'English', 'al'),
+	(4, '01/01/2000', 'English', 'tr'),
+
 
 
 /* Create users */

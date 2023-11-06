@@ -14,7 +14,7 @@ from prijateli_tree.app.utils.constants import (
 class BaseConfig:
     def __init__(self):
         # App Settings
-        self.DEBUG = False
+        self.DEBUG = True
         self.LANGUAGE = LANGUAGE_ENGLISH
         self.TESTING = False
 

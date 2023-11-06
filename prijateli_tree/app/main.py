@@ -2,7 +2,7 @@ import glob
 import json
 import os
 from pathlib import Path
-from typing import Annotated, List
+from typing import Annotated
 
 from fastapi import FastAPI, Header, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -13,7 +13,6 @@ from fastapi_localization import TranslateJsonResponse
 from prijateli_tree.app.config import config
 from prijateli_tree.app.database import Base, engine
 from prijateli_tree.app.routers import administration, games
-from prijateli_tree.app.schemas import LanguageTranslatableSchema
 from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     KEY_ENV,
@@ -31,12 +30,15 @@ config = config[os.getenv(KEY_ENV)]
 
 app = FastAPI(debug=config.DEBUG)
 
-BASE_DIR = Path(__file__).resolve().parent
+base_dir = Path(__file__).resolve().parent
 
 app.mount(
-    "/static", StaticFiles(directory=str(Path(BASE_DIR, "static"))), name="static"
+    "/static",
+    StaticFiles(directory=str(Path(base_dir, "static"))),
+    name="static",
 )
-templates = Jinja2Templates(directory=str(Path(BASE_DIR, "templates")))
+templates = Jinja2Templates(directory=str(Path(base_dir, "templates")))
+
 
 languages = {}
 for lang in glob.glob("languages/*.json"):
@@ -60,9 +62,10 @@ app.include_router(
 @app.post(
     "/language",
     response_class=TranslateJsonResponse,
-    response_model=List[LanguageTranslatableSchema],
 )
-def set_language(accept_language: Annotated[str | None, Header()] = None) -> Response:
+def set_language(
+    accept_language: Annotated[str | None, Header()] = None
+) -> Response:
     if accept_language in [
         LANGUAGE_ENGLISH,
         LANGUAGE_TURKISH,

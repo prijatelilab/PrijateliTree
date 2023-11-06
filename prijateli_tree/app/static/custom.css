@@ -1,10 +1,5 @@
-.nav-wrapper {
-    padding: 3px 10px 0 10px;
-}
-
-#app-logo {
-    background-image: url("images/logo.png");
-    background-repeat: no-repeat, repeat;
-    background-size: 45px;
-    height: 95%;
+.form-container {
+    margin-top: 50px;
+    padding: 30px 10px;
+    border-radius: 10px;
 }

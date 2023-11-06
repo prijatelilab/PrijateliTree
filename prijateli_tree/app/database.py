@@ -12,7 +12,9 @@ from sqlalchemy import (
     String,
     UniqueConstraint,
     create_engine,
+    text,
 )
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.sql import func as sql_func
@@ -22,11 +24,18 @@ from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 engine = create_engine(
     os.getenv(KEY_DATABASE_URI),
-    echo=True,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class User(Base):
@@ -49,6 +58,11 @@ class User(Base):
     qualtrics_id = Column(String, nullable=True)
     role = Column(String, nullable=False)
     grade_level = Column(Integer, nullable=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        unique=True,
+        server_default=text("gen_random_uuid()"),
+    )
     language_id = Column(
         Integer,
         ForeignKey("languages.id", name="users_languages_id_fkey"),
@@ -168,7 +182,9 @@ class Game(Base):
     )
     rounds = Column(Integer, nullable=False)
     practice = Column(Boolean, default=False, nullable=False)
-    game_type = relationship("GameType", back_populates="games")
+    game_type = relationship(
+        "GameType", foreign_keys="Game.game_type_id", back_populates="games"
+    )
     players = relationship("Player", back_populates="game")
 
 
@@ -200,12 +216,10 @@ class Player(Base):
     ready = Column(Boolean, nullable=False, default=False)
     game = relationship(
         "Game",
-        foreign_keys="[game_players.user_id, game_players.game_id]",
         back_populates="players",
     )
     answers = relationship(
         "GameAnswer",
-        foreign_keys="[game_players.user_id, game_players.game_id]",
         back_populates="player",
     )
 
@@ -226,7 +240,10 @@ class GameAnswer(Base):
     player_answer = Column(String(1), nullable=False)
     correct_answer = Column(String(1), nullable=False)
     round = Column(Integer, nullable=False)
-    player = relationship("Player", back_populates="answers")
+    player = relationship(
+        "Player",
+        back_populates="answers",
+    )
 
 
 class Survey(Base):
@@ -255,7 +272,9 @@ class PlayerSurveyAnswer(Base):
     )
     player_id = Column(
         Integer,
-        ForeignKey("game_players.id", name="player_survey_answers_player_id_fkey"),
+        ForeignKey(
+            "game_players.id", name="player_survey_answers_player_id_fkey"
+        ),
         nullable=False,
     )
     survey_id = Column(

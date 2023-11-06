@@ -30,7 +30,9 @@ def upgrade():
         ),
     )
     op.create_unique_constraint(
-        "uix_session_answer", "player_survey_answers", ["player_id", "survey_id"]
+        "uix_session_answer",
+        "player_survey_answers",
+        ["player_id", "survey_id"],
     )
     op.drop_constraint(
         "player_survey_answers_player_id_fkey",
@@ -44,7 +46,9 @@ def upgrade():
         ["player_id"],
         ["id"],
     )
-    op.add_column("session_players", sa.Column("user_id", sa.Integer(), nullable=False))
+    op.add_column(
+        "session_players", sa.Column("user_id", sa.Integer(), nullable=False)
+    )
     op.drop_constraint(
         "session_players_player_id_fkey", "session_players", type_="foreignkey"
     )
@@ -61,7 +65,9 @@ def upgrade():
 def downgrade():
     op.add_column(
         "session_players",
-        sa.Column("player_id", sa.INTEGER(), autoincrement=False, nullable=False),
+        sa.Column(
+            "player_id", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
     )
     op.drop_constraint(
         "session_players_player_id_fkey", "session_players", type_="foreignkey"
@@ -86,7 +92,9 @@ def downgrade():
         ["player_id"],
         ["id"],
     )
-    op.drop_constraint("uix_session_answer", "player_survey_answers", type_="unique")
+    op.drop_constraint(
+        "uix_session_answer", "player_survey_answers", type_="unique"
+    )
     op.drop_column("player_survey_answers", "id")
     op.create_primary_key(
         "player_survey_answers_pkey",

@@ -5,6 +5,7 @@ KEY_ENV = "ENV"
 KEY_ENV_DEV = "development"
 KEY_ENV_PROD = "production"
 KEY_ENV_TESTING = "testing"
+KEY_LOGIN_SECRET = "LOGIN_SECRET_KEY"
 
 # File Constants
 FILE_MODE_READ = "r"
@@ -16,6 +17,8 @@ BALL_RED = "R"
 NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"
+ROLE_ADMIN = "admin"
+ROLE_SUPER_ADMIN = "super-admin"
 
 # Language Constants
 LANGUAGE_ALBANIAN = "al"

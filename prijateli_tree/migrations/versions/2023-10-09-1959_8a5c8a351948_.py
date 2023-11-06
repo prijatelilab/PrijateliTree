@@ -179,10 +179,15 @@ def downgrade():
     op.add_column(
         "denirs",
         sa.Column(
-            "created_by_session_id", sa.INTEGER(), autoincrement=False, nullable=True
+            "created_by_session_id",
+            sa.INTEGER(),
+            autoincrement=False,
+            nullable=True,
         ),
     )
-    op.drop_constraint("denirs_created_by_game_id_fkey", "denirs", type_="foreignkey")
+    op.drop_constraint(
+        "denirs_created_by_game_id_fkey", "denirs", type_="foreignkey"
+    )
     op.create_foreign_key(
         "denirs_created_by_session_id_fkey",
         "denirs",
@@ -215,16 +220,26 @@ def downgrade():
             autoincrement=False,
             nullable=False,
         ),
-        sa.Column("created_by", sa.INTEGER(), autoincrement=False, nullable=False),
-        sa.Column("session_id", sa.INTEGER(), autoincrement=False, nullable=False),
-        sa.Column("name_hidden", sa.BOOLEAN(), autoincrement=False, nullable=False),
-        sa.Column("position", sa.INTEGER(), autoincrement=False, nullable=False),
+        sa.Column(
+            "created_by", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
+        sa.Column(
+            "session_id", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
+        sa.Column(
+            "name_hidden", sa.BOOLEAN(), autoincrement=False, nullable=False
+        ),
+        sa.Column(
+            "position", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
         sa.Column("user_id", sa.INTEGER(), autoincrement=False, nullable=False),
         sa.ForeignKeyConstraint(
             ["created_by"], ["users.id"], name="session_players_created_by_fkey"
         ),
         sa.ForeignKeyConstraint(
-            ["session_id"], ["sessions.id"], name="session_players_session_id_fkey"
+            ["session_id"],
+            ["sessions.id"],
+            name="session_players_session_id_fkey",
         ),
         sa.ForeignKeyConstraint(
             ["user_id"], ["users.id"], name="session_players_player_id_fkey"
@@ -292,14 +307,23 @@ def downgrade():
             nullable=False,
         ),
         sa.Column(
-            "player_answer", sa.VARCHAR(length=1), autoincrement=False, nullable=False
+            "player_answer",
+            sa.VARCHAR(length=1),
+            autoincrement=False,
+            nullable=False,
         ),
         sa.Column(
-            "correct_answer", sa.VARCHAR(length=1), autoincrement=False, nullable=False
+            "correct_answer",
+            sa.VARCHAR(length=1),
+            autoincrement=False,
+            nullable=False,
         ),
         sa.Column("round", sa.INTEGER(), autoincrement=False, nullable=False),
         sa.Column(
-            "session_player_id", sa.INTEGER(), autoincrement=False, nullable=False
+            "session_player_id",
+            sa.INTEGER(),
+            autoincrement=False,
+            nullable=False,
         ),
         sa.ForeignKeyConstraint(
             ["session_player_id"],
@@ -332,15 +356,23 @@ def downgrade():
             autoincrement=False,
             nullable=False,
         ),
-        sa.Column("created_by", sa.INTEGER(), autoincrement=False, nullable=False),
-        sa.Column("session_type_id", sa.INTEGER(), autoincrement=False, nullable=False),
+        sa.Column(
+            "created_by", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
+        sa.Column(
+            "session_type_id", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
         sa.Column("rounds", sa.INTEGER(), autoincrement=False, nullable=False),
-        sa.Column("practice", sa.BOOLEAN(), autoincrement=False, nullable=False),
+        sa.Column(
+            "practice", sa.BOOLEAN(), autoincrement=False, nullable=False
+        ),
         sa.ForeignKeyConstraint(
             ["created_by"], ["users.id"], name="sessions_created_by_fkey"
         ),
         sa.ForeignKeyConstraint(
-            ["session_type_id"], ["users.id"], name="sessions_session_type_id_fkey"
+            ["session_type_id"],
+            ["users.id"],
+            name="sessions_session_type_id_fkey",
         ),
         sa.PrimaryKeyConstraint("id", name="sessions_pkey"),
     )

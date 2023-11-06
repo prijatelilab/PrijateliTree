@@ -15,7 +15,8 @@ down_revision = "44f42b35d858"
 
 def upgrade():
     op.add_column(
-        "session_answers", sa.Column("session_player_id", sa.Integer(), nullable=False)
+        "session_answers",
+        sa.Column("session_player_id", sa.Integer(), nullable=False),
     )
     op.drop_constraint(
         "session_answers_session_id_fkey", "session_answers", type_="foreignkey"
@@ -52,14 +53,20 @@ def downgrade():
     op.drop_column("session_players", "position")
     op.add_column(
         "session_answers",
-        sa.Column("session_id", sa.INTEGER(), autoincrement=False, nullable=False),
+        sa.Column(
+            "session_id", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
     )
     op.add_column(
         "session_answers",
-        sa.Column("player_id", sa.INTEGER(), autoincrement=False, nullable=False),
+        sa.Column(
+            "player_id", sa.INTEGER(), autoincrement=False, nullable=False
+        ),
     )
     op.drop_constraint(
-        "session_answers_session_players_fkey", "session_answers", type_="foreignkey"
+        "session_answers_session_players_fkey",
+        "session_answers",
+        type_="foreignkey",
     )
     op.create_foreign_key(
         "session_answers_player_id_fkey",

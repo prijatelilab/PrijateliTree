@@ -32,7 +32,7 @@ VALUES
     (9, '01/01/2000'::date, 1, 'turkish', 'name', 'i@email.com', '01/01/2008'::date, 1, 'student', 4, 2, 3, gen_random_uuid ()),
     (10, '01/01/2000'::date, 1, 'turkish', 'name', 'j@email.com', '01/01/2009'::date, 1, 'student', 4, 3, 3, gen_random_uuid ());
 
-   
+
  /* Create game_type */
  insert into game_types
  	(id, created_at, network, bag)
@@ -40,8 +40,8 @@ VALUES
  	(1, '01/01/2000'::date, 'integrated', 'BBBBRR'),
  	(2, '01/01/2000'::date, 'segregated', 'BBRRRR'),
  	(3, '01/01/2000'::date, 'self-selected', 'BBBBRR');
-   
-   
+
+
 /* Create game */
 INSERT INTO games
     (id, created_at, created_by, game_type_id, rounds, practice)

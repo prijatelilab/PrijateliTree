@@ -63,7 +63,9 @@ app.include_router(
     "/language",
     response_class=TranslateJsonResponse,
 )
-def set_language(accept_language: Annotated[str | None, Header()] = None) -> Response:
+def set_language(
+    accept_language: Annotated[str | None, Header()] = None
+) -> Response:
     if accept_language in [
         LANGUAGE_ENGLISH,
         LANGUAGE_TURKISH,

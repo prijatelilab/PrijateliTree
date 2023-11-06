@@ -2,10 +2,10 @@
 INSERT INTO languages
 	(id, created_at, name, abbr)
 VALUES
-	(1, '01/01/2000'::date, 'English', 'en'),
-	(2, '01/01/2000'::date, 'Macedonian', 'mk'),
-	(3, '01/01/2000'::date, 'Albanian', 'al'),
-	(4, '01/01/2000'::date, 'Turkish', 'tr');
+	(1, '01/01/2000', 'English', 'en'),
+	(2, '01/01/2000', 'Macedonian', 'mk'),
+	(3, '01/01/2000', 'Albanian', 'al'),
+	(4, '01/01/2000', 'Turkish', 'tr');
 
 
 /* Create highschools */
@@ -33,11 +33,20 @@ VALUES
     (10, '01/01/2000'::date, 1, 'turkish', 'name', 'j@email.com', '01/01/2009'::date, 1, 'student', 4, 3, 3, gen_random_uuid ());
 
    
+ /* Create game_type */
+ insert into game_types
+ 	(id, created_at, network, bag)
+ values
+ 	(1, '01/01/2000'::date, 'integrated', 'BBBBRR'),
+ 	(2, '01/01/2000'::date, 'segregated', 'BBRRRR'),
+ 	(3, '01/01/2000'::date, 'self-selected', 'BBBBRR');
+   
+   
 /* Create game */
 INSERT INTO games
-    (created_by, game_type_id, rounds, practice)
+    (id, created_at, created_by, game_type_id, rounds, practice)
 VALUES
-    (1, 1, 10, FALSE);
+    (1, '01/01/2000'::date, 1, 1, 10, FALSE);
 
 /* Add users to game */
 INSERT INTO game_players

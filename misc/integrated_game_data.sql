@@ -2,10 +2,10 @@
 INSERT INTO languages
 	(id, created_at, name, abbr)
 VALUES
-	(1, '01/01/2000', 'English', 'en'),
-	(2, '01/01/2000', 'Macedonian', 'mk'),
-	(3, '01/01/2000', 'Albanian', 'al'),
-	(4, '01/01/2000', 'Turkish', 'tr');
+	(1, '01/01/2000'::date, 'English', 'en'),
+	(2, '01/01/2000'::date, 'Macedonian', 'mk'),
+	(3, '01/01/2000'::date, 'Albanian', 'al'),
+	(4, '01/01/2000'::date, 'Turkish', 'tr');
 
 
 /* Create highschools */

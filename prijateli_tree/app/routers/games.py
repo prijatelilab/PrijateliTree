@@ -190,7 +190,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NO_CONTENT, detail="game not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # Get current round
     current_round = get_current_round(game_id, db)
@@ -274,7 +274,7 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     current_round = get_current_round(game_id, db)
 
     if current_round > game.rounds:
-        raise HTTPException(status_code=HTTPStatus.NO_CONTENT, detail="Game is over")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Game is over")
 
     if current_round < game.rounds:
         view_round(game_id, player_id, db)

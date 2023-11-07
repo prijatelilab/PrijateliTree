@@ -57,7 +57,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)):
     Gets the game's current round given the game id
     """
     total_players = db.query(Player).filter_by(game_id=game_id).count()
-    total_answers = db.query(GameAnswer).filter_by(game_id=game_id).count()
+    total_answers = db.query(GameAnswer).filter_by(id=game_id).count()
     current_round = total_answers // total_players + 1
 
     return current_round

@@ -166,13 +166,13 @@ def get_previous_answers(
     # Get the neighbors' previous answers
     neighbor_1_answer_obj = (
         db.query(GameAnswer)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
+        .filter_by(id=game_id, round=last_round, position=neighbors[0])
         .one_or_none()
     )
 
     neighbor_2_answer_obj = (
         db.query(GameAnswer)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
+        .filter_by(id=game_id, round=last_round, position=neighbors[1])
         .one_or_none()
     )
 
@@ -199,7 +199,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     if not game_type:
         raise HTTPException(
-            status_code=HTTPStatus.NO_CONTENT, detail="Game type not found"
+            status_code=HTTPStatus.NOT_FOUND, detail="Game type not found"
         )
 
     bag = game_type.bag
@@ -226,7 +226,7 @@ def route_add_score(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NO_CONTENT, detail="game not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # Find out the correct answer
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()

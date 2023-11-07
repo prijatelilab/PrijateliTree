@@ -81,11 +81,11 @@ def route_game_player_access(
 ):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NO_CONTENT, detail="game not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     if len([player for player in game.players if player.user_id == player_id]) != 1:
         raise HTTPException(
-            status_code=HTTPStatus.NO_CONTENT, detail="player not found in game"
+            status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
         )
 
     return {"game_id": game_id, "player_id": player_id}
@@ -104,7 +104,7 @@ def route_add_answer(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NO_CONTENT, detail="game not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
         # Get game type data
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
@@ -135,14 +135,14 @@ def get_previous_answers(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NO_CONTENT, detail="game not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # Get current round
     current_round = get_current_round(game_id, db)
 
     if current_round == 1:
         raise HTTPException(
-            status_code=HTTPStatus.NO_CONTENT, detail="No previous answers"
+            status_code=HTTPStatus.NOT_FOUND, detail="No previous answers"
         )
     else:
         last_round = current_round - 1

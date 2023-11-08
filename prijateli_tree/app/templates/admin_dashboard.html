@@ -1,7 +1,21 @@
 {% extends "base.html" %}
 {% block title %}
-  PrijateliTree - Admin Login
+  PrijateliTree - Admin Dashboard
 {% endblock title %}
+{% block helper_script %}
+  <script>
+    $(document).ready(function () {
+      $('#games').DataTable();
+      $('#students').DataTable();
+      $('#denir_transactions').DataTable();
+    });
+  </script>
+{% endblock helper_script %}
 {% block content %}
-  IT WORKS
+  <table id="games" class="table table-hover">
+  </table>
+  <table id="students" class="table table-hover">
+  </table>
+  <table id="denir_transactions" class="table table-hover">
+  </table>
 {% endblock content %}

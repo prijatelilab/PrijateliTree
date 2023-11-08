@@ -10,10 +10,11 @@ from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import SessionLocal, User
+from prijateli_tree.app.database import Game, GameType, SessionLocal, User
 from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     ROLE_ADMIN,
+    ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
 )
 
@@ -47,9 +48,7 @@ def query_user(user_uuid: int, db_session: Session):
 @router.get("/", response_class=HTMLResponse)
 def admin_page(user=Depends(login_manager.optional)):
     if user is None:
-        return RedirectResponse(
-            "login", status_code=HTTPStatus.FOUND
-        )
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
     else:
         return RedirectResponse("dashboard", status_code=HTTPStatus.FOUND)
 
@@ -94,6 +93,17 @@ def logout():
 def dashboard(
     request: Request, user=Depends(login_manager), db: Session = Depends(get_db)
 ):
+    game_types = db.query(GameType).all()
+    games = db.query(Game).order_by(Game.created_at.desc()).all()
+    students = db.query(User).filter_by(role=ROLE_STUDENT).all()
+
     return templates.TemplateResponse(
-        "admin_dashboard.html", {"request": request, "user": user}
+        "admin_dashboard.html",
+        {
+            "request": request,
+            "user": user,
+            "game_types": game_types,
+            "games": games,
+            "students": students,
+        },
     )

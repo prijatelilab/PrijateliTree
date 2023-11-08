@@ -7,15 +7,63 @@
     $(document).ready(function () {
       $('#games').DataTable();
       $('#students').DataTable();
-      $('#denir_transactions').DataTable();
+      $('#denir-transactions').DataTable();
+      $('#game-types').DataTable();
     });
   </script>
 {% endblock helper_script %}
 {% block content %}
   <table id="games" class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Game Type</th>
+        <th scope="col">Rounds</th>
+        <th scope="col">Bag</th>
+        <th scope="col">IsPractice</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
   </table>
   <table id="students" class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Language</th>
+        <th scope="col">Email</th>
+        <th scope="col">Birthdate</th>
+        <th scope="col">Grade</th>
+        <th scope="col">High School</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
   </table>
-  <table id="denir_transactions" class="table table-hover">
+  <table id="denir-transactions" class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">User</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Game ID</th>
+        <th scope="col">Paid by User ID</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <table id="game-types" class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Network</th>
+        <th scope="col">Bag</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
   </table>
 {% endblock content %}

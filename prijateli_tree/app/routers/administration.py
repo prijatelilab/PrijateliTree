@@ -10,7 +10,13 @@ from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import Game, GameType, SessionLocal, User
+from prijateli_tree.app.database import (
+    Denirs,
+    Game,
+    GameType,
+    SessionLocal,
+    User,
+)
 from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     ROLE_ADMIN,
@@ -96,6 +102,9 @@ def dashboard(
     game_types = db.query(GameType).all()
     games = db.query(Game).order_by(Game.created_at.desc()).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
+    denir_transactions = (
+        db.query(Denirs).order_by(Denirs.created_at.desc()).all()
+    )
 
     return templates.TemplateResponse(
         "admin_dashboard.html",
@@ -105,5 +114,6 @@ def dashboard(
             "game_types": game_types,
             "games": games,
             "students": students,
+            "transactions": denir_transactions,
         },
     )

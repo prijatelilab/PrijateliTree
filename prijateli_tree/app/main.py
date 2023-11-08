@@ -80,5 +80,5 @@ def set_language(
 
 
 @app.get("/", response_class=HTMLResponse)
-def funky(request: Request):
+def home(request: Request):
     return templates.TemplateResponse("base.html", {"request": request})

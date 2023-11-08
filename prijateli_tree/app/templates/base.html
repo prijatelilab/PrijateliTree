@@ -29,6 +29,11 @@
           <img src="../static/images/logo.png" alt="UChicago" height="35">
           <span>Prijateli Tree</span>
         </div>
+        {% if user %}
+          <form class="d-flex" action='{{ url_for("logout") }}'>
+            <button class="btn btn-primary" type="submit">Logout</button>
+          </form>
+        {% endif %}
       </div>
     </nav>
     {% block content %}

@@ -48,7 +48,7 @@ def query_user(user_uuid: int, db_session: Session):
 def admin_page(user=Depends(login_manager.optional)):
     if user is None:
         return RedirectResponse(
-            "admin_login", status_code=HTTPStatus.UNAUTHORIZED
+            "login", status_code=HTTPStatus.FOUND
         )
     else:
         return RedirectResponse("dashboard", status_code=HTTPStatus.FOUND)
@@ -84,8 +84,8 @@ def confirm_login(
 
 
 @router.get("/logout", response_class=HTMLResponse)
-def logout(request: Request, user=Depends(login_manager)):
-    resp = RedirectResponse(url="admin_login", status_code=HTTPStatus.FOUND)
+def logout():
+    resp = RedirectResponse(url="login", status_code=HTTPStatus.FOUND)
     login_manager.set_cookie(resp, "")
     return resp
 
@@ -95,5 +95,5 @@ def dashboard(
     request: Request, user=Depends(login_manager), db: Session = Depends(get_db)
 ):
     return templates.TemplateResponse(
-        "admin_dashboard.html", {"request": request}
+        "admin_dashboard.html", {"request": request, "user": user}
     )

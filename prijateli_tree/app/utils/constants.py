@@ -18,6 +18,7 @@ NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"
 ROLE_ADMIN = "admin"
+ROLE_STUDENT = "student"
 ROLE_SUPER_ADMIN = "super-admin"
 
 # Language Constants

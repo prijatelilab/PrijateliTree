@@ -27,7 +27,11 @@
             </tr>
           </thead>
           <tbody>
-            {% if games|length == 0 %}<tr class="empty-table">There are no games currently in the system.</tr>{% endif %}
+            {% if games|length == 0 %}
+              <tr class="empty-table">
+                <td colspan="5">There are no games currently in the system.</td>
+              </tr>
+            {% endif %}
           </tbody>
         </table>
       </div>
@@ -46,7 +50,11 @@
             </tr>
           </thead>
           <tbody>
-            {% if students|length == 0 %}<tr class="empty-table">There are no students currently in the system.</tr>{% endif %}
+            {% if students|length == 0 %}
+              <tr class="empty-table">
+                <td colspan="8">There are no students currently in the system.</td>
+              </tr>
+            {% endif %}
           </tbody>
         </table>
       </div>
@@ -63,7 +71,9 @@
           </thead>
           <tbody>
             {% if transactions|length %}
-              <tr class="empty-table">There are no denir transactions currently in the system.</tr>
+              <tr class="empty-table">
+                <td colspan="5">There are no denir transactions currently in the system.</td>
+              </tr>
             {% endif %}
           </tbody>
         </table>
@@ -79,7 +89,9 @@
           </thead>
           <tbody>
             {% if game_types|length == 0 %}
-              <tr class="empty-table">There are no game types currently in the system.</tr>
+              <tr class="empty-table">
+                <td colspan="5">There are no game types currently in the system.</td>
+              </tr>
             {% endif %}
           </tbody>
         </table>

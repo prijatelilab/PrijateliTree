@@ -3,3 +3,7 @@
     padding: 30px 10px;
     border-radius: 10px;
 }
+
+tr.empty-table {
+    text-align: center;
+}

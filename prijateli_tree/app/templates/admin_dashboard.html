@@ -13,57 +13,77 @@
   </script>
 {% endblock helper_script %}
 {% block content %}
-  <table id="games" class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Game Type</th>
-        <th scope="col">Rounds</th>
-        <th scope="col">Bag</th>
-        <th scope="col">IsPractice</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <table id="students" class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Language</th>
-        <th scope="col">Email</th>
-        <th scope="col">Birthdate</th>
-        <th scope="col">Grade</th>
-        <th scope="col">High School</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <table id="denir-transactions" class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">User</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Game ID</th>
-        <th scope="col">Paid by User ID</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <table id="game-types" class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Network</th>
-        <th scope="col">Bag</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <table id="games" class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Game Type</th>
+              <th scope="col">Rounds</th>
+              <th scope="col">Bag</th>
+              <th scope="col">IsPractice</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if games|length == 0 %}<tr class="empty-table">There are no games currently in the system.</tr>{% endif %}
+          </tbody>
+        </table>
+      </div>
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <table id="students" class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Language</th>
+              <th scope="col">Email</th>
+              <th scope="col">Birthdate</th>
+              <th scope="col">Grade</th>
+              <th scope="col">High School</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if students|length == 0 %}<tr class="empty-table">There are no students currently in the system.</tr>{% endif %}
+          </tbody>
+        </table>
+      </div>
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <table id="denir-transactions" class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">User</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Game ID</th>
+              <th scope="col">Paid by User ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if transactions|length %}
+              <tr class="empty-table">There are no denir transactions currently in the system.</tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <table id="game-types" class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Network</th>
+              <th scope="col">Bag</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if game_types|length == 0 %}
+              <tr class="empty-table">There are no game types currently in the system.</tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 {% endblock content %}

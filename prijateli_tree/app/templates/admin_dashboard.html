@@ -4,18 +4,22 @@
 {% endblock title %}
 {% block helper_script %}
   <script>
-    $(document).ready(function () {
-      $('#games').DataTable();
-      $('#students').DataTable();
-      $('#denir-transactions').DataTable();
-      $('#game-types').DataTable();
-    });
+    // $(document).ready(function () {
+    //   $('#games').DataTable();
+    //   $('#students').DataTable();
+    //   $('#denir-transactions').DataTable();
+    //   $('#game-types').DataTable();
+    // });
   </script>
 {% endblock helper_script %}
 {% block content %}
   <div class="container-fluid">
     <div class="row">
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <button type="button"
+                class="btn btn-primary btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#new-game">New Game</button>
         <table id="games" class="table table-hover table-bordered caption-top">
           <caption>List of Games</caption>
           <thead>
@@ -62,7 +66,7 @@
           <tbody class="table-group-divider">
             {% if students|length == 0 %}
               <tr class="empty-table">
-                <td colspan="8">There are no students currently in the system.</td>
+                <td colspan="7">There are no students currently in the system.</td>
               </tr>
             {% endif %}
             {% for s in students|sort(attribute='high_school.name, last_name') %}
@@ -135,6 +139,25 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="new-game" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Create New Game</h1>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Create</button>
+        </div>
       </div>
     </div>
   </div>

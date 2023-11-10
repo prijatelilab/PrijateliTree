@@ -15,10 +15,18 @@
         Prijateli Tree
       {% endblock title %}
     </title>
-    <link href="{{ url_for('static', path='/bootstrap.min.css') }}"
+    <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}"
           rel="stylesheet">
-    <link href="{{ url_for('static', path='/custom.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', path='/bootstrap.bundle.min.js') }}">
+    <link href="{{ url_for('static', path='/css/custom.css') }}"
+          rel="stylesheet">
+    <script type="text/javascript"
+            src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', path='/js/jquery-3.6.0.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', path='/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', path='/js/dataTables.bootstrap5.min.js') }}"></script>
     {% block helper_script %}
     {% endblock helper_script %}
   </head>
@@ -29,6 +37,11 @@
           <img src="../static/images/logo.png" alt="UChicago" height="35">
           <span>Prijateli Tree</span>
         </div>
+        {% if user %}
+          <form class="d-flex" action='{{ url_for("logout") }}'>
+            <button class="btn btn-primary" type="submit">Logout</button>
+          </form>
+        {% endif %}
       </div>
     </nav>
     {% block content %}

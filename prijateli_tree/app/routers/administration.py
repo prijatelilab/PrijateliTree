@@ -97,8 +97,13 @@ def logout():
 
 @router.get("/dashboard", response_class=HTMLResponse)
 def dashboard(
-    request: Request, user=Depends(login_manager), db: Session = Depends(get_db)
+    request: Request,
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
 ):
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
     game_types = db.query(GameType).all()
     games = db.query(Game).order_by(Game.created_at.desc()).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()

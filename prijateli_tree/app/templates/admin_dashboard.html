@@ -16,7 +16,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="games" class="table table-hover">
+        <table id="games" class="table table-hover table-bordered caption-top">
+          <caption>List of Games</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -26,18 +27,27 @@
               <th scope="col">IsPractice</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="table-group-divider">
             {% if games|length == 0 %}
               <tr class="empty-table">
                 <td colspan="5">There are no games currently in the system.</td>
               </tr>
             {% endif %}
-            {% for g in games %}{% endfor %}
+            {% for g in games|sort(attribute='-created_at') %}
+              <tr>
+                <th>{{ g.id }}</th>
+                <td>{{ g.game_type.network|title }}</td>
+                <td>{{ g.rounds }}</td>
+                <td>{{ g.game_type.bag }}</td>
+                <td>{{ g.practice }}</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="students" class="table table-hover">
+        <table id="students" class="table table-hover table-bordered caption-top">
+          <caption>List of Students</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -45,58 +55,84 @@
               <th scope="col">Last</th>
               <th scope="col">Language</th>
               <th scope="col">Email</th>
-              <th scope="col">Birthdate</th>
               <th scope="col">Grade</th>
               <th scope="col">High School</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="table-group-divider">
             {% if students|length == 0 %}
               <tr class="empty-table">
                 <td colspan="8">There are no students currently in the system.</td>
               </tr>
             {% endif %}
-            {% for s in students %}{% endfor %}
+            {% for s in students|sort(attribute='high_school.name, last_name') %}
+              <tr>
+                <th>{{ s.id }}</th>
+                <td>{{ s.first_name }}</td>
+                <td>{{ s.last_name }}</td>
+                <td>{{ s.language.name }}</td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.grade_level }}</td>
+                <td>{{ s.high_school.name }}</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="denir-transactions" class="table table-hover">
+        <table id="denir-transactions"
+               class="table table-hover table-bordered caption-top">
+          <caption>List of Denir Transactions</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
               <th scope="col">User</th>
               <th scope="col">Amount</th>
               <th scope="col">Game ID</th>
-              <th scope="col">Paid by User ID</th>
             </tr>
           </thead>
-          <tbody>
-            {% if transactions|length %}
+          <tbody class="table-group-divider">
+            {% if transactions|length == 0 %}
               <tr class="empty-table">
                 <td colspan="5">There are no denir transactions currently in the system.</td>
               </tr>
             {% endif %}
-            {% for t in transactions %}{% endfor %}
+            {% for t in transactions %}
+              <tr>
+                <th>{{ t.id }}</th>
+                <td>{{ t.user.first_name + ' ' + t.user.last_name }}</td>
+                <td>{{ t.amount }}</td>
+                <td>{{ t.created_by_game_id }}</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="game-types" class="table table-hover">
+        <table id="game-types" class="table table-hover table-bordered caption-top">
+          <caption>List of Game Types</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Network</th>
               <th scope="col">Bag</th>
+              <th scope="col">Number of Games</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="table-group-divider">
             {% if game_types|length == 0 %}
               <tr class="empty-table">
                 <td colspan="5">There are no game types currently in the system.</td>
               </tr>
             {% endif %}
-            {% for gt in game_types %}{% endfor %}
+            {% for gt in game_types|sort(attribute='-created_at') %}
+              <tr>
+                <th>{{ gt.id }}</th>
+                <td>{{ gt.network|title }}</td>
+                <td>{{ gt.bag }}</td>
+                <td>{{ gt.games|length }}</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

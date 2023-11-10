@@ -105,11 +105,9 @@ def dashboard(
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
     game_types = db.query(GameType).all()
-    games = db.query(Game).order_by(Game.created_at.desc()).all()
+    games = db.query(Game).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
-    denir_transactions = (
-        db.query(Denirs).order_by(Denirs.created_at.desc()).all()
-    )
+    denir_transactions = db.query(Denirs).all()
 
     return templates.TemplateResponse(
         "admin_dashboard.html",

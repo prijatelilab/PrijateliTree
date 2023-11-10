@@ -1,0 +1,23 @@
+.form-container {
+    border-radius: 10px;
+    margin-top: 50px;
+    padding: 30px 10px;
+}
+
+div.table-container {
+    border-radius: 6px;
+    border: 1px solid #b0b6bc;
+    margin-top: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.table-container button {
+    float: right;
+}
+
+tr.empty-table {
+    text-align: center;
+}

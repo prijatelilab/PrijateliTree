@@ -10,10 +10,17 @@ from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import SessionLocal, User
+from prijateli_tree.app.database import (
+    Denirs,
+    Game,
+    GameType,
+    SessionLocal,
+    User,
+)
 from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     ROLE_ADMIN,
+    ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
 )
 
@@ -47,9 +54,7 @@ def query_user(user_uuid: int, db_session: Session):
 @router.get("/", response_class=HTMLResponse)
 def admin_page(user=Depends(login_manager.optional)):
     if user is None:
-        return RedirectResponse(
-            "admin_login", status_code=HTTPStatus.UNAUTHORIZED
-        )
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
     else:
         return RedirectResponse("dashboard", status_code=HTTPStatus.FOUND)
 
@@ -84,16 +89,34 @@ def confirm_login(
 
 
 @router.get("/logout", response_class=HTMLResponse)
-def logout(request: Request, user=Depends(login_manager)):
-    resp = RedirectResponse(url="admin_login", status_code=HTTPStatus.FOUND)
+def logout():
+    resp = RedirectResponse(url="login", status_code=HTTPStatus.FOUND)
     login_manager.set_cookie(resp, "")
     return resp
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
 def dashboard(
-    request: Request, user=Depends(login_manager), db: Session = Depends(get_db)
+    request: Request,
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
 ):
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    game_types = db.query(GameType).all()
+    games = db.query(Game).all()
+    students = db.query(User).filter_by(role=ROLE_STUDENT).all()
+    denir_transactions = db.query(Denirs).all()
+
     return templates.TemplateResponse(
-        "admin_dashboard.html", {"request": request}
+        "admin_dashboard.html",
+        {
+            "request": request,
+            "user": user,
+            "game_types": game_types,
+            "games": games,
+            "students": students,
+            "transactions": denir_transactions,
+        },
     )

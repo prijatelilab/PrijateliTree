@@ -28,5 +28,5 @@ VALUES
     (1, 1, 3, 2, FALSE, FALSE),
     (1, 1, 4, 3, FALSE, FALSE),
     (1, 1, 5, 4, FALSE, FALSE),
-    (1, 1, 6, 3, FALSE, FALSE),
-    (1, 1, 7, 4, FALSE, FALSE);
+    (1, 1, 6, 5, FALSE, FALSE),
+    (1, 1, 7, 6, FALSE, FALSE);

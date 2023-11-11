@@ -15,6 +15,7 @@ from prijateli_tree.app.database import (
     GameType,
     Player,
     SessionLocal,
+    User,
 )
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
@@ -215,6 +216,19 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
             status_code=HTTPStatus.NO_CONTENT, detail="game not found"
         )
 
+    player = None
+    for p in game.players:
+        if p.id == player_id:
+            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
+        )
+
+    # Here's where you can get the correct text for your templating.
+    # template_text = languages[player.language.abbr]
+
     # Get current round
     current_round = get_current_round(game_id, db)
 
@@ -250,8 +264,21 @@ def route_add_score(
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(
-            status_code=HTTPStatus.NO_CONTENT, detail="game not found"
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
+
+    player = None
+    for p in game.players:
+        if p.id == player_id:
+            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
+        )
+
+    # Here's where you can get the correct text for your templating.
+    # template_text = languages[player.language.abbr]
 
     # Find out the correct answer
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()

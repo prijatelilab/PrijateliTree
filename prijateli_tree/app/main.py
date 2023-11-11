@@ -1,5 +1,3 @@
-import glob
-import json
 import os
 from pathlib import Path
 from typing import Annotated
@@ -14,13 +12,11 @@ from prijateli_tree.app.config import config
 from prijateli_tree.app.database import Base, engine
 from prijateli_tree.app.routers import administration, games
 from prijateli_tree.app.utils.constants import (
-    FILE_MODE_READ,
     KEY_ENV,
     LANGUAGE_ALBANIAN,
     LANGUAGE_ENGLISH,
     LANGUAGE_MACEDONIAN,
     LANGUAGE_TURKISH,
-    STANDARD_ENCODING,
 )
 
 
@@ -38,14 +34,6 @@ app.mount(
     name="static",
 )
 templates = Jinja2Templates(directory=str(Path(base_dir, "templates")))
-
-
-languages = {}
-for lang in glob.glob("languages/*.json"):
-    lang_code = lang.split("\\")[1].split(".")[0]
-
-    with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
-        languages[lang_code] = json.load(file)
 
 app.include_router(
     administration.router,

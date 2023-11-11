@@ -125,15 +125,17 @@ def dashboard(
 @router.post("/game")
 def create_game(
     request: Request,
-    user=Depends(login_manager.optional),
-    db: Session = Depends(get_db),
     game_type: Annotated[str, Form()],
     rounds: Annotated[int, Form()],
     practice: Annotated[bool, Form()],
-
-    last_name: Annotated[str, Form()],
+    pos_one: Annotated[int, Form()],
+    pos_two: Annotated[int, Form()],
+    pos_three: Annotated[int, Form()],
+    pos_four: Annotated[int, Form()],
+    pos_five: Annotated[int, Form()],
+    pos_six: Annotated[int, Form()],
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
 ):
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
-
-

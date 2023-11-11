@@ -1,3 +1,5 @@
+import glob
+import json
 import random
 from collections import Counter
 from http import HTTPStatus
@@ -17,6 +19,8 @@ from prijateli_tree.app.database import (
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
     BALL_RED,
+    FILE_MODE_READ,
+    STANDARD_ENCODING,
     WINNING_SCORE,
 )
 from prijateli_tree.app.utils.games import Game as GameUtil
@@ -35,6 +39,13 @@ def get_db():
 
 base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
+
+languages = {}
+for lang in glob.glob("../languages/*.json"):
+    lang_code = lang.split("\\")[1].split(".")[0]
+
+    with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
+        languages[lang_code] = json.load(file)
 
 
 def get_bag_color(bag):

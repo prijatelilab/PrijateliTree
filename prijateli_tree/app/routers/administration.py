@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
@@ -14,6 +14,7 @@ from prijateli_tree.app.database import (
     Denirs,
     Game,
     GameType,
+    Player,
     SessionLocal,
     User,
 )
@@ -139,3 +140,34 @@ def create_game(
 ):
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    game = Game(
+        created_by=user.id,
+        game_type_id=game_type,
+        rounds=rounds,
+        practice=practice,
+    )
+
+    db.add(game)
+    db.commit()
+    db.refresh(game)
+
+    # TODO: Who has their name hidden?
+    pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
+    for i in range(0, 6):
+        db.add(
+            Player(
+                created_by=user.id,
+                game_id=game.id,
+                user_id=pos_players[i],
+                position=i + 1,
+            )
+        )
+
+    db.commit()
+    db.refresh(game)
+
+    return Response(
+        status_code=HTTPStatus.CREATED,
+        content={"request": request, "game": game},
+    )

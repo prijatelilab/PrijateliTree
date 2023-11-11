@@ -103,13 +103,13 @@ def route_game_player_access(
         )
 
 
-# @router.post("/{game_id}/player/{player_id}/answer")
+@router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(
     game_id: int,
     player_id: int,
     player_answer: str,
-    db: Depends(get_db),
     current_round: int,
+    db: Session = Depends(get_db),
 ):
     """
     Function that updates the player's guess in the database
@@ -141,7 +141,10 @@ def route_add_answer(
 
 
 def get_previous_answers(
-    game_id: int, player_id: int, game_type: str, db: Session
+    game_id: int,
+    player_id: int,
+    game_type: str,
+    db: Session = Depends(get_db),
 ):
     """
     Function that returns the player's previous answer
@@ -234,12 +237,12 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         return {"round": current_round, "previous_answers": previous_answers}
 
 
-# @router.post("/{game_id}/player/{player_id}/score")
+@router.post("/{game_id}/player/{player_id}/score")
 def route_add_score(
     game_id: int,
     player_id: int,
     player_answer: str,
-    db: Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     """
     Function that updates the player's score in the database

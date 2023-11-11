@@ -120,3 +120,20 @@ def dashboard(
             "transactions": denir_transactions,
         },
     )
+
+
+@router.post("/game")
+def create_game(
+    request: Request,
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
+    game_type: Annotated[str, Form()],
+    rounds: Annotated[int, Form()],
+    practice: Annotated[bool, Form()],
+
+    last_name: Annotated[str, Form()],
+):
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+

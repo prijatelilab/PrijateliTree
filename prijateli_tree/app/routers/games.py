@@ -21,6 +21,7 @@ from prijateli_tree.app.utils.constants import (
 )
 from prijateli_tree.app.utils.games import Game as GameUtil
 
+
 router = APIRouter()
 
 
@@ -66,9 +67,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)):
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
     return {
         "game_id": game_id,
         "rounds": game.rounds,
@@ -82,14 +81,9 @@ def route_game_player_access(
 ):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
-    if (
-        len([player for player in game.players if player.user_id == player_id])
-        != 1
-    ):
+    if len([player for player in game.players if player.user_id == player_id]) != 1:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
         )
@@ -110,14 +104,10 @@ def route_add_answer(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
         # Get game type data
-    game_type = (
-        db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    )
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
 
     correct_answer = get_bag_color(game_type.bag)
 
@@ -145,9 +135,7 @@ def get_previous_answers(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # Get current round
     current_round = get_current_round(game_id, db)
@@ -168,9 +156,7 @@ def get_previous_answers(
 
     # Get the player's neighbors
     player = (
-        db.query(Player)
-        .filter_by(game_id=game_id, user_id=player_id)
-        .one_or_none()
+        db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
     )
 
     # Use game utils to get the player's neighbors
@@ -204,17 +190,13 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # Get current round
     current_round = get_current_round(game_id, db)
 
     # Get game type data
-    game_type = (
-        db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    )
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     if not game_type:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="Game type not found"
@@ -244,14 +226,10 @@ def route_add_score(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # Find out the correct answer
-    game_type = (
-        db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    )
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     bag = game_type.bag
 
     # Check if bag is red or blue
@@ -284,21 +262,18 @@ def score_to_denirs(
     """
     Function that updates the player's denirs in the database
     """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     pass
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")
-def integrated_game(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
-):
+def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Logic for handling the integrated game
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
     existing_player = (
         db.query(Player)
         .filter_by(game_id=game_id)
@@ -313,9 +288,7 @@ def integrated_game(
     current_round = get_current_round(game_id, db)
 
     if current_round > game.rounds:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="Game over"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Game over")
 
     view_round(game_id, player_id, db)
     # Update the player's answer if they want to - HOW?!

@@ -179,15 +179,27 @@ def get_previous_answers(
     neighbors = game_util.neighbors[player.position]
 
     # Get the neighbors' previous answers
-    neighbor_1_answer_obj = (
+    neighbor_1 = (
         db.query(Player)
         .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
         .one_or_none()
     )
 
-    neighbor_2_answer_obj = (
+    neighbor_1_answer_obj = (
+        db.query(GameAnswer)
+        .filter_by(game_player_id=neighbor_1.id, round=last_round)
+        .one_or_none()
+    )
+
+    neighbor_2 = (
         db.query(Player)
         .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
+        .one_or_none()
+    )
+
+    neighbor_2_answer_obj = (
+        db.query(GameAnswer)
+        .filter_by(game_player_id=neighbor_2.id, round=last_round)
         .one_or_none()
     )
 

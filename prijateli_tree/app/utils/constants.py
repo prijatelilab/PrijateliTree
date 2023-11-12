@@ -35,5 +35,6 @@ REGEX_PHONE_NUMBER = (
     r"|\d{3}[\s*.-]?\d{3}|\d{2}([\s*.-]?)\d{2}\1\d{2}(?:\1\d{2})?))$"
 )
 
-# SCORE CONSTANT
+# SCORE AND DENIR CONSTANTS
 WINNING_SCORE = 100
+DENIR_FACTOR = 0.25

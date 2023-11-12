@@ -23,6 +23,7 @@ from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     STANDARD_ENCODING,
     WINNING_SCORE,
+    DENIR_FACTOR,
 )
 from prijateli_tree.app.utils.games import Game as GameUtil
 
@@ -329,6 +330,10 @@ def score_to_denirs(
     for player_answer, correct_answer in zip(player_answers, correct_answers):
         if player_answer == correct_answer:
             total_score += WINNING_SCORE
+
+    denirs = total_score * DENIR_FACTOR
+
+    return {"reward": f"You have made {denirs} denars!"}
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")

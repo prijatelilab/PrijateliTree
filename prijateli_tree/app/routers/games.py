@@ -170,9 +170,7 @@ def get_previous_answers(
     )
 
     # Get the player's neighbors
-    player = (
-        db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
-    )
+    player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
 
     # Use game utils to get the player's neighbors
     game_util = GameUtil(game_type)
@@ -314,10 +312,23 @@ def score_to_denirs(
     db: Session = Depends(get_db),
 ):
     """
-    Function that updates the player's denirs in the database
+    Function that calculates the denirs for the player
+    given all of their scores
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    pass
+    total_score = 0
+    player = db.query(Player).filter_by(id=player_id, game_id=game_id)
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
+        )
+
+    answers_obj = db.query(GameAnswer).filter_by(game_player_id=player_id)
+    player_answers = [answer.player_answer for answer in answers_obj]
+    correct_answers = [answer.correct_answer for answer in answers_obj]
+
+    for player_answer, correct_answer in zip(player_answers, correct_answers):
+        if player_answer == correct_answer:
+            total_score += WINNING_SCORE
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")
@@ -328,6 +339,7 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
     existing_player = (
         db.query(Player)
         .filter_by(game_id=game_id)

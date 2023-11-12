@@ -254,9 +254,7 @@ def route_add_score(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     player = None
     for p in game.players:
@@ -283,14 +281,15 @@ def route_add_score(
     player_answer = latest_answers["your_previous_answer"]
 
     if player_answer == correct_answer:
-        # Create a new DENIR object
-        # TODO - Calculate DENIR based on score and update
-        pass
-    else:
-        # Create a new DENIR object
-        # Update with 0 denirs
+        # Update the player's score
         return {
-            "status": "Game over. Better luck next time!",
+            "status": "Correct!",
+            "score": f"{WINNING_SCORE} points have been added to your score",
+        }
+    else:
+        # Update the player's score
+        return {
+            "status": "Better luck next time!",
             "score": f"Your score would've been {WINNING_SCORE}",
         }
 

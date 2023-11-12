@@ -165,7 +165,7 @@ def get_previous_answers(
     # Get the player's previous answer
     player_answer = (
         db.query(GameAnswer)
-        .filter_by(game_id=game_id, player_id=player_id, round=last_round)
+        .filter_by(game_player_id=player_id, round=last_round)
         .one_or_none()
     )
 
@@ -180,14 +180,14 @@ def get_previous_answers(
 
     # Get the neighbors' previous answers
     neighbor_1_answer_obj = (
-        db.query(GameAnswer)
-        .filter_by(id=game_id, round=last_round, position=neighbors[0])
+        db.query(Player)
+        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
         .one_or_none()
     )
 
     neighbor_2_answer_obj = (
-        db.query(GameAnswer)
-        .filter_by(id=game_id, round=last_round, position=neighbors[1])
+        db.query(Player)
+        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
         .one_or_none()
     )
 

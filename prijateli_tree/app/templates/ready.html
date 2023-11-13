@@ -3,15 +3,18 @@
   PrijateliTree - Game Start
 {% endblock title %}
 {% block content %}
-  <h1>Get Ready to Play</h1>
-  <h2 style="color:red;">Red</h2>
-  <h3>or</h3>
-  <h2 style="color:blue;">Blue!</h2>
-  <form class="row" method="post" action='{{ url_for("confirm_ready") }}'>
+  <div style="text-align: center;">
+    <h1>Get Ready to Play</h1>
+    <h2 style="color:red;">Red</h2>
+    <h3>or</h3>
+    <h2 style="color:blue;">Blue!</h2>
+  </div>
+  <form class="row" method="post" action='{{ url_for("ready") }}' style="display: flex; justify-content: center;">
     <button class="btn icon-right waves-effect waves-light"
             type="submit"
-            value="submit">
-      I'm Ready!<i class="material-icons right">send</i>
+            value="submit"
+            style="background-color: #2196F3; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none; border-radius: 4px;">
+      <i class="material-icons right">I'm Ready!</i>
     </button>
-  </form
+  </form>
 {% endblock content %}

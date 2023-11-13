@@ -368,7 +368,7 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         score_to_denirs(game_id, player_id, "", db, current_round)
 
 
-@router.post("/confirm_ready")
+@router.post("/ready")
 def confirm_login(
     player_id: int,
     game_id: int,

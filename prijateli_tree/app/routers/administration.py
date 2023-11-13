@@ -141,6 +141,14 @@ def create_game(
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
+    pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
+
+    if len(set(pos_players)) != 6:
+        return Response(
+            status_code=HTTPStatus.BAD_REQUEST,
+            content="one player cannot take multiple positions",
+        )
+
     game = Game(
         created_by=user.id,
         game_type_id=game_type,
@@ -152,8 +160,6 @@ def create_game(
     db.commit()
     db.refresh(game)
 
-    # TODO: Who has their name hidden?
-    pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
     for i in range(0, 6):
         db.add(
             Player(

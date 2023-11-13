@@ -301,7 +301,7 @@ def route_add_score(
         # Update the player's score
         return {
             "status": "Better luck next time!",
-            "score": f"Your score would've been {WINNING_SCORE}",
+            "score": f"Your score would've won {WINNING_SCORE}",
         }
 
 
@@ -346,10 +346,7 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     existing_player = (
-        db.query(Player)
-        .filter_by(game_id=game_id)
-        .filter_by(id=player_id)
-        .one_or_none()
+        db.query(Player).filter_by(game_id=game_id, id=player_id).one_or_none()
     )
     if not existing_player:
         raise HTTPException(
@@ -359,7 +356,7 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     current_round = get_current_round(game_id, db)
 
     if current_round > game.rounds:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Game over")
+        return {"message": "Game over"}
 
     view_round(game_id, player_id, db)
     # Update the player's answer if they want to - HOW?!

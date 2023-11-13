@@ -128,7 +128,6 @@ def create_game(
     request: Request,
     game_type: Annotated[str, Form()],
     rounds: Annotated[int, Form()],
-    practice: Annotated[bool, Form()],
     pos_one: Annotated[int, Form()],
     pos_two: Annotated[int, Form()],
     pos_three: Annotated[int, Form()],
@@ -153,7 +152,6 @@ def create_game(
         created_by=user.id,
         game_type_id=game_type,
         rounds=rounds,
-        practice=practice,
     )
 
     db.add(game)

@@ -153,81 +153,101 @@
                   data-bs-dismiss="modal"
                   aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <form class="row" method="post" action='{{ url_for("create_game") }}'>
-            <div class="col-12">
-              <label for="game-type" class="form-label">Game Type</label>
-              <select id="game-type" class="form-select" name="game_type">
-                {% for gt in game_types|sort(attribute='network, bag') %}
-                  <option value="{{ gt.id }}">{{ gt.network|title }} with bag: {{ gt.bag }}</option>
-                {% endfor %}
-              </select>
+        <form method="post" action='{{ url_for("create_game") }}'>
+          <div class="modal-body">
+            <div class="mb-3 row">
+              <label for="game-type" class="col-sm-4 col-form-label">Game Type</label>
+              <div class="col-sm-8">
+                <select id="game-type" class="form-select form-select-sm" name="game_type">
+                  {% for gt in game_types|sort(attribute='network, bag') %}
+                    <option value="{{ gt.id }}">{{ gt.network|title }} with bag: {{ gt.bag }}</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="col-12">
-              <label for="num-rounds" class="form-label">Number of Rounds</label>
-              <input type="number"
-                     min="1"
-                     step="1"
-                     max="50"
-                     class="form-control"
-                     value="1"
-                     id="num-rounds"
-                     name="rounds">
+            <div class="mb-3 row">
+              <label for="num-rounds" class="col-sm-4 col-form-label">Number of Rounds</label>
+              <div class="col-sm-8">
+                <input type="number"
+                       min="1"
+                       step="1"
+                       max="50"
+                       class="form-control form-control-sm"
+                       value="1"
+                       id="num-rounds"
+                       name="rounds">
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="pos-one" class="form-label">Position One</label>
-              <select id="pos-one" class="form-select" name="pos_one">
-                {% for s in students|sort(attribute='last_name, high_school.name') %}
-                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
-                {% endfor %}
-              </select>
+            <div class="mb-3 row">
+              <label for="pos-one" class="col-sm-4 form-label">Position One</label>
+              <div class="col-sm-8">
+                <select id="pos-one" class="form-select form-select-sm" name="pos_one">
+                  {% for s in students|sort(attribute='last_name') %}
+                    <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="pos-two" class="form-label">Position Two</label>
-              <select id="pos-two" class="form-select" name="pos_two">
-                {% for s in students|sort(attribute='last_name, high_school.name') %}
-                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
-                {% endfor %}
-              </select>
+            <div class="mb-3 row">
+              <label for="pos-two" class="col-sm-4 form-label">Position Two</label>
+              <div class="col-sm-8">
+                <select id="pos-two" class="form-select form-select-sm" name="pos_two">
+                  {% for s in students|sort(attribute='last_name') %}
+                    <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="pos-three" class="form-label">Position Three</label>
-              <select id="pos-three" class="form-select" name="pos_three">
-                {% for s in students|sort(attribute='last_name, high_school.name') %}
-                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
-                {% endfor %}
-              </select>
+            <div class="mb-3 row">
+              <label for="pos-three" class="col-sm-4 form-label">Position Three</label>
+              <div class="col-sm-8">
+                <select id="pos-three" class="form-select form-select-sm" name="pos_three">
+                  {% for s in students|sort(attribute='last_name') %}
+                    <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="pos-four" class="form-label">Position Four</label>
-              <select id="pos-four" class="form-select" name="pos_four">
-                {% for s in students|sort(attribute='last_name, high_school.name') %}
-                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
-                {% endfor %}
-              </select>
+            <div class="mb-3 row">
+              <label for="pos-four" class="col-sm-4 form-label">Position Four</label>
+              <div class="col-sm-8">
+                <select id="pos-four" class="form-select form-select-sm" name="pos_four">
+                  {% for s in students|sort(attribute='last_name') %}
+                    <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="pos-five" class="form-label">Position Five</label>
-              <select id="pos-five" class="form-select" name="pos_five">
-                {% for s in students|sort(attribute='last_name, high_school.name') %}
-                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
-                {% endfor %}
-              </select>
+            <div class="mb-3 row">
+              <label for="pos-five" class="col-sm-4 form-label">Position Five</label>
+              <div class="col-sm-8">
+                <select id="pos-five"
+                        class="col-sm-4 form-select form-select-sm"
+                        name="pos_five">
+                  {% for s in students|sort(attribute='last_name') %}
+                    <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="pos-six" class="form-label">Position Six</label>
-              <select id="pos-six" class="form-select" name="pos_six">
-                {% for s in students|sort(attribute='last_name, high_school.name') %}
-                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
-                {% endfor %}
-              </select>
+            <div class="mb-3 row">
+              <label for="pos-six" class="col-sm-4 form-label">Position Six</label>
+              <div class="col-sm-8">
+                <select id="pos-six"
+                        class="col-sm-4 form-select form-select-sm"
+                        name="pos_six">
+                  {% for s in students|sort(attribute='last_name') %}
+                    <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Create</button>
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

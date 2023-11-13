@@ -366,3 +366,25 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
     if current_round == game.rounds:
         # Final round - calculate the denirs
         score_to_denirs(game_id, player_id, "", db, current_round)
+
+
+@router.post("/confirm_ready")
+def confirm_login(
+    player_id: int,
+    game_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Confirms if the player is ready for the game
+    """
+
+    player = db.query(Player).filter_by(id=player_id, game_id=game_id)
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
+        )
+
+    player.ready = True
+    db.commit()
+
+    return {"status": "Player is ready!"}

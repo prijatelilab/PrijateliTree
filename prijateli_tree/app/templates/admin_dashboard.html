@@ -153,7 +153,28 @@
                   data-bs-dismiss="modal"
                   aria-label="Close"></button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">
+          <form class="row" method="post" action='{{ url_for("create_game") }}'>
+            <div class="col-12">
+              <label for="game-type" class="form-label">Game Type</label>
+              <select id="game-type" class="form-select">
+                {% for gt in game_types|sort(attribute='network, bag') %}
+                  <option value="{{ gt.id }}">{{ gt.network|title }} with bag: {{ gt.bag }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="num-rounds" class="form-label">Number of Rounds</label>
+              <input type="number"
+                     min="1"
+                     step="1"
+                     max="50"
+                     class="form-control"
+                     value="1"
+                     id="num-rounds">
+            </div>
+          </form>
+        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Create</button>

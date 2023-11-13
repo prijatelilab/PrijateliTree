@@ -157,7 +157,7 @@
           <form class="row" method="post" action='{{ url_for("create_game") }}'>
             <div class="col-12">
               <label for="game-type" class="form-label">Game Type</label>
-              <select id="game-type" class="form-select">
+              <select id="game-type" class="form-select" name="game_type">
                 {% for gt in game_types|sort(attribute='network, bag') %}
                   <option value="{{ gt.id }}">{{ gt.network|title }} with bag: {{ gt.bag }}</option>
                 {% endfor %}
@@ -171,7 +171,56 @@
                      max="50"
                      class="form-control"
                      value="1"
-                     id="num-rounds">
+                     id="num-rounds"
+                     name="rounds">
+            </div>
+            <div class="col-md-6">
+              <label for="pos-one" class="form-label">Position One</label>
+              <select id="pos-one" class="form-select" name="pos_one">
+                {% for s in students|sort(attribute='last_name, high_school.name') %}
+                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="pos-two" class="form-label">Position Two</label>
+              <select id="pos-two" class="form-select" name="pos_two">
+                {% for s in students|sort(attribute='last_name, high_school.name') %}
+                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="pos-three" class="form-label">Position Three</label>
+              <select id="pos-three" class="form-select" name="pos_three">
+                {% for s in students|sort(attribute='last_name, high_school.name') %}
+                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="pos-four" class="form-label">Position Four</label>
+              <select id="pos-four" class="form-select" name="pos_four">
+                {% for s in students|sort(attribute='last_name, high_school.name') %}
+                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="pos-five" class="form-label">Position Five</label>
+              <select id="pos-five" class="form-select" name="pos_five">
+                {% for s in students|sort(attribute='last_name, high_school.name') %}
+                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="pos-six" class="form-label">Position Six</label>
+              <select id="pos-six" class="form-select" name="pos_six">
+                {% for s in students|sort(attribute='last_name, high_school.name') %}
+                  <option value="{{ s.id }}">{{ s.first_name|title }} {{ s.last_name|title }} ({{ s.language.abbr }})</option>
+                {% endfor %}
+              </select>
             </div>
           </form>
         </div>

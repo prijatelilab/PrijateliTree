@@ -146,7 +146,7 @@ def create_game(
     if len(set(pos_players)) != 6:
         return Response(
             status_code=HTTPStatus.BAD_REQUEST,
-            content="one player cannot take multiple positions",
+            content={"message": "one player cannot take multiple positions"},
         )
 
     game = Game(
@@ -160,7 +160,7 @@ def create_game(
     db.commit()
     db.refresh(game)
 
-    for i in range(0, 6):
+    for i in range(0, len(pos_players)):
         db.add(
             Player(
                 created_by=user.id,

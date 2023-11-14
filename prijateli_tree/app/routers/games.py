@@ -265,7 +265,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         ball = random.choice(game_type.bag)
         return {"round": current_round, "ball": ball}
     else:
-        # Show the player their previous answer and their neighbors'
+        # Show the player their previous answer and their neighbors
         previous_answers = get_previous_answers(game_id, player_id, db)
         return {"round": current_round, "previous_answers": previous_answers}
 

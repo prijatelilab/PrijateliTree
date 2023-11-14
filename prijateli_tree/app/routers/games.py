@@ -102,10 +102,7 @@ def route_game_player_access(
             status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
 
-    if (
-        len([player for player in game.players if player.user_id == player_id])
-        != 1
-    ):
+    if len([player for player in game.players if player.id == player_id]) != 1:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
         )

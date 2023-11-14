@@ -347,6 +347,7 @@ def integrated_game(
             status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
 
+    # TODO: We need to go over this one
     existing_player = (
         db.query(Player).filter_by(game_id=game_id, id=player_id).one_or_none()
     )

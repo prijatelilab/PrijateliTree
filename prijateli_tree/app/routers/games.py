@@ -176,19 +176,13 @@ def get_previous_answers(
     else:
         last_round = current_round - 1
 
-    # Get the player's previous answer
-    player_answer = (
-        db.query(GameAnswer)
-        .filter_by(game_player_id=player_id, round=last_round)
-        .one_or_none()
-    )
-
     # Get the player's neighbors
     player = (
         db.query(Player)
         .filter_by(game_id=game_id, user_id=player_id)
         .one_or_none()
     )
+    player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
     game_util = GameUtil(game_type)
@@ -200,29 +194,23 @@ def get_previous_answers(
         .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
         .one_or_none()
     )
-
-    neighbor_1_answer_obj = (
-        db.query(GameAnswer)
-        .filter_by(game_player_id=neighbor_1.id, round=last_round)
-        .one_or_none()
-    )
+    neighbor_1_answer = [
+        a for a in neighbor_1.answers if a.round == last_round
+    ][0]
 
     neighbor_2 = (
         db.query(Player)
         .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
         .one_or_none()
     )
-
-    neighbor_2_answer_obj = (
-        db.query(GameAnswer)
-        .filter_by(game_player_id=neighbor_2.id, round=last_round)
-        .one_or_none()
-    )
+    neighbor_2_answer = [
+        a for a in neighbor_2.answers if a.round == last_round
+    ][0]
 
     return {
         "your_previous_answer": player_answer.player_answer,
-        "neighbor_1_previous_answer": neighbor_1_answer_obj.player_answer,
-        "neighbor_2_previous_answer": neighbor_2_answer_obj.player_answer,
+        "neighbor_1_previous_answer": neighbor_1_answer.player_answer,
+        "neighbor_2_previous_answer": neighbor_2_answer.player_answer,
     }
 
 
@@ -253,16 +241,9 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     # Get current round
     current_round = get_current_round(game_id, db)
 
-    # Get game type data
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    if not game_type:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game type not found"
-        )
-
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
-        ball = random.choice(game_type.bag)
+        ball = random.choice(game.game_type.bag)
         return {"round": current_round, "ball": ball}
     else:
         # Show the player their previous answer and their neighbors
@@ -335,19 +316,17 @@ def score_to_denirs(
     """
     total_score = 0
     player = (
-        db.query(Player).filter_by(id=player_id, game_id=game_id).one_or_none()
+        db.query(Player)
+        .filter_by(user_id=player_id, game_id=game_id)
+        .one_or_none()
     )
     if player is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
         )
 
-    answers_obj = db.query(GameAnswer).filter_by(game_player_id=player_id)
-    player_answers = [answer.player_answer for answer in answers_obj]
-    correct_answers = [answer.correct_answer for answer in answers_obj]
-
-    for player_answer, correct_answer in zip(player_answers, correct_answers):
-        if player_answer == correct_answer:
+    for answer in player.answers:
+        if answer.player_answer == answer.correct_answer:
             total_score += WINNING_SCORE
 
     denirs = total_score * DENIR_FACTOR
@@ -392,7 +371,7 @@ def integrated_game(
 
 
 @router.post("/ready")
-def confirm_login(
+def confirm_player(
     player_id: int,
     game_id: int,
     db: Session = Depends(get_db),

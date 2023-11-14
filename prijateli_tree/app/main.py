@@ -70,3 +70,13 @@ def set_language(
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("base.html", {"request": request})
+
+
+@app.get("/ready", response_class=HTMLResponse)
+def ready(request: Request):
+    return templates.TemplateResponse("ready.html", {"request": request})
+
+
+@app.get("/waiting", response_class=HTMLResponse)
+def waiting(request: Request):
+    return templates.TemplateResponse("waiting.html", {"request": request})

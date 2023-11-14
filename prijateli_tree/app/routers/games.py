@@ -65,7 +65,7 @@ def get_bag_color(bag):
     return correct_answer
 
 
-def get_current_round(game_id: int, db: Session = Depends(get_db)):
+def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     """
     Gets the game's current round given the game id
     """
@@ -184,7 +184,11 @@ def get_previous_answers(
     )
 
     # Get the player's neighbors
-    player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
+    player = (
+        db.query(Player)
+        .filter_by(game_id=game_id, user_id=player_id)
+        .one_or_none()
+    )
 
     # Use game utils to get the player's neighbors
     game_util = GameUtil(game_type)
@@ -253,14 +257,12 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     if not game_type:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="Game type not found"
+            status_code=HTTPStatus.NOT_FOUND, detail="game type not found"
         )
-
-    bag = game_type.bag
 
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
-        ball = random.choice(bag)
+        ball = random.choice(game_type.bag)
         return {"round": current_round, "ball": ball}
     else:
         # Show the player their previous answer and their neighbors'
@@ -272,7 +274,6 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
 def route_add_score(
     game_id: int,
     player_id: int,
-    player_answer: str,
     db: Session = Depends(get_db),
 ):
     """
@@ -326,7 +327,6 @@ def route_add_score(
 def score_to_denirs(
     game_id: int,
     player_id: int,
-    player_answer: str,
     db: Session = Depends(get_db),
 ):
     """
@@ -334,7 +334,9 @@ def score_to_denirs(
     given all of their scores
     """
     total_score = 0
-    player = db.query(Player).filter_by(id=player_id, game_id=game_id)
+    player = (
+        db.query(Player).filter_by(id=player_id, game_id=game_id).one_or_none()
+    )
     if player is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
@@ -350,7 +352,7 @@ def score_to_denirs(
 
     denirs = total_score * DENIR_FACTOR
 
-    return {"reward": f"You have made {denirs} denars!"}
+    return {"reward": f"You have made {denirs} denirs!"}
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")
@@ -381,12 +383,12 @@ def integrated_game(
 
     view_round(game_id, player_id, db)
     # Update the player's answer if they want to - HOW?!
-    route_add_answer(game_id, player_id, "", db, current_round)
+    route_add_answer(game_id, player_id, "", current_round, db)
     # Calculate the score
-    route_add_score(game_id, player_id, "", db, current_round)
+    route_add_score(game_id, player_id, db)
     if current_round == game.rounds:
         # Final round - calculate the denirs
-        score_to_denirs(game_id, player_id, "", db, current_round)
+        score_to_denirs(game_id, player_id, db, current_round)
 
 
 @router.post("/ready")

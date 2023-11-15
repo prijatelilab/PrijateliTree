@@ -332,11 +332,9 @@ def route_add_score(
     # we want to count the number of games they are correct, e.g.
     # player_session.n_correct += result["is_correct"]
     # player_session.total_points += result["is_correct"] * WINNING_SCORE
+    url = "/{game_id}/player/{player_id}/score"
 
-    return RedirectResponse(
-            url="/{game_id}/player/{player_id}/score",
-            status_code=HTTPStatus.FOUND
-            )
+    return RedirectResponse(url=url, status_code=HTTPStatus.FOUND)
 
 
 @router.get("/{game_id}/player/{player_id}/score")

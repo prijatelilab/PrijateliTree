@@ -5,7 +5,8 @@ from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -247,11 +248,27 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         previous_answers = get_previous_answers(game_id, player_id, db)
         return {"round": current_round, "previous_answers": previous_answers}
 
-
-@router.post("/{game_id}/player/{player_id}/score")
-def route_end_game(
+@router.post("/{game_id}/player/{player_id}/update_score")
+def route_add_score(
+    request: Request,
     game_id: int,
     player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that updates the player's score in the database
+    """
+
+    
+
+    return RedirectResponse(url="/{game_id}/player/{player_id}/score", status_code=HTTPStatus.FOUND)
+
+@router.get("/{game_id}/player/{player_id}/score")
+def route_end_game(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    debug: bool = False,
     db: Session = Depends(get_db),
 ):
     """
@@ -284,10 +301,14 @@ def route_end_game(
     correct_color = get_bag_color(bag)
 
     # Get the player's previous answer
-    latest_guess = get_previous_answers(game_id, player_id, db)
-    player_guess = latest_guess["your_previous_answer"]
+    if debug:
+        player_guess = BALL_BLUE
+    else:
+        latest_guess = get_previous_answers(game_id, player_id, db)
+        player_guess = latest_guess["your_previous_answer"]
 
     result = {
+        "request": request, 
         "player_id": player_id,
         "game_id": game_id,
         "correct_color": correct_color,

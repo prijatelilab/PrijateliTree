@@ -166,7 +166,7 @@ def create_game(
     db: Session = Depends(get_db),
 ):
     if user is None:
-        return RedirectResponse("create_game", status_code=HTTPStatus.FOUND)
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
     pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
 

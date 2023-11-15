@@ -3,15 +3,26 @@
 End of Game
 {% endblock title %}
 {% block content %}
-  <h1>{% if is_correct %}You won!!!{% else %}Better luck next time!!!{% endif %}</h1>
+<h1>
+    {% if is_correct %}
+        You won!!! 
+    {% else %} 
+        Better luck next time!!!
+    {% endif %}
+</h1>
 
-  The bag the computer chose was  {{ correct_color }} <!--correct_color ... -->
-  and you guessed  {{ player_guess }}. <!--player_guess ... -->
-    <br>
-    <br>
-{% if is_correct %} 100  {% else %} 0 {% endif %} points will be added to your final reward!
-    <br>
-    <br>
+The bag the computer chose was  {{ correct_color }}
+and you guessed  {{ player_guess }}. 
+<br>
+<br>
+{% if is_correct %} 
+    100  
+{% else %} 
+    0 
+{% endif %} 
+points will be added to your final reward!
+<br>
+<br>
 <a href="{{ url_for('view_round', player_id=player_id, game_id=game_id) }}">Next</a></p>
 
 

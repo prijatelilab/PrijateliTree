@@ -80,13 +80,12 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
 
     return current_round
 
-def get_game_and_player(game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db)):
+def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Helper function to ensure game and player exist
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
+
     if game is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="game not found"
@@ -112,7 +111,7 @@ def did_player_win(game_id: int,
     """
     Helper function that determines if the player won, the color of the bag and their guess
     """
-    game, player = get_game_and_player(game_id, player_id)
+    game, player = get_game_and_player(game_id, player_id, db)
     # Check if bag is red or blue
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     correct_color = get_bag_color(game_type.bag)

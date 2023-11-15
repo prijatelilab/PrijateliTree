@@ -104,6 +104,7 @@ def logout():
 @router.get("/dashboard", response_class=HTMLResponse)
 def dashboard(
     request: Request,
+    success: str = "",
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ):
@@ -119,6 +120,7 @@ def dashboard(
         "admin_dashboard.html",
         {
             "request": request,
+            "success": success,
             "user": user,
             "game_types": game_types,
             "games": games,
@@ -131,6 +133,7 @@ def dashboard(
 @router.get("/game", response_class=HTMLResponse)
 def dashboard_create_game(
     request: Request,
+    error: str = "",
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ):
@@ -144,6 +147,7 @@ def dashboard_create_game(
         "create_game.html",
         {
             "request": request,
+            "error": error,
             "user": user,
             "game_types": game_types,
             "students": students,
@@ -153,7 +157,6 @@ def dashboard_create_game(
 
 @router.post("/game")
 def create_game(
-    request: Request,
     game_type: Annotated[str, Form()],
     rounds: Annotated[int, Form()],
     pos_one: Annotated[int, Form()],
@@ -171,8 +174,11 @@ def create_game(
     pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
 
     if len(set(pos_players)) != 6:
+        redirect_url = URL("/admin/game").include_query_params(
+            error="A game cannot contain the same student at two different positions."
+        )
         return RedirectResponse(
-            "game",
+            redirect_url,
             status_code=HTTPStatus.FOUND,
         )
 
@@ -199,7 +205,11 @@ def create_game(
     db.commit()
     db.refresh(game)
 
+    redirect_url = URL("/admin/dashboard").include_query_params(
+        success=f"Your game (ID: {game.id}) has been successfully created!"
+    )
+
     return RedirectResponse(
-        "dashboard",
+        redirect_url,
         status_code=HTTPStatus.FOUND,
     )

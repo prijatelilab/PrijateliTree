@@ -10,6 +10,10 @@
     //   $('#denir-transactions').DataTable();
     //   $('#game-types').DataTable();
     // });
+    function cleanParams() {
+      // Used to clear the URL of parameters after the banner alert is closed.
+      window.history.replaceState(null, '', window.location.pathname);
+    }
   </script>
 {% endblock helper_script %}
 {% block content %}
@@ -19,7 +23,8 @@
       <button type="button"
               class="btn-close"
               data-bs-dismiss="alert"
-              aria-label="Close"></button>
+              aria-label="Close"
+              onclick="cleanParams()"></button>
     </div>
   {% endif %}
   <div class="container-fluid">

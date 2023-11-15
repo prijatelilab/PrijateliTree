@@ -2,6 +2,14 @@
 {% block title %}
   PrijateliTree - Create Game
 {% endblock title %}
+{% block helper_script %}
+  <script>
+  function cleanParams() {
+      // Used to clear the URL of parameters after the banner alert is closed.
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  </script>
+{% endblock helper_script %}
 {% block content %}
   {% if error %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -9,7 +17,8 @@
       <button type="button"
               class="btn-close"
               data-bs-dismiss="alert"
-              aria-label="Close"></button>
+              aria-label="Close"
+              onclick="cleanParams()"></button>
     </div>
   {% endif %}
   <div class="container-sm">

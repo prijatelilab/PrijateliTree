@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
 from sqlalchemy.orm import Session
@@ -126,6 +126,31 @@ def dashboard(
     )
 
 
+@router.get("/game", response_class=HTMLResponse)
+def dashboard_create_game(
+    request: Request,
+    error: str = "",
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
+):
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    game_types = db.query(GameType).all()
+    students = db.query(User).filter_by(role=ROLE_STUDENT).all()
+
+    return templates.TemplateResponse(
+        "create_game.html",
+        {
+            "error": error,
+            "request": request,
+            "user": user,
+            "game_types": game_types,
+            "students": students,
+        },
+    )
+
+
 @router.post("/game")
 def create_game(
     request: Request,
@@ -141,14 +166,13 @@ def create_game(
     db: Session = Depends(get_db),
 ):
     if user is None:
-        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+        return RedirectResponse("create_game", status_code=HTTPStatus.FOUND)
 
     pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
 
     if len(set(pos_players)) != 6:
-        return Response(
-            status_code=HTTPStatus.BAD_REQUEST,
-            content={"message": "one player cannot take multiple positions"},
+        return dashboard_create_game(
+            request, "At least one student was selected twice.", user, db
         )
 
     game = Game(
@@ -174,7 +198,4 @@ def create_game(
     db.commit()
     db.refresh(game)
 
-    return Response(
-        status_code=HTTPStatus.CREATED,
-        content={"request": request, "game": game},
-    )
+    return dashboard(request, user, db)

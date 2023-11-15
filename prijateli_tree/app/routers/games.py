@@ -150,7 +150,6 @@ def route_add_answer(
 def get_previous_answers(
     game_id: int,
     player_id: int,
-    game_type: str,
     db: Session = Depends(get_db),
 ):
     """
@@ -182,6 +181,7 @@ def get_previous_answers(
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     game_util = GameUtil(game_type)
     neighbors = game_util.neighbors[player.position]
 
@@ -249,7 +249,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{game_id}/player/{player_id}/score")
-def route_add_score(
+def route_end_game(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
@@ -281,24 +281,22 @@ def route_add_score(
     bag = game_type.bag
 
     # Check if bag is red or blue
-    correct_answer = get_bag_color(bag)
+    correct_color = get_bag_color(bag)
 
     # Get the player's previous answer
-    latest_answers = get_previous_answers(game_id, player_id, db)
-    player_answer = latest_answers["your_previous_answer"]
+    latest_guess = get_previous_answers(game_id, player_id, db)
+    player_guess = latest_guess["your_previous_answer"]
 
-    if player_answer == correct_answer:
-        # Update the player's score
-        return {
-            "status": "Correct!",
-            "score": f"{WINNING_SCORE} points have been added to your score",
-        }
-    else:
-        # Update the player's score
-        return {
-            "status": "Better luck next time!",
-            "score": f"Your score would've won {WINNING_SCORE}",
-        }
+    result = {
+        "player_id": player_id,
+        "game_id": game_id,
+        "correct_color": correct_color,
+        "player_guess": player_guess,
+        "is_correct": player_guess == correct_color,
+        "winning_score": WINNING_SCORE
+    }
+
+    return templates.TemplateResponse("end_of_game.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/denirs")

@@ -78,7 +78,61 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
 
     return current_round
 
+def get_game_and_player(game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db)):
+    """
+    Helper function to ensure game and player exist
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
+    player = None
+    for p in game.players:
+        if p.id == player_id:
+            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
+        )
+    return game, player
+
+
+def did_player_win(game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+    debug: bool = False
+):
+    """
+    Helper function that determines if the player won, the color of the bag and their guess
+    """
+    game, player = get_game_and_player(game_id, player_id)
+    # Check if bag is red or blue
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+    correct_color = get_bag_color(game_type.bag)
+
+    # Get the player's previous answer
+    if debug:
+        player_guess = random.choice([BALL_BLUE, BALL_RED])
+    else:
+        latest_guess = get_previous_answers(game_id, player_id, db)
+        player_guess = latest_guess["your_previous_answer"]
+    
+    return {
+        "correct_color": correct_color,
+        "player_guess": player_guess,
+        "is_correct": player_guess == correct_color
+    }
+
+###############################
+#
+#        BEGIN API   
+#
+###############################
 @router.get("/{game_id}")
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
@@ -259,9 +313,19 @@ def route_add_score(
     Function that updates the player's score in the database
     """
 
-    
+    # There isn't a place to store this right now as far as I can tell
+    # player_session = ...
 
+    # result = did_player_win(game_id, player_id, db)
+
+    # we want to count the number of games they are correct, e.g.
+    # player_session.n_correct += result["is_correct"]
+    # player_session.total_points += result["is_correct"] * WINNING_SCORE
+    
+    
     return RedirectResponse(url="/{game_id}/player/{player_id}/score", status_code=HTTPStatus.FOUND)
+
+
 
 @router.get("/{game_id}/player/{player_id}/score")
 def route_end_game(
@@ -269,53 +333,24 @@ def route_end_game(
     game_id: int,
     player_id: int,
     debug: bool = False,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db)
+):  
     """
     Function that updates the player's score in the database
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    player = None
-    for p in game.players:
-        if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
-
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
-
+    
     # Here's where you can get the correct text for your templating.
     # template_text = languages[player.language.abbr]
-
-    # Find out the correct answer
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    bag = game_type.bag
-
-    # Check if bag is red or blue
-    correct_color = get_bag_color(bag)
-
-    # Get the player's previous answer
-    if debug:
-        player_guess = BALL_BLUE
-    else:
-        latest_guess = get_previous_answers(game_id, player_id, db)
-        player_guess = latest_guess["your_previous_answer"]
 
     result = {
         "request": request, 
         "player_id": player_id,
         "game_id": game_id,
-        "correct_color": correct_color,
-        "player_guess": player_guess,
-        "is_correct": player_guess == correct_color,
-        "winning_score": WINNING_SCORE
+        "winning_score": WINNING_SCORE,
     }
+
+    # add information about winning and ball colors
+    result.update(did_player_win(game_id, player_id, db, debug))
 
     return templates.TemplateResponse("end_of_game.html", result)
 

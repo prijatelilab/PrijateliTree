@@ -7,7 +7,6 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
-from fastapi_login.exceptions import InvalidCredentialsException
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
@@ -67,6 +66,7 @@ def admin_login(request: Request):
 
 @router.post("/login")
 def confirm_login(
+    request: Request,
     first_name: Annotated[str, Form()],
     last_name: Annotated[str, Form()],
     email: Annotated[str, Form()],
@@ -81,7 +81,10 @@ def confirm_login(
         .one_or_none()
     )
     if user is None:
-        raise InvalidCredentialsException
+        return templates.TemplateResponse(
+            "admin_login.html",
+            {"request": request, "error": "Please submit valid credentials."},
+        )
 
     token = login_manager.create_access_token(data={"sub": str(user.uuid)})
     response = RedirectResponse(url="dashboard", status_code=HTTPStatus.FOUND)

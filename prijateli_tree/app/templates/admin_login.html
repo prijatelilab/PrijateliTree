@@ -7,16 +7,25 @@
     <div class="row">
       <div class="form-container bg-light-subtle col-xs-12 offset-md-1 col-md-10 offset-lg-1 col col-lg-10 offset-xl-3 col col-xl-6">
         <form method="post" action='{{ url_for("confirm_login") }}'>
+          {% if error %}<h5 class="text-danger-emphasis">{{ error }}</h5>{% endif %}
           <div class="mb-3 row">
             <label for="first_name" class="col-sm-3 col-form-label">First Name:</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="first_name" name="first_name" required>
+              <input type="text"
+                     class="form-control"
+                     id="first_name"
+                     name="first_name"
+                     required>
             </div>
           </div>
           <div class="mb-3 row">
             <label for="last_name" class="col-sm-3 col-form-label">Last Name:</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="last_name" name="last_name" required>
+              <input type="text"
+                     class="form-control"
+                     id="last_name"
+                     name="last_name"
+                     required>
             </div>
           </div>
           <div class="mb-3 row">

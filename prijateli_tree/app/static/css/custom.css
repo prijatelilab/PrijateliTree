@@ -14,7 +14,7 @@ div.table-container {
     padding-top: 20px;
 }
 
-.table-container button {
+div.table-container a.btn {
     float: right;
 }
 

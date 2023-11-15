@@ -33,14 +33,20 @@
   <body role="document" data-bs-theme="dark">
     <nav class="navbar bg-body-tertiary">
       <div class="container-fluid">
-        <div class="navbar-brand">
-          <img src="../static/images/logo.png" alt="UChicago" height="35">
-          <span>Prijateli Tree</span>
-        </div>
         {% if user %}
+          <a class="navbar-brand" href='{{ url_for("dashboard") }}'>
+            <img src="../static/images/logo.png" alt="UChicago" height="35">
+            <span>Admin Panel</span>
+          </a>
           <form class="d-flex" action='{{ url_for("logout") }}'>
-            <button class="btn btn-primary" type="submit">Logout</button>
+            <button class="btn btn-primary float-end" type="submit">Logout</button>
           </form>
+        {% endif %}
+        {% if not user %}
+          <div class="navbar-brand">
+            <img src="../static/images/logo.png" alt="UChicago" height="35">
+            <span>Prijateli Tree</span>
+          </div>
         {% endif %}
       </div>
     </nav>

@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
 from sqlalchemy.orm import Session
+from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Denirs,
@@ -27,6 +28,7 @@ from prijateli_tree.app.utils.constants import (
 
 base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
+templates.env.globals["URL"] = URL
 
 
 def get_db():
@@ -129,7 +131,6 @@ def dashboard(
 @router.get("/game", response_class=HTMLResponse)
 def dashboard_create_game(
     request: Request,
-    error: str = "",
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ):
@@ -142,7 +143,6 @@ def dashboard_create_game(
     return templates.TemplateResponse(
         "create_game.html",
         {
-            "error": error,
             "request": request,
             "user": user,
             "game_types": game_types,
@@ -171,8 +171,9 @@ def create_game(
     pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
 
     if len(set(pos_players)) != 6:
-        return dashboard_create_game(
-            request, "At least one student was selected twice.", user, db
+        return RedirectResponse(
+            "game",
+            status_code=HTTPStatus.FOUND,
         )
 
     game = Game(
@@ -198,4 +199,7 @@ def create_game(
     db.commit()
     db.refresh(game)
 
-    return dashboard(request, user, db)
+    return RedirectResponse(
+        "dashboard",
+        status_code=HTTPStatus.FOUND,
+    )

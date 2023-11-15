@@ -6,7 +6,7 @@ from http import HTTPStatus
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from starlette.datastructures import URL
@@ -80,7 +80,12 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
 
     return current_round
 
-def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
+
+def get_game_and_player(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db)
+):
     """
     Helper function to ensure game and player exist
     """
@@ -103,15 +108,17 @@ def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_
     return game, player
 
 
-def did_player_win(game_id: int,
+def did_player_win(
+    game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
     debug: bool = False
 ):
     """
-    Helper function that determines if the player won, the color of the bag and their guess
+    Helper function that determines if the player won,
+    the color of the bag and their guess
     """
-    game, player = get_game_and_player(game_id, player_id, db)
+    game, _ = get_game_and_player(game_id, player_id, db)
     # Check if bag is red or blue
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
     correct_color = get_bag_color(game_type.bag)
@@ -122,7 +129,7 @@ def did_player_win(game_id: int,
     else:
         latest_guess = get_previous_answers(game_id, player_id, db)
         player_guess = latest_guess["your_previous_answer"]
-    
+
     return {
         "correct_color": correct_color,
         "player_guess": player_guess,
@@ -131,9 +138,11 @@ def did_player_win(game_id: int,
 
 ###############################
 #
-#        BEGIN API   
+#        BEGIN API
 #
 ###############################
+
+
 @router.get("/{game_id}")
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
@@ -303,6 +312,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         previous_answers = get_previous_answers(game_id, player_id, db)
         return {"round": current_round, "previous_answers": previous_answers}
 
+
 @router.post("/{game_id}/player/{player_id}/update_score")
 def route_add_score(
     request: Request,
@@ -322,10 +332,11 @@ def route_add_score(
     # we want to count the number of games they are correct, e.g.
     # player_session.n_correct += result["is_correct"]
     # player_session.total_points += result["is_correct"] * WINNING_SCORE
-    
-    
-    return RedirectResponse(url="/{game_id}/player/{player_id}/score", status_code=HTTPStatus.FOUND)
 
+    return RedirectResponse(
+            url="/{game_id}/player/{player_id}/score",
+            status_code=HTTPStatus.FOUND
+            )
 
 
 @router.get("/{game_id}/player/{player_id}/score")
@@ -335,21 +346,18 @@ def route_end_game(
     player_id: int,
     debug: bool = False,
     db: Session = Depends(get_db)
-):  
+):
     """
     Function that updates the player's score in the database
     """
-    
     # Here's where you can get the correct text for your templating.
     # template_text = languages[player.language.abbr]
-
     result = {
-        "request": request, 
+        "request": request,
         "player_id": player_id,
         "game_id": game_id,
         "winning_score": WINNING_SCORE,
     }
-
     # add information about winning and ball colors
     result.update(did_player_win(game_id, player_id, db, debug))
 

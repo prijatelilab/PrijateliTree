@@ -8,7 +8,6 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
@@ -42,7 +41,6 @@ def get_db():
 
 base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
-templates.env.globals["URL"] = URL
 
 languages = {}
 for lang in glob.glob("../languages/*.json"):

@@ -13,7 +13,6 @@ from sqlalchemy.orm import Session
 from prijateli_tree.app.database import (
     Game,
     GameAnswer,
-    GameType,
     Player,
     SessionLocal,
     User,
@@ -116,8 +115,7 @@ def did_player_win(
     """
     game, _ = get_game_and_player(game_id, player_id, db)
     # Check if bag is red or blue
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    correct_color = get_bag_color(game_type.bag)
+    correct_color = get_bag_color(game.game_type.bag)
 
     # Get the player's previous answer
     if debug:
@@ -189,10 +187,7 @@ def route_add_answer(
             status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
 
-        # Get game type data
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-
-    correct_answer = get_bag_color(game_type.bag)
+    correct_answer = get_bag_color(game.game_type.bag)
 
     # Record the answer
     new_answer = GameAnswer(
@@ -243,8 +238,7 @@ def get_previous_answers(
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    game_util = GameUtil(game_type)
+    game_util = GameUtil(game.game_type)
     neighbors = game_util.neighbors[player.position]
 
     # Get the neighbors' previous answers

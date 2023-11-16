@@ -80,9 +80,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
 
 
 def get_game_and_player(
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db)
+    game_id: int, player_id: int, db: Session = Depends(get_db)
 ):
     """
     Helper function to ensure game and player exist
@@ -110,7 +108,7 @@ def did_player_win(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-    debug: bool = False
+    debug: bool = False,
 ):
     """
     Helper function that determines if the player won,
@@ -131,8 +129,9 @@ def did_player_win(
     return {
         "correct_color": correct_color,
         "player_guess": player_guess,
-        "is_correct": player_guess == correct_color
+        "is_correct": player_guess == correct_color,
     }
+
 
 ###############################
 #
@@ -341,7 +340,7 @@ def route_end_game(
     game_id: int,
     player_id: int,
     debug: bool = False,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Function that updates the player's score in the database

@@ -78,17 +78,9 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     return current_round
 
 
-def get_game(game_id: int, db: Session = Depends(get_db)):
-    """
-    Helper function that gets a game
-    """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    return game
-
-
 @router.get("/{game_id}")
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
-    game = get_game(game_id, db)
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
     return {
@@ -102,7 +94,7 @@ def route_game_access(game_id: int, db: Session = Depends(get_db)):
 def route_game_player_access(
     game_id: int, player_id: int, db: Session = Depends(get_db)
 ):
-    game = get_game(game_id, db)
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
@@ -125,7 +117,7 @@ def route_add_answer(
     """
     Function that updates the player's guess in the database
     """
-    game = get_game(game_id, db)
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
@@ -159,7 +151,7 @@ def get_previous_answers(
     Function that returns the player's previous answer
     from the last round, along with the answers of their neighbors
     """
-    game = get_game(game_id, db)
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
@@ -174,7 +166,9 @@ def get_previous_answers(
         last_round = current_round - 1
 
     # Get the player's neighbors
-    player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
+    player = (
+        db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
+    )
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
@@ -208,7 +202,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Function that returns the current round
     """
-    game = get_game(game_id, db)
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 

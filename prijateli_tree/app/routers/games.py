@@ -221,7 +221,11 @@ def get_previous_answers(
     player = (
         db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
     )
-    player_answer = [a for a in player.answers if a.round == last_round][0]
+    player_answers = [a for a in player.answers if a.round == last_round]
+    if player_answers:
+        player_answer = player_answers[0]
+    else:
+        player_answer = None
 
     # Use game utils to get the player's neighbors
     game_util = GameUtil(game.game_type)

@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
+    GameType,
     GameAnswer,
     Player,
     SessionLocal,
@@ -97,6 +98,25 @@ def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_
             status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
         )
     return game, player
+
+
+def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
+    """
+    Helper function to ensure game and game type exist
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
+
+    if game_type is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game type not found"
+        )
+
+    return game, game_type
 
 
 def did_player_win(
@@ -203,10 +223,7 @@ def get_previous_answers(
     Function that returns the player's previous answer
     from the last round, along with the answers of their neighbors
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
-
+    game, game_type = get_game_and_type(game_id, db)
     # Get current round
     current_round = get_current_round(game_id, db)
 
@@ -228,7 +245,7 @@ def get_previous_answers(
         player_answer = None
 
     # Use game utils to get the player's neighbors
-    game_util = GameUtil(game.game_type)
+    game_util = GameUtil(network_type=game_type.network)
     neighbors = game_util.neighbors[player.position]
 
     # Get the neighbors' previous answers

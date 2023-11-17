@@ -72,7 +72,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     players = db.query(Player).filter_by(game_id=game_id).all()
     answers = []
     for player in players:
-        answers.append(player.answers)
+        answers.extend(player.answers)
     current_round = len(answers) // len(players) + 1
 
     return current_round
@@ -128,6 +128,59 @@ def did_player_win(
         "correct_color": correct_color,
         "player_guess": player_guess,
         "is_correct": player_guess == correct_color,
+    }
+
+
+def get_previous_answers(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that returns the player's previous answer
+    from the last round, along with the answers of their neighbors
+    """
+    game, player = get_game_and_player(game_id, player_id, db)
+
+    # Get current round
+    current_round = get_current_round(game_id, db)
+    
+    if current_round == 1:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="No previous answers"
+        )
+    else:
+        last_round = current_round - 1
+
+    player_answer = [a for a in player.answers if a.round == last_round][0]
+
+    # Use game utils to get the player's neighbors
+    game_util = GameUtil(game.game_type)
+    neighbors = game_util.neighbors[player.position]
+
+    # Get the neighbors' previous answers
+    neighbor_1 = (
+        db.query(Player)
+        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
+        .one_or_none()
+    )
+    neighbor_1_answer = [
+        a for a in neighbor_1.answers if a.round == last_round
+    ][0]
+
+    neighbor_2 = (
+        db.query(Player)
+        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
+        .one_or_none()
+    )
+    neighbor_2_answer = [
+        a for a in neighbor_2.answers if a.round == last_round
+    ][0]
+
+    return {
+        "your_previous_answer": player_answer.player_answer,
+        "neighbor_1_previous_answer": neighbor_1_answer.player_answer,
+        "neighbor_2_previous_answer": neighbor_2_answer.player_answer,
     }
 
 
@@ -202,69 +255,6 @@ def route_add_answer(
     db.refresh(new_answer)
 
     return {"status": "New answer recorded", "round": current_round}
-
-
-def get_previous_answers(
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-):
-    """
-    Function that returns the player's previous answer
-    from the last round, along with the answers of their neighbors
-    """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    # Get current round
-    current_round = get_current_round(game_id, db)
-
-    if current_round == 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="No previous answers"
-        )
-    else:
-        last_round = current_round - 1
-
-    # Get the player's neighbors
-    player = (
-        db.query(Player)
-        .filter_by(game_id=game_id, user_id=player_id)
-        .one_or_none()
-    )
-    player_answer = [a for a in player.answers if a.round == last_round][0]
-
-    # Use game utils to get the player's neighbors
-    game_util = GameUtil(game.game_type)
-    neighbors = game_util.neighbors[player.position]
-
-    # Get the neighbors' previous answers
-    neighbor_1 = (
-        db.query(Player)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
-        .one_or_none()
-    )
-    neighbor_1_answer = [
-        a for a in neighbor_1.answers if a.round == last_round
-    ][0]
-
-    neighbor_2 = (
-        db.query(Player)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
-        .one_or_none()
-    )
-    neighbor_2_answer = [
-        a for a in neighbor_2.answers if a.round == last_round
-    ][0]
-
-    return {
-        "your_previous_answer": player_answer.player_answer,
-        "neighbor_1_previous_answer": neighbor_1_answer.player_answer,
-        "neighbor_2_previous_answer": neighbor_2_answer.player_answer,
-    }
 
 
 @router.get("/{game_id}/player/{player_id}/round")

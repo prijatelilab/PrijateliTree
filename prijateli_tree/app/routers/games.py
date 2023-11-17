@@ -5,14 +5,14 @@ from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
     GameAnswer,
-    GameType,
     Player,
     SessionLocal,
     User,
@@ -78,6 +78,62 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     return current_round
 
 
+def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
+    """
+    Helper function to ensure game and player exist
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    player = None
+    for p in game.players:
+        if p.id == player_id:
+            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
+        )
+    return game, player
+
+
+def did_player_win(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+    debug: bool = False,
+):
+    """
+    Helper function that determines if the player won,
+    the color of the bag and their guess
+    """
+    game, _ = get_game_and_player(game_id, player_id, db)
+    # Check if bag is red or blue
+    correct_color = get_bag_color(game.game_type.bag)
+
+    # Get the player's previous answer
+    if debug:
+        player_guess = random.choice([BALL_BLUE, BALL_RED])
+    else:
+        latest_guess = get_previous_answers(game_id, player_id, db)
+        player_guess = latest_guess["your_previous_answer"]
+
+    return {
+        "correct_color": correct_color,
+        "player_guess": player_guess,
+        "is_correct": player_guess == correct_color,
+    }
+
+
+###############################
+#
+#        BEGIN API
+#
+###############################
+
+
 @router.get("/{game_id}")
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
@@ -121,10 +177,7 @@ def route_add_answer(
     if game is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
-        # Get game type data
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-
-    correct_answer = get_bag_color(game_type.bag)
+    correct_answer = get_bag_color(game.game_type.bag)
 
     # Record the answer
     new_answer = GameAnswer(
@@ -144,7 +197,6 @@ def route_add_answer(
 def get_previous_answers(
     game_id: int,
     player_id: int,
-    game_type: str,
     db: Session = Depends(get_db),
 ):
     """
@@ -172,7 +224,7 @@ def get_previous_answers(
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
-    game_util = GameUtil(game_type)
+    game_util = GameUtil(game.game_type)
     neighbors = game_util.neighbors[player.position]
 
     # Get the neighbors' previous answers
@@ -232,8 +284,9 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         return {"round": current_round, "previous_answers": previous_answers}
 
 
-@router.post("/{game_id}/player/{player_id}/score")
+@router.post("/{game_id}/player/{player_id}/update_score")
 def route_add_score(
+    request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
@@ -241,46 +294,43 @@ def route_add_score(
     """
     Function that updates the player's score in the database
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
-    player = None
-    for p in game.players:
-        if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+    # There isn't a place to store this right now as far as I can tell
+    # player_session = ...
 
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    # result = did_player_win(game_id, player_id, db)
 
+    # we want to count the number of games they are correct, e.g.
+    # player_session.n_correct += result["is_correct"]
+    # player_session.total_points += result["is_correct"] * WINNING_SCORE
+    url = "/{game_id}/player/{player_id}/score"
+
+    return RedirectResponse(url=url, status_code=HTTPStatus.FOUND)
+
+
+@router.get("/{game_id}/player/{player_id}/score")
+def route_end_game(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    debug: bool = False,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that updates the player's score in the database
+    """
     # Here's where you can get the correct text for your templating.
     # template_text = languages[player.language.abbr]
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "winning_score": WINNING_SCORE,
+    }
+    # add information about winning and ball colors
+    result.update(did_player_win(game_id, player_id, db, debug))
 
-    # Find out the correct answer
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-    bag = game_type.bag
-
-    # Check if bag is red or blue
-    correct_answer = get_bag_color(bag)
-
-    # Get the player's previous answer
-    latest_answers = get_previous_answers(game_id, player_id, db)
-    player_answer = latest_answers["your_previous_answer"]
-
-    if player_answer == correct_answer:
-        # Update the player's score
-        return {
-            "status": "Correct!",
-            "score": f"{WINNING_SCORE} points have been added to your score",
-        }
-    else:
-        # Update the player's score
-        return {
-            "status": "Better luck next time!",
-            "score": f"Your score would've won {WINNING_SCORE}",
-        }
+    return templates.TemplateResponse("end_of_game.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/denirs")

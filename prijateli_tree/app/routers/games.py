@@ -70,10 +70,12 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     Gets the game's current round given the game id
     """
     players = db.query(Player).filter_by(game_id=game_id).all()
-    answers = []
+    n_answers = 0
+
     for player in players:
-        answers.extend(db.query(GameAnswer).filter_by(game_player_id=player.id).all())
-    current_round = len(answers) // len(players) + 1
+        n_answers += len(player.answers)
+
+    current_round = n_answers // len(players) + 1
 
     return current_round
 
@@ -94,7 +96,8 @@ def get_game_and_player(
     player = None
     for p in game.players:
         if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+            # player = db.query(User).filter_by(id=p.user_id).one_or_none()
+            player = db.query(Player).filter_by(id = player_id).one_or_none()
 
     if player is None:
         raise HTTPException(
@@ -155,32 +158,26 @@ def get_previous_answers(
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
-    game_util = GameUtil(game.game_type)
-    neighbors = game_util.neighbors[player.position]
-
+    game_util = GameUtil(game.game_type.network)
+    neighbors_positions = game_util.neighbors[player.position]
+    
+    neighbors_answers = []
     # Get the neighbors' previous answers
-    neighbor_1 = (
-        db.query(Player)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
-        .one_or_none()
-    )
-    neighbor_1_answer = [
-        a for a in neighbor_1.answers if a.round == last_round
-    ][0]
+    for neighbor_position in neighbors_positions:
+        this_neighbor = (
+            db.query(Player)
+            .filter_by(game_id=game_id, position=neighbor_position)
+            .one_or_none()
+        )
+        this_answer = [
+            a for a in this_neighbor.answers if a.round == last_round
+        ][0]
 
-    neighbor_2 = (
-        db.query(Player)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
-        .one_or_none()
-    )
-    neighbor_2_answer = [
-        a for a in neighbor_2.answers if a.round == last_round
-    ][0]
+        neighbors_answers.append(this_answer.player_answer)
 
     return {
         "your_previous_answer": player_answer.player_answer,
-        "neighbor_1_previous_answer": neighbor_1_answer.player_answer,
-        "neighbor_2_previous_answer": neighbor_2_answer.player_answer,
+        "neighbors_previous_answer": neighbors_answers
     }
 
 

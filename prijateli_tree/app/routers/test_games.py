@@ -19,8 +19,6 @@ def test_add_answer(game_id, player_id, round, answer):
         json={
             "player_answer": answer,
             "current_round": round,
-            "correct_answer": "R",
-            "game_player_id": player_id,
         },
     )
     print(response.status_code)

@@ -150,9 +150,6 @@ def did_player_win(
 def get_neighbors(
     game_type,
     player,
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
 ):
     """
     Gets the player's neighbors
@@ -188,7 +185,7 @@ def get_previous_answers(
     # Get the player's neighbors
     player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
     player_answers = db.query(GameAnswer).filter_by(
-        id=game_id, game_player_id=player_id, round=last_round
+        game_player_id=player_id, round=last_round
     )
     if player_answers:
         player_answer = player_answers[0]

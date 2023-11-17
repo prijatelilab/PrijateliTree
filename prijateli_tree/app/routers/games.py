@@ -79,18 +79,14 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     return current_round
 
 
-def get_game_and_player(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
-):
+def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Helper function to ensure game and player exist
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     player = None
     for p in game.players:
@@ -111,9 +107,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
 
@@ -153,77 +147,22 @@ def did_player_win(
     }
 
 
-###############################
-#
-#        BEGIN API
-#
-###############################
-
-
-@router.get("/{game_id}")
-def route_game_access(game_id: int, db: Session = Depends(get_db)):
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-    return {
-        "game_id": game_id,
-        "rounds": game.rounds,
-        "practice": game.practice,
-    }
-
-
-@router.get("/{game_id}/player/{player_id}")
-def route_game_player_access(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
-):
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    if len([player for player in game.players if player.id == player_id]) != 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
-        )
-
-    return {"game_id": game_id, "player_id": player_id}
-
-
-@router.post("/{game_id}/player/{player_id}/answer")
-def route_add_answer(
+def get_neighbors(
+    game_type,
+    player,
     game_id: int,
     player_id: int,
-    player_answer: str,
-    current_round: int,
     db: Session = Depends(get_db),
 ):
     """
-    Function that updates the player's guess in the database
+    Gets the player's neighbors
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
 
-    correct_answer = get_bag_color(game.game_type.bag)
+    # Use game utils to get the player's neighbors
+    game_util = GameUtil(network_type=game_type.network)
+    neighbors = game_util.neighbors[player.position]
 
-    # Record the answer
-    new_answer = GameAnswer(
-        game_player_id=player_id,
-        player_answer=player_answer,
-        correct_answer=correct_answer,
-        round=current_round,
-    )
-
-    db.add(new_answer)
-    db.commit()
-    db.refresh(new_answer)
-
-    return {"status": "New answer recorded", "round": current_round}
+    return neighbors
 
 
 def get_previous_answers(
@@ -248,44 +187,89 @@ def get_previous_answers(
 
     # Get the player's neighbors
     player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
-    player_answers = [a for a in player.answers if a.round == last_round]
+    player_answers = db.query(GameAnswer).filter_by(
+        id=game_id, game_player_id=player_id, round=last_round
+    )
     if player_answers:
         player_answer = player_answers[0]
     else:
         player_answer = None
 
     # Use game utils to get the player's neighbors
-    game_util = GameUtil(network_type=game_type.network)
-    neighbors = game_util.neighbors[player.position]
+    neighbors = get_neighbors(game_type, player, game_id, player_id, db)
 
     # Get the neighbors' previous answers
-    neighbor_1 = db.query(Player).filter_by(
-        game_id=game_id, position=neighbors[0]
-    )
-    neighbor_1_answers = [
-        a for a in neighbor_1.answers if a.round == last_round
-    ]
-    if neighbor_1_answers:
-        neighbor_1_answer = neighbor_1_answers[0]
-    else:
-        neighbor_1_answer = None
+    for neighbor in neighbors:
+        pass
 
-    neighbor_2 = db.query(Player).filter_by(
-        game_id=game_id, position=neighbors[1]
-    )
-    neighbor_2_answers = [
-        a for a in neighbor_2.answers if a.round == last_round
-    ]
-    if neighbor_2_answers:
-        neighbor_2_answer = neighbor_2_answers[0]
-    else:
-        neighbor_2_answer = None
+    return {"your_previous_answer": player_answer.player_answer}
 
+
+###############################
+#
+#        BEGIN API
+#
+###############################
+
+
+@router.get("/{game_id}")
+def route_game_access(game_id: int, db: Session = Depends(get_db)):
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
     return {
-        "your_previous_answer": player_answer.player_answer,
-        "neighbor_1_previous_answer": neighbor_1_answer.player_answer,
-        "neighbor_2_previous_answer": neighbor_2_answer.player_answer,
+        "game_id": game_id,
+        "rounds": game.rounds,
+        "practice": game.practice,
     }
+
+
+@router.get("/{game_id}/player/{player_id}")
+def route_game_player_access(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    if len([player for player in game.players if player.id == player_id]) != 1:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
+        )
+
+    return {"game_id": game_id, "player_id": player_id}
+
+
+@router.post("/{game_id}/player/{player_id}/answer")
+def route_add_answer(
+    game_id: int,
+    player_id: int,
+    player_answer: str,
+    current_round: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that updates the player's guess in the database
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    if game is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+
+    correct_answer = get_bag_color(game.game_type.bag)
+
+    # Record the answer
+    new_answer = GameAnswer(
+        game_player_id=player_id,
+        player_answer=player_answer,
+        correct_answer=correct_answer,
+        round=current_round,
+    )
+
+    db.add(new_answer)
+    db.commit()
+    db.refresh(new_answer)
+
+    return {"status": "New answer recorded", "round": current_round}
 
 
 @router.get("/{game_id}/player/{player_id}/round")
@@ -370,9 +354,7 @@ def score_to_denirs(
     """
     total_score = 0
     player = (
-        db.query(Player)
-        .filter_by(user_id=player_id, game_id=game_id)
-        .one_or_none()
+        db.query(Player).filter_by(user_id=player_id, game_id=game_id).one_or_none()
     )
     if player is None:
         raise HTTPException(
@@ -389,17 +371,13 @@ def score_to_denirs(
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")
-def integrated_game(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
-):
+def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Logic for handling the integrated game
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
 
     # TODO: We need to go over this one
     existing_player = (

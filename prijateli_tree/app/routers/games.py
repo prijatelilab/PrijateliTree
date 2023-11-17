@@ -71,10 +71,12 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     Gets the game's current round given the game id
     """
     players = db.query(Player).filter_by(game_id=game_id).all()
-    answers = []
+    n_answers = 0
+
     for player in players:
-        answers.append(player.answers)
-    current_round = len(answers) // len(players) + 1
+        n_answers += len(player.answers)
+
+    current_round = n_answers // len(players) + 1
 
     return current_round
 
@@ -91,7 +93,8 @@ def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_
     player = None
     for p in game.players:
         if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+            # player = db.query(User).filter_by(id=p.user_id).one_or_none()
+            player = db.query(Player).filter_by(id=player_id).one_or_none()
 
     if player is None:
         raise HTTPException(
@@ -147,21 +150,6 @@ def did_player_win(
     }
 
 
-def get_neighbors(
-    game_type,
-    player,
-):
-    """
-    Gets the player's neighbors
-    """
-
-    # Use game utils to get the player's neighbors
-    game_util = GameUtil(network_type=game_type.network)
-    neighbors = game_util.neighbors[player.position]
-
-    return neighbors
-
-
 def get_previous_answers(
     game_id: int,
     player_id: int,
@@ -171,7 +159,8 @@ def get_previous_answers(
     Function that returns the player's previous answer
     from the last round, along with the answers of their neighbors
     """
-    game, game_type = get_game_and_type(game_id, db)
+    game, player = get_game_and_player(game_id, player_id, db)
+
     # Get current round
     current_round = get_current_round(game_id, db)
 
@@ -182,24 +171,28 @@ def get_previous_answers(
     else:
         last_round = current_round - 1
 
-    # Get the player's neighbors
-    player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
-    player_answers = db.query(GameAnswer).filter_by(
-        game_player_id=player_id, round=last_round
-    )
-    if player_answers:
-        player_answer = player_answers[0]
-    else:
-        player_answer = None
+    player_answer = [a for a in player.answers if a.round == last_round][0]
 
     # Use game utils to get the player's neighbors
-    neighbors = get_neighbors(game_type, player, game_id, player_id, db)
+    game_util = GameUtil(game.game_type.network)
+    neighbors_positions = game_util.neighbors[player.position]
 
+    neighbors_answers = []
     # Get the neighbors' previous answers
-    for neighbor in neighbors:
-        pass
+    for neighbor_position in neighbors_positions:
+        this_neighbor = (
+            db.query(Player)
+            .filter_by(game_id=game_id, position=neighbor_position)
+            .one_or_none()
+        )
+        this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
 
-    return {"your_previous_answer": player_answer.player_answer}
+        neighbors_answers.append(this_answer.player_answer)
+
+    return {
+        "your_previous_answer": player_answer.player_answer,
+        "neighbors_previous_answer": neighbors_answers,
+    }
 
 
 ###############################

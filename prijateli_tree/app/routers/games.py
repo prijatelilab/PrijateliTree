@@ -12,8 +12,8 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
-    GameType,
     GameAnswer,
+    GameType,
     Player,
     SessionLocal,
     User,
@@ -79,14 +79,18 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     return current_round
 
 
-def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def get_game_and_player(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
     """
     Helper function to ensure game and player exist
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     player = None
     for p in game.players:
@@ -107,7 +111,9 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
 
@@ -158,7 +164,9 @@ def did_player_win(
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
     return {
         "game_id": game_id,
         "rounds": game.rounds,
@@ -172,7 +180,9 @@ def route_game_player_access(
 ):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     if len([player for player in game.players if player.id == player_id]) != 1:
         raise HTTPException(
@@ -195,7 +205,9 @@ def route_add_answer(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     correct_answer = get_bag_color(game.game_type.bag)
 
@@ -235,9 +247,7 @@ def get_previous_answers(
         last_round = current_round - 1
 
     # Get the player's neighbors
-    player = (
-        db.query(Player).filter_by(game_id=game_id, user_id=player_id).one_or_none()
-    )
+    player = db.query(Player).filter_by(game_id=game_id, user_id=player_id)
     player_answers = [a for a in player.answers if a.round == last_round]
     if player_answers:
         player_answer = player_answers[0]
@@ -249,23 +259,23 @@ def get_previous_answers(
     neighbors = game_util.neighbors[player.position]
 
     # Get the neighbors' previous answers
-    neighbor_1 = (
-        db.query(Player)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
-        .one_or_none()
+    neighbor_1 = db.query(Player).filter_by(
+        game_id=game_id, position=neighbors[0]
     )
-    neighbor_1_answers = [a for a in neighbor_1.answers if a.round == last_round]
+    neighbor_1_answers = [
+        a for a in neighbor_1.answers if a.round == last_round
+    ]
     if neighbor_1_answers:
         neighbor_1_answer = neighbor_1_answers[0]
     else:
         neighbor_1_answer = None
 
-    neighbor_2 = (
-        db.query(Player)
-        .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
-        .one_or_none()
+    neighbor_2 = db.query(Player).filter_by(
+        game_id=game_id, position=neighbors[1]
     )
-    neighbor_2_answers = [a for a in neighbor_2.answers if a.round == last_round]
+    neighbor_2_answers = [
+        a for a in neighbor_2.answers if a.round == last_round
+    ]
     if neighbor_2_answers:
         neighbor_2_answer = neighbor_2_answers[0]
     else:
@@ -283,23 +293,9 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Function that returns the current round
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
-
-    player = None
-    for p in game.players:
-        if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
-
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
-
+    game, player = get_game_and_player(game_id, player_id, db)
     # Here's where you can get the correct text for your templating.
     # template_text = languages[player.language.abbr]
-
     # Get current round
     current_round = get_current_round(game_id, db)
 
@@ -374,7 +370,9 @@ def score_to_denirs(
     """
     total_score = 0
     player = (
-        db.query(Player).filter_by(user_id=player_id, game_id=game_id).one_or_none()
+        db.query(Player)
+        .filter_by(user_id=player_id, game_id=game_id)
+        .one_or_none()
     )
     if player is None:
         raise HTTPException(
@@ -391,13 +389,17 @@ def score_to_denirs(
 
 
 @router.post("/{game_id}/player/{player_id}/integrated")
-def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def integrated_game(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
     """
     Logic for handling the integrated game
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     # TODO: We need to go over this one
     existing_player = (

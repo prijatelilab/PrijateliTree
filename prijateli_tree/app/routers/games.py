@@ -266,7 +266,7 @@ def route_add_answer(
     db.commit()
     db.refresh(new_answer)
 
-    return {"status": "New answer recorded", "round": current_round}
+    return new_answer
 
 
 @router.get("/{game_id}/player/{player_id}/round")

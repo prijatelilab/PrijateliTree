@@ -72,7 +72,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     players = db.query(Player).filter_by(game_id=game_id).all()
     answers = []
     for player in players:
-        answers.extend(player.answers)
+        answers.extend(db.query(GameAnswer).filter_by(game_player_id=player.id).all())
     current_round = len(answers) // len(players) + 1
 
     return current_round

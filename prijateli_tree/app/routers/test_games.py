@@ -8,14 +8,20 @@ API = "http://localhost:8000/"
 # Add answer
 
 
-def test_add_answer(game_id, player_id, answer):
+def test_add_answer(game_id, player_id, round, answer):
     """
     Adding answer for a given player.
     """
-
+    api = f"{API}games/{game_id}/player/{player_id}/answer"
+    print(api)
     response = requests.post(
-        f"{API}games/{game_id}/players/{player_id}/answer",
-        json={"answer": answer},
+        api,
+        json={
+            "player_answer": answer,
+            "current_round": round,
+            "correct_answer": "R",
+            "game_player_id": player_id,
+        },
     )
     print(response.status_code)
     print(response.json())
@@ -25,8 +31,9 @@ def test_get_player(game_id, player_id):
     """
     Getting player info.
     """
-
-    response = requests.get(f"{API}games/{game_id}/players/{player_id}")
+    api = f"{API}games/{game_id}/player/{player_id}"
+    print(api)
+    response = requests.get(api)
     print(response.status_code)
     print(response.json())
 
@@ -36,4 +43,4 @@ def test_get_player(game_id, player_id):
 if __name__ == "__main__":
     # Some tests
     test_get_player(1, 2)
-    test_add_answer(1, 2, "B")
+    test_add_answer(1, 2, 1, "B")

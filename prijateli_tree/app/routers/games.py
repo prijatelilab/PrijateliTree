@@ -233,14 +233,22 @@ def get_previous_answers(
         .filter_by(game_id=game_id, round=last_round, position=neighbors[0])
         .one_or_none()
     )
-    neighbor_1_answer = [a for a in neighbor_1.answers if a.round == last_round][0]
+    neighbor_1_answers = [a for a in neighbor_1.answers if a.round == last_round]
+    if neighbor_1_answers:
+        neighbor_1_answer = neighbor_1_answers[0]
+    else:
+        neighbor_1_answer = None
 
     neighbor_2 = (
         db.query(Player)
         .filter_by(game_id=game_id, round=last_round, position=neighbors[1])
         .one_or_none()
     )
-    neighbor_2_answer = [a for a in neighbor_2.answers if a.round == last_round][0]
+    neighbor_2_answers = [a for a in neighbor_2.answers if a.round == last_round]
+    if neighbor_2_answers:
+        neighbor_2_answer = neighbor_2_answers[0]
+    else:
+        neighbor_2_answer = None
 
     return {
         "your_previous_answer": player_answer.player_answer,
@@ -380,9 +388,6 @@ def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db))
         )
     # Get current round
     current_round = get_current_round(game_id, db)
-
-    if current_round > game.rounds:
-        return {"message": "Game over"}
 
     view_round(game_id, player_id, db)
     # Update the player's answer if they want to - HOW?!

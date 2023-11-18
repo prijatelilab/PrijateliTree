@@ -30,7 +30,7 @@
       "now_you_will_play": "Now you will play 2 practice games to get used to the rules.",
       "since_these_rules": "Since these are practice rounds, we will not reward anyone for their performance."
     },
-    "practice_game_first_round": {
+    "game_first_round": {
       "blue": "BLUE.",
       "guess_color": "Guess the color of the bag:",
       "red": "RED.",
@@ -39,7 +39,7 @@
       "your_ball_is_blue": "Your ball is BLUE.",
       "your_ball_is_red": "Your ball is RED."
     },
-    "practice_game_other_rounds": {
+    "game_other_rounds": {
       "code_guessed_blue": "Code guessed BLUE.",
       "code_guessed_red": "Code guessed RED.",
       "name_guessed_blue": "Name guessed BLUE.",
@@ -48,17 +48,17 @@
       "your_guess_was_blue": "Your guess in the last round was BLUE.",
       "your_guess_was_red": "Your guess in the last round was RED."
     },
-    "practice_game_results": {
+    "game_results": {
       "better_luck": "Better luck next time!",
       "results": "Results",
       "the_computer_chose_blue": "The computer chose the BLUE bag.",
       "the_computer_chose_red": "The computer chose the RED bag.",
       "you_won": "You won!"
     },
-    "practice_game_video": {
+    "game_video": {
       "explanation": "Explanation.",
       "feel_free": "Feel free to watch the video again to remind yourself of the rules.",
-      "practice_game": "Practice Game.",
+      "game": "Practice Game.",
       "score": "Score."
     },
     "quiz_balls": {

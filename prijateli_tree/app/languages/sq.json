@@ -30,7 +30,7 @@
       "now_you_will_play": "Tani do t\u00eb luani 2 loj\u00ebra p\u00ebr ushtrim p\u00ebr t'i m\u00ebsuar rregullat.",
       "since_these_rules": "Pasiq\u00eb k\u00ebto jan\u00eb raunde ushtruese, nuk do t\u00eb shp\u00ebrblejm\u00eb ask\u00ebnd p\u00ebr performanc\u00ebn e tyre."
     },
-    "practice_game_first_round": {
+    "game_first_round": {
       "blue": "E KALT\u00cbR.",
       "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
       "red": "E KUQE.",
@@ -39,7 +39,7 @@
       "your_ball_is_blue": "Topi juaj \u00ebsht\u00eb I KALT\u00cbR.",
       "your_ball_is_red": "Topi juaj \u00ebsht\u00eb I KUQ."
     },
-    "practice_game_other_rounds": {
+    "game_other_rounds": {
       "code_guessed_blue": "Kodi q\u00eblloi E KALT\u00cbR.",
       "code_guessed_red": "Kodi q\u00eblloi E KUQE.",
       "name_guessed_blue": "Emri q\u00eblloi E KALT\u00cbR.",
@@ -48,17 +48,17 @@
       "your_guess_was_blue": "Supozimi juaj n\u00eb raundin e fundit ishte E KALT\u00cbR.",
       "your_guess_was_red": "Supozimi juaj n\u00eb raundin e fundit ishte E KUQE."
     },
-    "practice_game_results": {
+    "game_results": {
       "better_luck": "Fat m\u00eb t\u00eb mir\u00eb her\u00ebn tjet\u00ebr!",
       "results": "Rezultatet",
       "the_computer_chose_blue": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KALT\u00cbR.",
       "the_computer_chose_red": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KUQE.",
       "you_won": "Fituat!"
     },
-    "practice_game_video": {
+    "game_video": {
       "explanation": "Sqairm.",
       "feel_free": "Ndjehuni t\u00eb lir\u00eb ta shikoni videon p\u00ebrs\u00ebri p\u00ebr t'i p\u00ebrkujtuar rregullat.",
-      "practice_game": "Loj\u00eb per ushtrim.",
+      "game": "Loj\u00eb per ushtrim.",
       "score": "Rezultati."
     },
     "quiz_balls": {

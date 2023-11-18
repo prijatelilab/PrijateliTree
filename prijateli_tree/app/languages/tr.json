@@ -30,7 +30,7 @@
       "now_you_will_play": "\u015eimdi kurallara al\u0131\u015fmak i\u00e7in 2 al\u0131\u015ft\u0131rma oyunu oynayacaks\u0131n\u0131z.",
       "since_these_rules": "Bunlar al\u0131\u015ft\u0131rma turlar\u0131 oldu\u011fu i\u00e7in kimseyi performans\u0131ndan dolay\u0131 \u00f6d\u00fcllendirmeyece\u011fiz."
     },
-    "practice_game_first_round": {
+    "game_first_round": {
       "blue": "MAV\u0130.",
       "guess_color": "Torban\u0131n rengini tahmin edin:",
       "red": "KIRMIZI.",
@@ -39,7 +39,7 @@
       "your_ball_is_blue": "Topunuz MAV\u0130.",
       "your_ball_is_red": "Topunuz KIRMIZI."
     },
-    "practice_game_other_rounds": {
+    "game_other_rounds": {
       "code_guessed_blue": "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yapt\u0131.",
       "code_guessed_red": "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yapt\u0131.",
       "name_guessed_blue": "Ad, MAVI tahminini yapt\u0131.",
@@ -48,17 +48,17 @@
       "your_guess_was_blue": "Your guess in the last round was BLUE.",
       "your_guess_was_red": "Your guess in the last round was RED."
     },
-    "practice_game_results": {
+    "game_results": {
       "better_luck": "Bir dahaki sefere iyi \u015fanslar!",
       "results": "Results",
       "the_computer_chose_blue": "Bilgisayar MAV\u0130 \u00e7antay\u0131 se\u00e7ti.",
       "the_computer_chose_red": "Bilgisayar KIRMIZI \u00e7antay\u0131 se\u00e7ti.",
       "you_won": "Kazand\u0131n!"
     },
-    "practice_game_video": {
+    "game_video": {
       "explanation": "A\u00e7\u0131klama.",
       "feel_free": "Kurallar\u0131 kendinize hat\u0131rlatmak i\u00e7in videoyu tekrar izlemekten \u00e7ekinmeyin.",
-      "practice_game": "Practice Game.",
+      "game": "Practice Game.",
       "score": "Skor."
     },
     "quiz_balls": {

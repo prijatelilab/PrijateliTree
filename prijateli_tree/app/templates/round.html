@@ -6,7 +6,8 @@
   <div style="text-align: center;">
     <h1 style="margin-bottom: 30px;">Round: {{ current_round }}</h1>
     {% if first_round %}
-      <p style="font-size: 24px; margin-bottom: 20px;">Your Ball: 
+      <p style="font-size: 24px; margin-bottom: 20px;">
+        Your Ball:
         {% if ball == 'R' %}
           <span style="color: red; font-size: 24px;">Red</span>
         {% elif ball == 'B' %}
@@ -26,7 +27,6 @@
           {{ previous_answers.your_previous_answer }}
         {% endif %}
       </p>
-
       <h2 style="margin-bottom: 20px;">Neighbors' Previous Guesses</h2>
       <ul style="list-style: none; padding: 0;">
         {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
@@ -34,7 +34,7 @@
             {% if neighbor_answer == 'R' %}
               <span style="color: red;">Red</span>
             {% elif neighbor_answer == 'B' %}
-              <span style="color: #007bff;">Blue</span> <!-- A brighter blue color -->
+              <span style="color: #007bff;">Blue</span>
             {% else %}
               {{ neighbor_answer }}
             {% endif %}

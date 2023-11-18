@@ -1,11 +1,13 @@
 """Script to test the games API endpoints."""
-
+import random
 import requests
 
+# Parameters
 
 API = "http://localhost:8000/"
+POSSIBLE_ANSWERS = ["R", "B"]
 
-# Add answer
+# Testing functions
 
 
 def test_add_answer(game_id, player_id, round, answer):
@@ -30,7 +32,6 @@ def test_get_player(game_id, player_id):
     Getting player info.
     """
     api = f"{API}games/{game_id}/player/{player_id}"
-    print(api)
     response = requests.get(api)
     print(response.status_code)
     print(response.json())
@@ -40,5 +41,6 @@ def test_get_player(game_id, player_id):
 
 if __name__ == "__main__":
     # Some tests
-    test_get_player(1, 2)
-    test_add_answer(1, 2, 1, "B")
+    for player in range(2, 7):
+        random_answer = random.choice(POSSIBLE_ANSWERS)
+        test_add_answer(1, player, 1, random_answer)

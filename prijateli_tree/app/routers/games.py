@@ -44,10 +44,8 @@ templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
 
 languages = {}
 for lang in glob.glob("../languages/*.json"):
-    lang_code = lang.split("\\")[1].split(".")[0]
-
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
-        languages[lang_code] = json.load(file)
+        languages.update(json.load(file))
 
 
 def get_bag_color(bag):

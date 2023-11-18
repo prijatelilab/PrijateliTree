@@ -4,37 +4,37 @@
 {% endblock title %}
 {% block content %}
   <div style="text-align: center;">
-    <h1>Round: {{ current_round }}</h1>
+    <h1 style="margin-bottom: 20px;">Round: {{ current_round }}</h1>
     {% if first_round %}
-      <p>Your Ball: 
+      <p style="font-size: 24px; margin-bottom: 20px;">Your Ball: 
         {% if ball == 'R' %}
-          <span style="color: red;">Red</span>
+          <span style="color: red; font-size: 24px;">Red</span>
         {% elif ball == 'B' %}
-          <span style="color: blue;">Blue</span>
+          <span style="color: #007bff; font-size: 24px;">Blue</span> <!-- A brighter blue color -->
         {% else %}
           {{ ball }}
         {% endif %}
       </p>
     {% else %}
-      <h2>Your Previous Guess</h2>
-      <p>
+      <h2 style="margin-bottom: 20px;">Your Previous Guess</h2>
+      <p style="font-size: 24px; margin-bottom: 20px;">
         {% if previous_answers.your_previous_answer == 'R' %}
           <span style="color: red;">Red</span>
         {% elif previous_answers.your_previous_answer == 'B' %}
-          <span style="color: blue;">Blue</span>
+          <span style="color: #007bff;">Blue</span> <!-- A brighter blue color -->
         {% else %}
           {{ previous_answers.your_previous_answer }}
         {% endif %}
       </p>
 
-      <h2>Neighbors' Previous Answers</h2>
-      <ul>
+      <h2 style="margin-bottom: 20px;">Neighbors' Previous Answers</h2>
+      <ul style="list-style: none; padding: 0;">
         {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
-          <li>
+          <li style="font-size: 24px; margin-bottom: 20px;">
             {% if neighbor_answer == 'R' %}
               <span style="color: red;">Red</span>
             {% elif neighbor_answer == 'B' %}
-              <span style="color: blue;">Blue</span>
+              <span style="color: #007bff;">Blue</span> <!-- A brighter blue color -->
             {% else %}
               {{ neighbor_answer }}
             {% endif %}

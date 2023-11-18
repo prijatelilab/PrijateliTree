@@ -356,19 +356,18 @@ def route_end_game(
     if game_status["is_correct"]:
         points = WINNING_SCORE
 
+    template_text = get_language_from_player_id(player_id, db)
+
     result = {
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
         "points": points,
+        "text": template_text
     }
     # add information about winning and ball colors
     result.update(game_status)
-    
-    # Get the correct text for your templating
-    template_text = get_language_from_player_id(player_id, db)
-    result.update(template_text)
-    
+
     return templates.TemplateResponse("end_of_game.html", result)
 
 

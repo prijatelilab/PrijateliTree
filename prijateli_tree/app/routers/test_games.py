@@ -1,6 +1,8 @@
 """Script to test the games API endpoints."""
 import random
+
 import requests
+
 
 # Parameters
 

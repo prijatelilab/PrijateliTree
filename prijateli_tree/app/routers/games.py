@@ -43,10 +43,10 @@ base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
 
 languages = {}
-for lang in glob.glob("../languages/*.json"):
+print("Read languages")
+for lang in glob.glob("prijateli_tree/app/languages/*.json"):
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
         languages.update(json.load(file))
-
 
 def get_bag_color(bag):
     """
@@ -100,6 +100,18 @@ def get_game_and_player(
         )
     return game, player
 
+def get_language_from_player_id(player_id: int, db: Session = Depends(get_db)):
+    """
+    using player id get template language
+    """
+    player = db.query(Player).filter_by(id=player_id).one_or_none()
+    user = db.query(User).filter_by(id=player.user_id).one_or_none()
+    if user is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="user not found"
+        )
+
+    return languages[user.language.abbr]
 
 def did_player_win(
     game_id: int,
@@ -287,7 +299,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         )
 
     # Here's where you can get the correct text for your templating.
-    # template_text = languages[player.language.abbr]
+    # template_text = languages[get_language_from_]
 
     # Get current round
     current_round = get_current_round(game_id, db)
@@ -337,17 +349,26 @@ def route_end_game(
     """
     Function that updates the player's score in the database
     """
-    # Here's where you can get the correct text for your templating.
-    # template_text = languages[player.language.abbr]
+    
+    game_status = did_player_win(game_id, player_id, db, debug)
+
+    points = 0
+    if game_status["is_correct"]:
+        points = WINNING_SCORE
+
     result = {
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "winning_score": WINNING_SCORE,
+        "points": points,
     }
     # add information about winning and ball colors
-    result.update(did_player_win(game_id, player_id, db, debug))
-
+    result.update(game_status)
+    
+    # Get the correct text for your templating
+    template_text = get_language_from_player_id(player_id, db)
+    result.update(template_text)
+    
     return templates.TemplateResponse("end_of_game.html", result)
 
 

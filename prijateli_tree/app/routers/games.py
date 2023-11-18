@@ -272,20 +272,24 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     game, player = get_game_and_player(game_id, player_id, db)
     # Here's where you can get the correct text for your templating.
     # template_text = languages[player.language.abbr]
+
     # Get current round
     current_round = get_current_round(game_id, db)
 
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(game.game_type.bag)
+        first_round = True
     else:
         # Show the player their previous answer and their neighbors
         previous_answers = get_previous_answers(game_id, player_id, db)
+        first_round = False
 
     results = {
         "ball": ball,
         "previous_answers": previous_answers,
         "current_round": current_round,
+        "first_round": first_round,
     }
 
     return results

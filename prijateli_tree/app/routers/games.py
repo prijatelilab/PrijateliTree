@@ -278,11 +278,17 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     if current_round == 1:
         # Pick a random letter from the bag and show it to the player
         ball = random.choice(game.game_type.bag)
-        return {"round": current_round, "ball": ball}
     else:
         # Show the player their previous answer and their neighbors
         previous_answers = get_previous_answers(game_id, player_id, db)
-        return {"round": current_round, "previous_answers": previous_answers}
+
+    results = {
+        "ball": ball,
+        "previous_answers": previous_answers,
+        "current_round": current_round,
+    }
+
+    return results
 
 
 @router.post("/{game_id}/player/{player_id}/update_score")

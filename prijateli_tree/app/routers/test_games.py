@@ -53,7 +53,7 @@ def test_view_round(game_id, player_id):
 
 if __name__ == "__main__":
     # Some tests
-    # for player in range(2, 7):
+    # for player in range(1, 6):
     #     random_answer = random.choice(POSSIBLE_ANSWERS)
     #     test_add_answer(1, player, 1, random_answer)
 

@@ -10,7 +10,7 @@
         {% if ball == 'R' %}
           <span style="color: red; font-size: 24px;">Red</span>
         {% elif ball == 'B' %}
-          <span style="color: #007bff; font-size: 24px;">Blue</span> <!-- A brighter blue color -->
+          <span style="color: #007bff; font-size: 24px;">Blue</span>
         {% else %}
           {{ ball }}
         {% endif %}
@@ -21,13 +21,13 @@
         {% if previous_answers.your_previous_answer == 'R' %}
           <span style="color: red;">Red</span>
         {% elif previous_answers.your_previous_answer == 'B' %}
-          <span style="color: #007bff;">Blue</span> <!-- A brighter blue color -->
+          <span style="color: #007bff;">Blue</span>
         {% else %}
           {{ previous_answers.your_previous_answer }}
         {% endif %}
       </p>
 
-      <h2 style="margin-bottom: 20px;">Neighbors' Previous Answers</h2>
+      <h2 style="margin-bottom: 20px;">Neighbors' Previous Guesses</h2>
       <ul style="list-style: none; padding: 0;">
         {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
           <li style="font-size: 24px; margin-bottom: 20px;">

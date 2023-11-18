@@ -35,7 +35,7 @@
       <div class="container-fluid">
         {% if user %}
           <a class="navbar-brand" href='{{ url_for("dashboard") }}'>
-            <img src="../static/images/logo.png" alt="UChicago" height="35">
+            <img src="{{ request.url_for('static', path='/images/logo.png') }}" alt="UChicago" height="35">
             <span>Admin Panel</span>
           </a>
           <form class="d-flex" action='{{ url_for("logout") }}'>
@@ -44,7 +44,7 @@
         {% endif %}
         {% if not user %}
           <div class="navbar-brand">
-            <img src="../static/images/logo.png" alt="UChicago" height="35">
+            <img src="{{ request.url_for('static', path='/images/logo.png') }}" alt="UChicago" height="35">
             <span>Prijateli Tree</span>
           </div>
         {% endif %}

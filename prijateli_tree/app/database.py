@@ -180,6 +180,11 @@ class Game(Base):
         ForeignKey("game_types.id", name="games_game_type_id_fkey"),
         nullable=False,
     )
+    next_game_id = Column(
+        Integer,
+        ForeignKey("games.id", name="games_next_game_id_fkey"),
+        nullable=True,
+    )
     rounds = Column(Integer, nullable=False)
     practice = Column(Boolean, default=False, nullable=False)
     game_type = relationship(

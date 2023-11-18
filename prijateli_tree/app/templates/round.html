@@ -3,16 +3,43 @@
   PrijateliTree - View Round
 {% endblock title %}
 {% block content %}
-  <div>
+  <div style="text-align: center;">
     <h1>Round: {{ current_round }}</h1>
     {% if first_round %}
-      <p>Your Ball: {{ ball }}</p>
+      <p>Your Ball: 
+        {% if ball == 'R' %}
+          <span style="color: red;">Red</span>
+        {% elif ball == 'B' %}
+          <span style="color: blue;">Blue</span>
+        {% else %}
+          {{ ball }}
+        {% endif %}
+      </p>
     {% else %}
       <h2>Your Previous Guess</h2>
-      <p>{{ previous_answers.your_previous_answer }}</p>
+      <p>
+        {% if previous_answers.your_previous_answer == 'R' %}
+          <span style="color: red;">Red</span>
+        {% elif previous_answers.your_previous_answer == 'B' %}
+          <span style="color: blue;">Blue</span>
+        {% else %}
+          {{ previous_answers.your_previous_answer }}
+        {% endif %}
+      </p>
+
       <h2>Neighbors' Previous Answers</h2>
       <ul>
-        {% for neighbor_answer in previous_answers.neighbors_previous_answer %}<li>{{ neighbor_answer }}</li>{% endfor %}
+        {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
+          <li>
+            {% if neighbor_answer == 'R' %}
+              <span style="color: red;">Red</span>
+            {% elif neighbor_answer == 'B' %}
+              <span style="color: blue;">Blue</span>
+            {% else %}
+              {{ neighbor_answer }}
+            {% endif %}
+          </li>
+        {% endfor %}
       </ul>
     {% endif %}
   </div>

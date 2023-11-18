@@ -265,7 +265,9 @@ def route_add_answer(
 
 
 @router.get("/{game_id}/player/{player_id}/round")
-def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def view_round(
+    request: Request, game_id: int, player_id: int, db: Session = Depends(get_db)
+):
     """
     Function that returns the current round
     """
@@ -291,7 +293,9 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
             "current_round": current_round,
         }
 
-    return templates.TemplateResponse("round.html", template_data)
+    return templates.TemplateResponse(
+        "round.html", {"request": request, **template_data}
+    )
 
 
 @router.post("/{game_id}/player/{player_id}/update_score")

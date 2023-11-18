@@ -10,9 +10,7 @@
     {% else %}
       <h2>Your Previous Guesses</h2>
       <ul>
-        {% for answer in previous_answers %}
-          <li>{{ answer }}</li>
-        {% endfor %}
+        {% for answer in previous_answers %}<li>{{ answer }}</li>{% endfor %}
       </ul>
     {% endif %}
   </div>

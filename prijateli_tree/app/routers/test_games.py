@@ -39,10 +39,22 @@ def test_get_player(game_id, player_id):
     print(response.json())
 
 
+def test_view_round(game_id, player_id):
+    """
+    Getting round info.
+    """
+    api = f"{API}games/{game_id}/player/{player_id}/round"
+    response = requests.get(api)
+    print(response.status_code)
+    print(response.json())
+
+
 # MAIN
 
 if __name__ == "__main__":
     # Some tests
-    for player in range(2, 7):
-        random_answer = random.choice(POSSIBLE_ANSWERS)
-        test_add_answer(1, player, 1, random_answer)
+    # for player in range(2, 7):
+    #     random_answer = random.choice(POSSIBLE_ANSWERS)
+    #     test_add_answer(1, player, 1, random_answer)
+
+    test_view_round(1, 3)

@@ -10,12 +10,9 @@
     {% else %}
       <h2>Your Previous Guess</h2>
       <p>{{ previous_answers.your_previous_answer }}</p>
-
       <h2>Neighbors' Previous Answers</h2>
       <ul>
-        {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
-          <li>{{ neighbor_answer }}</li>
-        {% endfor %}
+        {% for neighbor_answer in previous_answers.neighbors_previous_answer %}<li>{{ neighbor_answer }}</li>{% endfor %}
       </ul>
     {% endif %}
   </div>

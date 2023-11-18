@@ -80,14 +80,18 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     return current_round
 
 
-def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def get_game_and_player(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
     """
     Helper function to ensure game and player exist
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     player = None
     for p in game.players:
@@ -109,7 +113,9 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
 
@@ -184,7 +190,9 @@ def get_previous_answers(
             .filter_by(game_id=game_id, position=neighbor_position)
             .one_or_none()
         )
-        this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
+        this_answer = [
+            a for a in this_neighbor.answers if a.round == last_round
+        ][0]
 
         neighbors_answers.append(this_answer.player_answer)
 
@@ -205,7 +213,9 @@ def get_previous_answers(
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
     return {
         "game_id": game_id,
         "rounds": game.rounds,
@@ -219,7 +229,9 @@ def route_game_player_access(
 ):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     if len([player for player in game.players if player.id == player_id]) != 1:
         raise HTTPException(
@@ -241,7 +253,9 @@ def route_add_answer(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     correct_answer = get_bag_color(game.game_type.bag)
 
@@ -266,7 +280,10 @@ def route_add_answer(
 
 @router.get("/{game_id}/player/{player_id}/round")
 def view_round(
-    request: Request, game_id: int, player_id: int, db: Session = Depends(get_db)
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
 ):
     """
     Function that returns the current round
@@ -375,13 +392,17 @@ def score_to_denirs(
 
 
 @router.get("/{game_id}/player/{player_id}/integrated")
-def integrated_game(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def integrated_game(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
     """
     Logic for handling the integrated game
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="game not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+        )
 
     # TODO: We need to go over this one
     existing_player = (

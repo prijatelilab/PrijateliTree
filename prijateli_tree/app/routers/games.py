@@ -18,6 +18,7 @@ from prijateli_tree.app.utils.constants import (
     FILE_MODE_READ,
     STANDARD_ENCODING,
     WINNING_SCORE,
+    SYSTEM_ID,
 )
 from prijateli_tree.app.utils.games import Game as GameUtil
 
@@ -458,3 +459,71 @@ def confirm_player(
     db.commit()
 
     return {"status": "Player is ready!"}
+
+
+@router.post("/{game_id}/player_id/{player_id}/next_game")
+def create_new_game_from_old_game(
+    game_id: int, 
+    player_id: int, 
+    db: Session = Depends(get_db)
+):
+    """
+    Takes previous game and creates the next random game for the same players
+    """
+    last_game, this_player = get_game_and_player(game_id, player_id, db)
+    next_game = db.query(Game).filter_by(id=last_game.next_game_id).one_or_none()
+    
+    if next_game is None:
+
+        game_type = random.choice(db.query(GameType).all())
+        n_rounds = random.choice([3, 4, 5])
+
+        next_game = Game(
+            created_by=SYSTEM_ID,
+            game_type_id=game_type.id,
+            rounds=n_rounds,
+        )
+
+        db.add(next_game)
+        db.commit()
+        db.refresh(next_game)
+
+        players = last_game.players
+
+        # randomize location in network conditional on language
+        # one group is always in 1-2-3 and the other 4-5-6
+        group_1 = random.shuffle([p.user_id for p in players if p in (1, 2, 3)])
+        group_2 = random.shuffle([p.user_id for p in players if p in (4, 5, 6)])
+
+        pos_players = game_1 + game_2
+        
+        for i in range(0, len(pos_players)):
+            db.add(
+                Player(
+                    created_by=SYSTEM_ID,
+                    game_id=next_game.id,
+                    user_id=pos_players[i],
+                    position=i + 1,
+                )
+            )
+
+        db.commit()
+        db.refresh(next_game)
+
+    next_player = (db.query(Player)
+        .filter_by(
+            user_id = player.user_id, 
+            game_id = next_game.id
+            )
+        .one()
+    )
+
+    # unclear what next URL will be.
+    redirect_url = URL(f"{next_game.id}/player/{next_player.id}/round").include_query_params(
+        success=f"Your game (ID: {game.id}) has been successfully created!"
+    )
+
+    return RedirectResponse(
+        redirect_url,
+        status_code=HTTPStatus.FOUND,
+    )

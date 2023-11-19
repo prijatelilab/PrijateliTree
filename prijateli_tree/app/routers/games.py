@@ -477,7 +477,7 @@ def create_new_game_from_old_game(
         group_1 = random.shuffle([p.user_id for p in players if p in (1, 2, 3)])
         group_2 = random.shuffle([p.user_id for p in players if p in (4, 5, 6)])
 
-        pos_players = game_1 + game_2
+        pos_players = group_1 + group_2
         
         for i in range(0, len(pos_players)):
             db.add(

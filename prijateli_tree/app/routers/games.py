@@ -9,10 +9,12 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
     GameAnswer,
+    GameType,
     Player,
     SessionLocal,
     User,
@@ -445,40 +447,42 @@ def confirm_player(
 
 @router.post("/{game_id}/player_id/{player_id}/next_game")
 def create_new_game_from_old_game(
-    game_id: int, 
-    player_id: int, 
+    game_id: int,
+    player_id: int,
     db: Session = Depends(get_db)
 ):
     """
     Takes previous game and creates the next random game for the same players
     """
-    last_game, this_player = get_game_and_player(game_id, player_id, db)
-    next_game = db.query(Game).filter_by(id=last_game.next_game_id).one_or_none()
-    
-    if next_game is None:
+    last_game, player = get_game_and_player(game_id, player_id, db)
 
-        game_type = random.choice(db.query(GameType).all())
+    if last_game.next_game_id is None:
+        game_types = db.query(GameType).filter(
+            GameType.network.in_(['integrated', 'segregated'])).all()
+        game_type = random.choice(game_types)
         n_rounds = random.choice([3, 4, 5])
 
         next_game = Game(
             created_by=SYSTEM_ID,
+            id=last_game.next_game_id,
             game_type_id=game_type.id,
             rounds=n_rounds,
         )
 
         db.add(next_game)
+
+        db.query(Game).filter_by(id=game_id).update({"next_game_id": next_game.id})
+
         db.commit()
         db.refresh(next_game)
 
-        players = last_game.players
-
         # randomize location in network conditional on language
         # one group is always in 1-2-3 and the other 4-5-6
-        group_1 = random.shuffle([p.user_id for p in players if p in (1, 2, 3)])
-        group_2 = random.shuffle([p.user_id for p in players if p in (4, 5, 6)])
+        group_1 = random.shuffle([p.user_id for p in last_game.players if p in (1, 2, 3)])
+        group_2 = random.shuffle([p.user_id for p in last_game.players if p in (4, 5, 6)])
 
         pos_players = group_1 + group_2
-        
+
         for i in range(0, len(pos_players)):
             db.add(
                 Player(
@@ -492,17 +496,14 @@ def create_new_game_from_old_game(
         db.commit()
         db.refresh(next_game)
 
-    next_player = (db.query(Player)
-        .filter_by(
-            user_id = player.user_id, 
-            game_id = next_game.id
-            )
-        .one()
-    )
+    next_player = db.query(Player).filter_by(
+                    user_id=player.user_id,
+                    game_id=next_game.id
+                    ).one()
 
     # unclear what next URL will be.
     redirect_url = URL(f"{next_game.id}/player/{next_player.id}/round").include_query_params(
-        success=f"Your game (ID: {game.id}) has been successfully created!"
+        success=f"Your game (ID: {next_game.id}) has been successfully created!"
     )
 
     return RedirectResponse(

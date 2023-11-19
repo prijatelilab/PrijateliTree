@@ -16,6 +16,17 @@ The games are a means to provide insights into social learning, the economics of
 
 ## Dev commands
 `make lint`: Runs the `pre-commit` processes and lints the repository.
+`make build`: Builds the Docker images for the application and the database pass through.
+`make start`: Starts the Docker containers based on the images created in the `make build` step.
+`make create_db`: Runs the alembic scripts. This MUST be run before you run the `make start` command, or it will error.
+`make stop`: Stops the running Docker containers.
+`make clean`: Removes all Docker containers.
+`make clean_all`: Removes the database link between the Docker containers and the self-hosted version of PostgreSQL.
+
+## General Debugging Notes
+- If you are failing the `Format-and-Fail` GitHub Action, you must run `make lint` and make any changes it requests.
+- If you have already run the `make` command, you cannot run it again UNLESS you delete all the tables in your hosted database.
+  - This is because the command will attempt to run the Alembic scripts again which will error since all the tables already exist.
 
 ## Data Migrations
 To run a data migration, you need to run the following steps:

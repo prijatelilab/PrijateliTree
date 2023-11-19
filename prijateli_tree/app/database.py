@@ -16,7 +16,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import Session, relationship, sessionmaker
 from sqlalchemy.sql import func as sql_func
 
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
@@ -219,6 +219,7 @@ class Player(Base):
     position = Column(Integer, nullable=False)
     name_hidden = Column(Boolean, nullable=False, default=False)
     ready = Column(Boolean, nullable=False, default=False)
+    user = relationship("User", foreign_keys="Player.user_id")
     game = relationship(
         "Game",
         back_populates="players",
@@ -227,6 +228,11 @@ class Player(Base):
         "GameAnswer",
         back_populates="player",
     )
+
+    @property
+    def language(self, db: Session = next(get_db())):
+        user = db.query(User).filter_by(id=Player.user_id).one()
+        return db.query(Language).filter_by(id=user.language_id).one()
 
 
 class GameAnswer(Base):

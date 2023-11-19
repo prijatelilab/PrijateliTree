@@ -22,6 +22,10 @@ create_db:
 lint:
 	pre-commit run --all-files
 
+.PHONY: test
+test:
+	pytest -vsx ./prijateli_tree/tests/
+
 .PHONY: stop
 stop:
 	docker-compose stop

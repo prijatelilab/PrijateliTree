@@ -10,13 +10,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import (
-    Game,
-    GameAnswer,
-    GameType,
-    Player,
-    SessionLocal,
-)
+from prijateli_tree.app.database import Game, GameAnswer, Player, SessionLocal
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
     BALL_RED,
@@ -113,14 +107,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
             status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
 
-    game_type = db.query(GameType).filter_by(id=game.game_type_id).one_or_none()
-
-    if game_type is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game type not found"
-        )
-
-    return game, game_type
+    return game, game.game_type
 
 
 def did_player_win(

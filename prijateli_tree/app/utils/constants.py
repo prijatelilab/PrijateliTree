@@ -7,6 +7,9 @@ KEY_ENV_PROD = "production"
 KEY_ENV_TESTING = "testing"
 KEY_LOGIN_SECRET = "LOGIN_SECRET_KEY"
 
+# user id for system
+SYSTEM_ID = 0
+
 # File Constants
 FILE_MODE_READ = "r"
 STANDARD_ENCODING = "utf-8"

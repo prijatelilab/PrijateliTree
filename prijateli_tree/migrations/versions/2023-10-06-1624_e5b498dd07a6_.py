@@ -18,10 +18,10 @@ def upgrade():
             INSERT INTO languages
             (name, abbr)
             VALUES
-            ('English', 'EN'),
-            ('Macedonian', 'MK'),
-            ('Albanian', 'SQ'),
-            ('Turkish', 'TR')
+            ('English', 'en'),
+            ('Macedonian', 'mk'),
+            ('Albanian', 'sq'),
+            ('Turkish', 'tr')
         """
     )
 

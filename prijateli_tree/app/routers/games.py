@@ -96,7 +96,6 @@ def get_game_and_player(
     player = None
     for p in game.players:
         if p.id == player_id:
-            # player = db.query(User).filter_by(id=p.user_id).one_or_none()
             player = db.query(Player).filter_by(id=player_id).one_or_none()
 
     if player is None:

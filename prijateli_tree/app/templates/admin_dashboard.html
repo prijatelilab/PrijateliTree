@@ -133,6 +133,7 @@
               <th scope="col">ID</th>
               <th scope="col">Network</th>
               <th scope="col">Bag</th>
+              <th scope="col">Hidden Names</th>
               <th scope="col">Number of Games</th>
             </tr>
           </thead>
@@ -147,6 +148,7 @@
                 <th>{{ gt.id }}</th>
                 <td>{{ gt.network|title }}</td>
                 <td>{{ gt.bag }}</td>
+                <td>{{ gt.names_hidden }}</td>
                 <td>{{ gt.games|length }}</td>
               </tr>
             {% endfor %}

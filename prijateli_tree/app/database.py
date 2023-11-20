@@ -153,6 +153,7 @@ class GameType(Base):
     # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
     bag = Column(String, nullable=False)
     games = relationship("Game", back_populates="game_type")
+    names_hidden = Column(Boolean, nullable=False, server_default="false")
 
     __table_args__ = (
         CheckConstraint(
@@ -217,7 +218,6 @@ class Player(Base):
         nullable=False,
     )
     position = Column(Integer, nullable=False)
-    name_hidden = Column(Boolean, nullable=False, default=False)
     ready = Column(Boolean, nullable=False, default=False)
     user = relationship("User", foreign_keys="Player.user_id")
     game = relationship(

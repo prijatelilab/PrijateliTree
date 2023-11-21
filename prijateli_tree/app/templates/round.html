@@ -3,15 +3,15 @@
   PrijateliTree - View Round
 {% endblock title %}
 {% block content %}
-  <div class="container-sm general-container">
+  <div style="text-align: center;">
     <h1 style="margin-bottom: 30px;">Round: {{ current_round }}</h1>
     {% if first_round %}
       <p style="font-size: 24px; margin-bottom: 20px;">
         Your Ball:
         {% if ball == 'R' %}
-          <span style="color: red; font-size: 24px;">Red</span>
+          <span class="red_text">Red</span>
         {% elif ball == 'B' %}
-          <span style="color: #007bff; font-size: 24px;">Blue</span>
+          <span class="blue_text">Blue</span>
         {% else %}
           {{ ball }}
         {% endif %}
@@ -20,9 +20,9 @@
       <h2 style="margin-bottom: 20px;">Your Previous Guess</h2>
       <p style="font-size: 24px; margin-bottom: 20px;">
         {% if previous_answers.your_previous_answer == 'R' %}
-          <span style="color: red;">Red</span>
+          <span class="red_color">Red</span>
         {% elif previous_answers.your_previous_answer == 'B' %}
-          <span style="color: #007bff;">Blue</span>
+          <span class="blue_color">Blue</span>
         {% else %}
           {{ previous_answers.your_previous_answer }}
         {% endif %}
@@ -32,9 +32,9 @@
         {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
           <li style="font-size: 24px; margin-bottom: 20px;">
             {% if neighbor_answer == 'R' %}
-              <span style="color: red;">Red</span>
+              <span class="red_color">Red</span>
             {% elif neighbor_answer == 'B' %}
-              <span style="color: #007bff;">Blue</span>
+              <span class="blue_color">Blue</span>
             {% else %}
               {{ neighbor_answer }}
             {% endif %}

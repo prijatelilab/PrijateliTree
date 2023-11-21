@@ -26,3 +26,21 @@ tr.empty-table {
     margin-top: 30px;
     text-align: center;
 }
+
+.red_text {
+    color: red;
+    font-size: 24px;
+}
+
+.blue_text {
+    color: #007bff;
+    font-size: 24px;
+}
+
+.red_color {
+    color: red;
+}
+
+.blue_color {
+    color: #007bff;
+}

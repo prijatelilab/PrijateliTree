@@ -313,10 +313,10 @@ def all_set(
     players = db.query(Player).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
-        n_answers += players.answers
-    
+        n_answers += len(players.answers)
+
     ready = n_answers % len(players) == 0
-    print(ready)
+
     return {"ready": ready}
 
 

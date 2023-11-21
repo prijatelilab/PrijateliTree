@@ -19,6 +19,7 @@ The games are a means to provide insights into social learning, the economics of
 `make build`: Builds the Docker images for the application and the database pass through.
 `make start`: Starts the Docker containers based on the images created in the `make build` step.
 `make create_db`: Runs the alembic scripts. This MUST be run before you run the `make start` command, or it will error.
+`make update_db`: Updates the DB to the latest Alembic version.
 `make stop`: Stops the running Docker containers.
 `make clean`: Removes all Docker containers.
 `make clean_all`: Removes the database link between the Docker containers and the self-hosted version of PostgreSQL.

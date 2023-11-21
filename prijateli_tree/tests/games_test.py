@@ -1,14 +1,10 @@
 """Script to test the games API endpoints."""
 import random
+from http import HTTPStatus
 
 import requests
 
-from prijateli_tree.app.utils.constants import (
-    BALL_BLUE,
-    BALL_RED,
-    STATUS_CODE_OK,
-)
-
+from prijateli_tree.app.utils.constants import BALL_BLUE, BALL_RED
 
 API = "http://localhost:8000/"
 POSSIBLE_ANSWERS = [BALL_RED, BALL_BLUE]
@@ -36,7 +32,7 @@ def test_add_answer():
     Tests if the 'add answer' endpoint works.
     """
     response = test_add_answer()
-    assert response(1, 2, 1, "R") == STATUS_CODE_OK
+    assert response(1, 2, 1, "R") == HTTPStatus.OK
 
 
 def view_round(game_id, player_id):
@@ -54,7 +50,7 @@ def test_view_round():
     Tests if the 'view round' endpoint works.
     """
     response = test_view_round()
-    assert response(1, 2) == STATUS_CODE_OK
+    assert response(1, 2) == HTTPStatus.OK
 
 
 # MAIN

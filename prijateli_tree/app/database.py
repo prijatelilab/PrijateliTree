@@ -231,7 +231,7 @@ class Player(Base):
 
     @property
     def language(self, db: Session = next(get_db())):
-        user = db.query(User).filter_by(id=Player.user_id).one()
+        user = db.query(User).filter_by(id=self.user_id).one()
         return db.query(Language).filter_by(id=user.language_id).one()
 
 

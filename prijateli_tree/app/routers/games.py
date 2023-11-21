@@ -100,6 +100,20 @@ def get_game_and_player(
     return game, filtered_player[0]
 
 
+def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
+    """
+    Get language form player_id
+    """
+    player = db.query(Player).filter_by(id=player_id).one_or_none()
+
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not found"
+        )
+
+    return player.language.abbr
+
+
 def did_player_win(
     game_id: int,
     player_id: int,
@@ -330,11 +344,13 @@ def waiting(
     """
     Wait screen shows until all players are ready to move to the next section
     """
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
     result = {
         "request": request,
         "game_id": game_id,
         "player_id": player_id,
-        "text": "..."
+        "text": template_text
     }
 
     return templates.TemplateResponse("waiting.html", result)

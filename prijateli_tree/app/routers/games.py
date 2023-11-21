@@ -10,13 +10,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import (
-    Game,
-    GameAnswer,
-    Player,
-    SessionLocal,
-    User,
-)
+from prijateli_tree.app.database import Game, GameAnswer, Player, SessionLocal
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
     BALL_RED,
@@ -43,7 +37,6 @@ base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
 
 languages = {}
-print("Read languages!")
 for lang in glob.glob("prijateli_tree/app/languages/*.json"):
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
         languages.update(json.load(file))
@@ -103,7 +96,6 @@ def did_player_win(
     game: Game,
     player_id: int,
     db: Session = Depends(get_db),
-    debug: bool = False,
 ):
     """
     Helper function that determines if the player won,
@@ -265,24 +257,9 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
     """
     Function that returns the current round
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    game, player = get_game_and_player(game_id, player_id, db)
 
-    player = None
-    for p in game.players:
-        if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
-
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
-
-    # Here's where you can get the correct text for your templating.
-    # template_text = languages[get_language_from_]
+    # template_text = languages[player.language.abbr]
 
     # Get current round
     current_round = get_current_round(game_id, db)
@@ -293,7 +270,7 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         return {"round": current_round, "ball": ball}
     else:
         # Show the player their previous answer and their neighbors
-        previous_answers = get_previous_answers(game_id, player_id, db)
+        previous_answers = get_previous_answers(game.id, player.id, db)
         return {"round": current_round, "previous_answers": previous_answers}
 
 
@@ -368,15 +345,7 @@ def score_to_denirs(
     given all of their scores
     """
     total_score = 0
-    player = (
-        db.query(Player)
-        .filter_by(user_id=player_id, game_id=game_id)
-        .one_or_none()
-    )
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    game, player = get_game_and_player(game_id, player_id, db)
 
     for answer in player.answers:
         if answer.player_answer == answer.correct_answer:
@@ -394,20 +363,8 @@ def integrated_game(
     """
     Logic for handling the integrated game
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    game, player = get_game_and_player(game_id, player_id, db)
 
-    # TODO: We need to go over this one
-    existing_player = (
-        db.query(Player).filter_by(game_id=game_id, id=player_id).one_or_none()
-    )
-    if not existing_player:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
     # Get current round
     current_round = get_current_round(game_id, db)
 
@@ -434,11 +391,7 @@ def confirm_player(
     Confirms if the player is ready for the game
     """
 
-    player = db.query(Player).filter_by(id=player_id, game_id=game_id)
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    game, player = get_game_and_player(game_id, player_id, db)
 
     player.ready = True
     db.commit()

@@ -18,6 +18,7 @@ async function check_all_set() {
 setInterval(function() { check_all_set();}, 5000);
 
 
+
 </script>
 {% endblock helper_script %}
 
@@ -26,4 +27,5 @@ setInterval(function() { check_all_set();}, 5000);
 {% endblock title %}
 {% block content %}
   <h1>Waiting for other players...</h1>
+  <div class="spin-loader"></div>
 {% endblock content %}

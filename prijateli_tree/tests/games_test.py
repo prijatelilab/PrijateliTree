@@ -14,7 +14,7 @@ API = "http://localhost:8000/"
 POSSIBLE_ANSWERS = [BALL_RED, BALL_BLUE]
 
 
-def test_add_answer(game_id, player_id, round, answer):
+def add_answer(game_id, player_id, round, answer):
     """
     Adding answer for a given player.
     """
@@ -28,27 +28,33 @@ def test_add_answer(game_id, player_id, round, answer):
         },
     )
 
-    assert response.status_code == STATUS_CODE_OK
+    return response.status_code
 
 
-def test_get_player(game_id, player_id):
+def test_add_answer():
     """
-    Getting player info.
+    Tests if the 'add answer' endpoint works.
     """
-    api = f"{API}games/{game_id}/player/{player_id}"
-    response = requests.get(api)
-
-    assert response.status_code == STATUS_CODE_OK
+    response = test_add_answer()
+    assert response(1, 2, 1, "R") == STATUS_CODE_OK
 
 
-def test_view_round(game_id, player_id):
+def view_round(game_id, player_id):
     """
     Getting round info.
     """
     api = f"{API}games/{game_id}/player/{player_id}/round"
     response = requests.get(api)
 
-    assert response.status_code == STATUS_CODE_OK
+    return response.status_code
+
+
+def test_view_round():
+    """
+    Tests if the 'view round' endpoint works.
+    """
+    response = test_view_round()
+    assert response(1, 2) == STATUS_CODE_OK
 
 
 # MAIN
@@ -57,5 +63,5 @@ if __name__ == "__main__":
     # Some tests
     for player in range(1, 6):
         random_answer = random.choice(POSSIBLE_ANSWERS)
-        test_add_answer(1, player, 1, random_answer)
-    test_view_round(1, 3)
+        add_answer(1, player, 1, random_answer)
+    view_round(1, 3)

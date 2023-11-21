@@ -29,7 +29,7 @@ tr.empty-table {
 
 
 
- 
+
 /* Waiting spinner */
 /* credit: https://dribbble.com/shots/1756041-Spinning-CSS-Loader */
 
@@ -44,7 +44,7 @@ tr.empty-table {
     --spinner-bg: #26A69A;
     --spinner-inner-bg: #000101;
   }
-  
+
   /* Define .spin-loader class */
   .spin-loader {
     border-radius: var(--spinner-radius);
@@ -54,7 +54,7 @@ tr.empty-table {
     position: relative;
     animation: spin var(--spinner-speed) linear 0s infinite normal;
     background: var(--spinner-bg);
-  
+
     /* Pseudo-elements for the left half and the inner circle */
     &::before,
     &::after {
@@ -62,7 +62,7 @@ tr.empty-table {
       display: block;
       position: absolute;
     }
-  
+
     /* Styles for the left half of the spinner */
     &::before {
       border-radius: 0 var(--spinner-fill-radius) var(--spinner-fill-radius) 0;
@@ -74,7 +74,7 @@ tr.empty-table {
       background: var(--spinner-color);
       background-image: linear-gradient(var(--spinner-bg), var(--spinner-color));
     }
-  
+
     /* Styles for the inner circle of the spinner */
     &::after {
       border-radius: var(--spinner-radius);
@@ -87,7 +87,7 @@ tr.empty-table {
       background: var(--spinner-inner-bg);
     }
   }
-  
+
   /* Define keyframes for the spin animation */
   @keyframes spin {
     to {

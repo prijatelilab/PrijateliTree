@@ -3,27 +3,29 @@
   End of Game
 {% endblock title %}
 {% block content %}
-  <h1>
-    {% if is_correct %}
-      {{ text.game_results.you_won }}
+  <div class="container-sm general-container">
+    <h1>
+      {% if is_correct %}
+        {{ text.game_results.you_won }}
+      {% else %}
+        {{ text.game_results.better_luck }}
+      {% endif %}
+    </h1>
+    {% if correct_color == "B" %}
+      {{ text.game_results.the_computer_chose_blue }}
     {% else %}
-      {{ text.game_results.better_luck }}
+      {{ text.game_results.the_computer_chose_red }}
     {% endif %}
-  </h1>
-  {% if correct_color == "B" %}
-    {{ text.game_results.the_computer_chose_blue }}
-  {% else %}
-    {{ text.game_results.the_computer_chose_red }}
-  {% endif %}
-  {% if player_answer == "B" %}
-    You chose Blue.
-  {% else %}
-    You chose Red.
-  {% endif %}
-  <br>
-  <br>
-  {{ text.real_game_intro.added_points | replace('{X}', points) }}
-  <br>
-  <br>
-  <a href="{{ url_for('view_round', player_id=player_id, game_id=game_id) }}">Next</a>
+    {% if player_answer == "B" %}
+      You chose Blue.
+    {% else %}
+      You chose Red.
+    {% endif %}
+    <br>
+    <br>
+    {{ text.real_game_intro.added_points | replace('{X}', points) }}
+    <br>
+    <br>
+    <a href="{{ url_for('view_round', player_id=player_id, game_id=game_id) }}">Next</a>
+  </div>
 {% endblock content %}

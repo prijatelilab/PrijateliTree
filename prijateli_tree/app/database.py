@@ -16,7 +16,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import Session, relationship, sessionmaker
 from sqlalchemy.sql import func as sql_func
 
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
@@ -153,6 +153,7 @@ class GameType(Base):
     # Will be the representation of the bag, something like RRRRBB, BBBBRR, etc.
     bag = Column(String, nullable=False)
     games = relationship("Game", back_populates="game_type")
+    names_hidden = Column(Boolean, nullable=False, server_default="false")
 
     __table_args__ = (
         CheckConstraint(
@@ -179,6 +180,11 @@ class Game(Base):
         Integer,
         ForeignKey("game_types.id", name="games_game_type_id_fkey"),
         nullable=False,
+    )
+    next_game_id = Column(
+        Integer,
+        ForeignKey("games.id", name="games_next_game_id_fkey"),
+        nullable=True,
     )
     rounds = Column(Integer, nullable=False)
     practice = Column(Boolean, default=False, nullable=False)
@@ -212,8 +218,8 @@ class Player(Base):
         nullable=False,
     )
     position = Column(Integer, nullable=False)
-    name_hidden = Column(Boolean, nullable=False, default=False)
     ready = Column(Boolean, nullable=False, default=False)
+    user = relationship("User", foreign_keys="Player.user_id")
     game = relationship(
         "Game",
         back_populates="players",
@@ -222,6 +228,11 @@ class Player(Base):
         "GameAnswer",
         back_populates="player",
     )
+
+    @property
+    def language(self, db: Session = next(get_db())):
+        user = db.query(User).filter_by(id=Player.user_id).one()
+        return db.query(Language).filter_by(id=user.language_id).one()
 
 
 class GameAnswer(Base):

@@ -89,16 +89,13 @@ def get_game_and_player(
             status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
 
-    player = None
-    for p in game.players:
-        if p.id == player_id:
-            player = db.query(User).filter_by(id=p.user_id).one_or_none()
+    filtered_player = [p for p in game.players if p.id == player_id]
 
-    if player is None:
+    if not len(filtered_player):
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
         )
-    return game, player
+    return game, filtered_player[0]
 
 
 def did_player_win(

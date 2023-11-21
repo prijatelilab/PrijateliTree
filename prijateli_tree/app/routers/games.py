@@ -300,6 +300,40 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         previous_answers = get_previous_answers(game_id, player_id, db)
         return {"round": current_round, "previous_answers": previous_answers}
 
+@router.get("/{game_id}/all_set")
+def all_set(
+    request: Request,
+    game_id: int,
+    db: Session = Depends(get_db),
+):
+    players = db.query(Player).filter_by(game_id=game_id).all()
+    n_answers = 0
+    for player in players:
+        n_answers += players.answers
+    current_round = len(answers) // len(players) + 1
+
+    ready = True
+    return {"ready": ready}
+
+@router.get("/{game_id}/player/{player_id}/wait")
+def wait(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Wait screen shows until all players are ready to move to the next section
+    """
+    result = {
+        "request": request,
+        "game_id": game_id,
+        "player_id": player_id,
+        "text": "..."
+    }
+
+    return templates.TemplateResponse("wait.html", result)
+
 
 @router.post("/{game_id}/player/{player_id}/update_score")
 def route_add_score(

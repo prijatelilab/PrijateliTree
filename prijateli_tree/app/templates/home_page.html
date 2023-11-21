@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}
+  PrijateliTree - Introduction Page
+{% endblock title %}
+{% block content %}
+  <div class="container-sm text-center extra-top-margin">
+    <h1>Welcome to the PrijateliTree application!</h1>
+    <p>If you are attempting to access a particular game, please reach out to your game coordinator.</p>
+    <p>
+      If you are an Administrator attempting to create a session or add users, please continue to
+      <a href='{{ url_for("admin_login") }}'>this page</a>.
+    </p>
+  </div>
+{% endblock content %}

@@ -29,12 +29,14 @@
       </p>
       <h2 style="margin-bottom: 20px;">Neighbors' Previous Guesses</h2>
       <ul style="list-style: none; padding: 0;">
-        {% for neighbor_answer in previous_answers.neighbors_previous_answer %}
+        {% for index in previous_answers.neighbors_previous_answer %}
+          {% set neighbor_answer = previous_answers.neighbors_previous_answer[loop.index-1] %}
+          {% set neighbor_name = previous_answers.neighbors_names[loop.index-1] %}
           <li style="font-size: 24px; margin-bottom: 20px;">
             {% if neighbor_answer == 'R' %}
-              <span class="red_color">Red</span>
+              <span class="red_color">{{ neighbor_name }} - Red</span>
             {% elif neighbor_answer == 'B' %}
-              <span class="blue_color">Blue</span>
+              <span class="blue_color">{{ neighbor_name }} - Blue</span>
             {% else %}
               {{ neighbor_answer }}
             {% endif %}

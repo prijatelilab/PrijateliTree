@@ -63,5 +63,5 @@ if __name__ == "__main__":
     # Some tests
     for player in range(1, 6):
         random_answer = random.choice(POSSIBLE_ANSWERS)
-        add_answer(1, player, 1, random_answer)
-    view_round(1, 3)
+        test_add_answer(1, player, 1, random_answer)
+    test_view_round(1, 3)

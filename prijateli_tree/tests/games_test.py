@@ -3,7 +3,11 @@ import random
 
 import requests
 
-from prijateli_tree.app.utils.constants import BALL_BLUE, BALL_RED
+from prijateli_tree.app.utils.constants import (
+    BALL_BLUE,
+    BALL_RED,
+    STATUS_CODE_OK,
+)
 
 
 API = "http://localhost:8000/"
@@ -23,8 +27,8 @@ def test_add_answer(game_id, player_id, round, answer):
             "current_round": round,
         },
     )
-    print(response.status_code)
-    print(response.json())
+
+    assert response.status_code == STATUS_CODE_OK
 
 
 def test_get_player(game_id, player_id):
@@ -33,8 +37,8 @@ def test_get_player(game_id, player_id):
     """
     api = f"{API}games/{game_id}/player/{player_id}"
     response = requests.get(api)
-    print(response.status_code)
-    print(response.json())
+
+    assert response.status_code == STATUS_CODE_OK
 
 
 def test_view_round(game_id, player_id):
@@ -43,8 +47,8 @@ def test_view_round(game_id, player_id):
     """
     api = f"{API}games/{game_id}/player/{player_id}/round"
     response = requests.get(api)
-    print(response.status_code)
-    print(response.json())
+
+    assert response.status_code == STATUS_CODE_OK
 
 
 # MAIN

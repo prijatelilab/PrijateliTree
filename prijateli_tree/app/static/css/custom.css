@@ -21,3 +21,8 @@ div.table-container a.btn {
 tr.empty-table {
     text-align: center;
 }
+
+.general-container {
+    margin-top: 30px;
+    text-align: center;
+}

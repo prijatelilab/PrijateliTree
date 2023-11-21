@@ -160,6 +160,7 @@ def get_previous_answers(
     neighbors_positions = game_util.neighbors[player.position]
 
     neighbors_answers = []
+    neighbors_names = []
     # Get the neighbors' previous answers
     for neighbor_position in neighbors_positions:
         this_neighbor = (
@@ -170,12 +171,13 @@ def get_previous_answers(
         this_answer = [
             a for a in this_neighbor.answers if a.round == last_round
         ][0]
-
+        neighbors_names.append(this_neighbor.user.name)
         neighbors_answers.append(this_answer.player_answer)
 
     return {
         "your_previous_answer": player_answer.player_answer,
         "neighbors_previous_answer": neighbors_answers,
+        "neighbors_names": neighbors_names,
     }
 
 

@@ -337,6 +337,8 @@ def route_end_game(
     Function that updates the player's score in the database
     """
     
+    _, player = get_game_and_player(game_id, player_id, db)
+
     game_status = did_player_win(game_id, player_id, db, debug)
 
     points = 0

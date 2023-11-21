@@ -1,4 +1,26 @@
 {% extends "base.html" %}
+
+{% block helper_script %}
+<script>
+<!--calls wait again after 5 seconds-->
+
+async function check_all_set() {
+  const response = await fetch("/games/{{game_id}}/all_set");
+  const all_set = await response.json();
+  
+  if (all_set.ready) {
+    window.location.href = "/games/{{game_id}}/player/{{player_id}}/round";
+  } else {
+    console.log("still waiting ...")
+  };
+}
+
+setInterval(function() { check_all_set();}, 5000);
+
+
+</script>
+{% endblock helper_script %}
+
 {% block title %}
   PrijateliTree - Waiting
 {% endblock title %}

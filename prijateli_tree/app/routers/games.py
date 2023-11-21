@@ -300,23 +300,28 @@ def view_round(game_id: int, player_id: int, db: Session = Depends(get_db)):
         previous_answers = get_previous_answers(game_id, player_id, db)
         return {"round": current_round, "previous_answers": previous_answers}
 
+
 @router.get("/{game_id}/all_set")
 def all_set(
     request: Request,
     game_id: int,
     db: Session = Depends(get_db),
 ):
+    """
+    Determines if all players have submitted a guess in the current round
+    """
     players = db.query(Player).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
         n_answers += players.answers
-    current_round = len(answers) // len(players) + 1
-
-    ready = True
+    
+    ready = n_answers % len(players) == 0
+    print(ready)
     return {"ready": ready}
 
-@router.get("/{game_id}/player/{player_id}/wait")
-def wait(
+
+@router.get("/{game_id}/player/{player_id}/waiting")
+def waiting(
     request: Request,
     game_id: int,
     player_id: int,
@@ -332,7 +337,7 @@ def wait(
         "text": "..."
     }
 
-    return templates.TemplateResponse("wait.html", result)
+    return templates.TemplateResponse("waiting.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/update_score")

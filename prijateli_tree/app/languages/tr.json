@@ -17,19 +17,6 @@
       "denars": "{X} dinar!",
       "you_guessed_correctly": "{X} oyunda do\u011fru tahmin ettiniz ve {x} puan kazand\u0131n\u0131z, bu da ekstra kazand\u0131\u011f\u0131n\u0131z anlam\u0131na geliyors."
     },
-    "homepage": {
-      "facilitator_password": "E\u011fitimcinin \u015eifresi",
-      "facilitator_username": "E\u011fitimcinin kullan\u0131c\u0131 ad\u0131",
-      "facilitators": "Sadece e\u011fitimciler i\u00e7in!",
-      "login": "Giri\u015f Yap",
-      "school": "Okul",
-      "student_language": "\u00d6\u011frencinin dili",
-      "student_name": "Ad ve soyad"
-    },
-    "intro_practice": {
-      "now_you_will_play": "\u015eimdi kurallara al\u0131\u015fmak i\u00e7in 2 al\u0131\u015ft\u0131rma oyunu oynayacaks\u0131n\u0131z.",
-      "since_these_rules": "Bunlar al\u0131\u015ft\u0131rma turlar\u0131 oldu\u011fu i\u00e7in kimseyi performans\u0131ndan dolay\u0131 \u00f6d\u00fcllendirmeyece\u011fiz."
-    },
     "game_first_round": {
       "blue": "MAV\u0130.",
       "guess_color": "Torban\u0131n rengini tahmin edin:",
@@ -60,6 +47,19 @@
       "feel_free": "Kurallar\u0131 kendinize hat\u0131rlatmak i\u00e7in videoyu tekrar izlemekten \u00e7ekinmeyin.",
       "game": "Practice Game.",
       "score": "Skor."
+    },
+    "homepage": {
+      "facilitator_password": "E\u011fitimcinin \u015eifresi",
+      "facilitator_username": "E\u011fitimcinin kullan\u0131c\u0131 ad\u0131",
+      "facilitators": "Sadece e\u011fitimciler i\u00e7in!",
+      "login": "Giri\u015f Yap",
+      "school": "Okul",
+      "student_language": "\u00d6\u011frencinin dili",
+      "student_name": "Ad ve soyad"
+    },
+    "intro_practice": {
+      "now_you_will_play": "\u015eimdi kurallara al\u0131\u015fmak i\u00e7in 2 al\u0131\u015ft\u0131rma oyunu oynayacaks\u0131n\u0131z.",
+      "since_these_rules": "Bunlar al\u0131\u015ft\u0131rma turlar\u0131 oldu\u011fu i\u00e7in kimseyi performans\u0131ndan dolay\u0131 \u00f6d\u00fcllendirmeyece\u011fiz."
     },
     "quiz_balls": {
       "colors_in_bag": "Mavi torbadaki toplar hangi renktir?",

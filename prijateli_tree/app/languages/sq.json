@@ -17,19 +17,6 @@
       "denars": "{X} denar\u00eb!",
       "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
     },
-    "homepage": {
-      "facilitator_password": "Fjal\u00ebkalimi i trajnuesit",
-      "facilitator_username": "Emri i p\u00ebrdoruesit i trajnuesit",
-      "facilitators": "Vet\u00ebm p\u00ebr trajnues!",
-      "login": "Ky\u00e7u",
-      "school": "Shkolla",
-      "student_language": "Gjuha e nx\u00ebn\u00ebsit",
-      "student_name": "Emri dhe mbiemri"
-    },
-    "intro_practice": {
-      "now_you_will_play": "Tani do t\u00eb luani 2 loj\u00ebra p\u00ebr ushtrim p\u00ebr t'i m\u00ebsuar rregullat.",
-      "since_these_rules": "Pasiq\u00eb k\u00ebto jan\u00eb raunde ushtruese, nuk do t\u00eb shp\u00ebrblejm\u00eb ask\u00ebnd p\u00ebr performanc\u00ebn e tyre."
-    },
     "game_first_round": {
       "blue": "E KALT\u00cbR.",
       "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
@@ -60,6 +47,19 @@
       "feel_free": "Ndjehuni t\u00eb lir\u00eb ta shikoni videon p\u00ebrs\u00ebri p\u00ebr t'i p\u00ebrkujtuar rregullat.",
       "game": "Loj\u00eb per ushtrim.",
       "score": "Rezultati."
+    },
+    "homepage": {
+      "facilitator_password": "Fjal\u00ebkalimi i trajnuesit",
+      "facilitator_username": "Emri i p\u00ebrdoruesit i trajnuesit",
+      "facilitators": "Vet\u00ebm p\u00ebr trajnues!",
+      "login": "Ky\u00e7u",
+      "school": "Shkolla",
+      "student_language": "Gjuha e nx\u00ebn\u00ebsit",
+      "student_name": "Emri dhe mbiemri"
+    },
+    "intro_practice": {
+      "now_you_will_play": "Tani do t\u00eb luani 2 loj\u00ebra p\u00ebr ushtrim p\u00ebr t'i m\u00ebsuar rregullat.",
+      "since_these_rules": "Pasiq\u00eb k\u00ebto jan\u00eb raunde ushtruese, nuk do t\u00eb shp\u00ebrblejm\u00eb ask\u00ebnd p\u00ebr performanc\u00ebn e tyre."
     },
     "quiz_balls": {
       "colors_in_bag": "\u00c7far\u00eb ngjyrash jan\u00eb topat n\u00eb \u00e7ant\u00ebn e kalt\u00ebr?",

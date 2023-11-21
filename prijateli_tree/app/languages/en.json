@@ -17,19 +17,6 @@
       "denars": "{X} denars!",
       "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
     },
-    "homepage": {
-      "facilitator_password": "Facilitator Password",
-      "facilitator_username": "Facilitator Username",
-      "facilitators": "Only for facilitators!",
-      "login": "Log In",
-      "school": "School",
-      "student_language": "Language of Student",
-      "student_name": "First and Last Name"
-    },
-    "intro_practice": {
-      "now_you_will_play": "Now you will play 2 practice games to get used to the rules.",
-      "since_these_rules": "Since these are practice rounds, we will not reward anyone for their performance."
-    },
     "game_first_round": {
       "blue": "BLUE.",
       "guess_color": "Guess the color of the bag:",
@@ -60,6 +47,19 @@
       "feel_free": "Feel free to watch the video again to remind yourself of the rules.",
       "game": "Practice Game.",
       "score": "Score."
+    },
+    "homepage": {
+      "facilitator_password": "Facilitator Password",
+      "facilitator_username": "Facilitator Username",
+      "facilitators": "Only for facilitators!",
+      "login": "Log In",
+      "school": "School",
+      "student_language": "Language of Student",
+      "student_name": "First and Last Name"
+    },
+    "intro_practice": {
+      "now_you_will_play": "Now you will play 2 practice games to get used to the rules.",
+      "since_these_rules": "Since these are practice rounds, we will not reward anyone for their performance."
     },
     "quiz_balls": {
       "colors_in_bag": "What colors are the balls in the blue bag?",

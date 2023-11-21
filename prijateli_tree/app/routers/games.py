@@ -48,6 +48,7 @@ for lang in glob.glob("prijateli_tree/app/languages/*.json"):
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
         languages.update(json.load(file))
 
+
 def get_bag_color(bag):
     """
     Gets color of the bag based on the number of red and blue balls
@@ -331,7 +332,7 @@ def route_end_of_game(
     """
     Function that updates the player's score in the database
     """
-    
+
     game, player = get_game_and_player(game_id, player_id, db)
     game_status = did_player_win(game, player_id, db, debug)
 
@@ -346,11 +347,11 @@ def route_end_of_game(
         "player_id": player_id,
         "game_id": game_id,
         "points": points,
-        "text": template_text
+        "text": template_text,
     }
-    
+
     # add information about winning and ball colors
-    
+
     result.update(game_status)
 
     return templates.TemplateResponse("end_of_game.html", result)

@@ -100,19 +100,6 @@ def get_game_and_player(
         )
     return game, player
 
-def get_language_from_player_id(player_id: int, db: Session = Depends(get_db)):
-    """
-    using player id get template language
-    """
-    player = db.query(Player).filter_by(id=player_id).one_or_none()
-    user = db.query(User).filter_by(id=player.user_id).one_or_none()
-    if user is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="user not found"
-        )
-
-    return languages[user.language.abbr]
-
 def did_player_win(
     game_id: int,
     player_id: int,
@@ -356,7 +343,7 @@ def route_end_game(
     if game_status["is_correct"]:
         points = WINNING_SCORE
 
-    template_text = get_language_from_player_id(player_id, db)
+    template_text = languages[player.language.abbr]
 
     result = {
         "request": request,

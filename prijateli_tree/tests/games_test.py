@@ -16,7 +16,6 @@ def add_answer(game_id, player_id, round, answer):
     Adding answer for a given player.
     """
     api = f"{API}games/{game_id}/player/{player_id}/answer"
-    print(api)
     response = requests.post(
         api,
         json={

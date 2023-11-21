@@ -22,6 +22,7 @@ tr.empty-table {
     text-align: center;
 }
 
-.extra-top-margin {
+.general-container {
     margin-top: 30px;
+    text-align: center;
 }

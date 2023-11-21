@@ -22,6 +22,7 @@ The games are a means to provide insights into social learning, the economics of
 `make stop`: Stops the running Docker containers.
 `make clean`: Removes all Docker containers.
 `make clean_all`: Removes the database link between the Docker containers and the self-hosted version of PostgreSQL.
+`make test`: Runs all the tests in the `prijateli_tree/tests` folder.
 
 ## General Debugging Notes
 - If you are failing the `Format-and-Fail` GitHub Action, you must run `make lint` and make any changes it requests.

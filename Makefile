@@ -24,7 +24,7 @@ lint:
 
 .PHONY: test
 test:
-	pytest -vsx ./prijateli_tree/tests/
+	pytest -vs ./prijateli_tree/tests/
 
 .PHONY: stop
 stop:

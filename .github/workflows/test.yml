@@ -32,4 +32,4 @@ jobs:
       - run: poetry install --no-interaction --no-root
         if: steps.cache-deps.outputs.cache-hit != 'true'
       - run: poetry install --no-interaction
-      - run: poetry run pytest -vsx ./prijateli_tree/tests/
+      - run: poetry run pytest -vs ./prijateli_tree/tests/

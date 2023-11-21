@@ -1,5 +1,5 @@
 {
-  "TR": {
+  "tr": {
     "different_game_choices": {
       "now_you_can_observe": "Art\u0131k bu oyunda ilerleyen turlarda g\u00f6zlemleyece\u011finiz oyuncular\u0131 se\u00e7ebilirsiniz.",
       "player_one": "Oyuncu 1:",
@@ -17,6 +17,37 @@
       "denars": "{X} dinar!",
       "you_guessed_correctly": "{X} oyunda do\u011fru tahmin ettiniz ve {x} puan kazand\u0131n\u0131z, bu da ekstra kazand\u0131\u011f\u0131n\u0131z anlam\u0131na geliyors."
     },
+    "game_first_round": {
+      "blue": "MAV\u0130.",
+      "guess_color": "Torban\u0131n rengini tahmin edin:",
+      "red": "KIRMIZI.",
+      "round": "Yuvarlak",
+      "the_computer_chose": "Bilgisayar bir torba se\u00e7ti ve toplar\u0131 her oyuncuya rastgele b\u00f6l\u00fc\u015ft\u00fcrd\u00fc.",
+      "your_ball_is_blue": "Topunuz MAV\u0130.",
+      "your_ball_is_red": "Topunuz KIRMIZI."
+    },
+    "game_other_rounds": {
+      "code_guessed_blue": "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yapt\u0131.",
+      "code_guessed_red": "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yapt\u0131.",
+      "name_guessed_blue": "Ad, MAVI tahminini yapt\u0131.",
+      "name_guessed_red": "Ad, KIRMIZI tahminini yapt\u0131.",
+      "see_what_others_guessed": "Son turda di\u011fer baz\u0131 oyuncular\u0131n neler tahmin etti\u011fini g\u00f6r\u00fcn:",
+      "your_guess_was_blue": "Your guess in the last round was BLUE.",
+      "your_guess_was_red": "Your guess in the last round was RED."
+    },
+    "game_results": {
+      "better_luck": "Bir dahaki sefere iyi \u015fanslar!",
+      "results": "Results",
+      "the_computer_chose_blue": "Bilgisayar MAV\u0130 \u00e7antay\u0131 se\u00e7ti.",
+      "the_computer_chose_red": "Bilgisayar KIRMIZI \u00e7antay\u0131 se\u00e7ti.",
+      "you_won": "Kazand\u0131n!"
+    },
+    "game_video": {
+      "explanation": "A\u00e7\u0131klama.",
+      "feel_free": "Kurallar\u0131 kendinize hat\u0131rlatmak i\u00e7in videoyu tekrar izlemekten \u00e7ekinmeyin.",
+      "game": "Practice Game.",
+      "score": "Skor."
+    },
     "homepage": {
       "facilitator_password": "E\u011fitimcinin \u015eifresi",
       "facilitator_username": "E\u011fitimcinin kullan\u0131c\u0131 ad\u0131",
@@ -29,37 +60,6 @@
     "intro_practice": {
       "now_you_will_play": "\u015eimdi kurallara al\u0131\u015fmak i\u00e7in 2 al\u0131\u015ft\u0131rma oyunu oynayacaks\u0131n\u0131z.",
       "since_these_rules": "Bunlar al\u0131\u015ft\u0131rma turlar\u0131 oldu\u011fu i\u00e7in kimseyi performans\u0131ndan dolay\u0131 \u00f6d\u00fcllendirmeyece\u011fiz."
-    },
-    "practice_game_first_round": {
-      "blue": "MAV\u0130.",
-      "guess_color": "Torban\u0131n rengini tahmin edin:",
-      "red": "KIRMIZI.",
-      "round": "Yuvarlak",
-      "the_computer_chose": "Bilgisayar bir torba se\u00e7ti ve toplar\u0131 her oyuncuya rastgele b\u00f6l\u00fc\u015ft\u00fcrd\u00fc.",
-      "your_ball_is_blue": "Topunuz MAV\u0130.",
-      "your_ball_is_red": "Topunuz KIRMIZI."
-    },
-    "practice_game_other_rounds": {
-      "code_guessed_blue": "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yapt\u0131.",
-      "code_guessed_red": "{Ad/Sifre}, {KIRMIZI/MAVI} tahminini yapt\u0131.",
-      "name_guessed_blue": "Ad, MAVI tahminini yapt\u0131.",
-      "name_guessed_red": "Ad, KIRMIZI tahminini yapt\u0131.",
-      "see_what_others_guessed": "Son turda di\u011fer baz\u0131 oyuncular\u0131n neler tahmin etti\u011fini g\u00f6r\u00fcn:",
-      "your_guess_was_blue": "Your guess in the last round was BLUE.",
-      "your_guess_was_red": "Your guess in the last round was RED."
-    },
-    "practice_game_results": {
-      "better_luck": "Bir dahaki sefere iyi \u015fanslar!",
-      "results": "Results",
-      "the_computer_chose_blue": "Bilgisayar MAV\u0130 \u00e7antay\u0131 se\u00e7ti.",
-      "the_computer_chose_red": "Bilgisayar KIRMIZI \u00e7antay\u0131 se\u00e7ti.",
-      "you_won": "Kazand\u0131n!"
-    },
-    "practice_game_video": {
-      "explanation": "A\u00e7\u0131klama.",
-      "feel_free": "Kurallar\u0131 kendinize hat\u0131rlatmak i\u00e7in videoyu tekrar izlemekten \u00e7ekinmeyin.",
-      "practice_game": "Practice Game.",
-      "score": "Skor."
     },
     "quiz_balls": {
       "colors_in_bag": "Mavi torbadaki toplar hangi renktir?",

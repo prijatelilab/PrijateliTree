@@ -1,5 +1,5 @@
 {
-  "SQ": {
+  "sq": {
     "different_game_choices": {
       "now_you_can_observe": "Tani mund t\u00eb zgjidhni lojtar\u00ebt q\u00eb do ti v\u00ebzhgoni n\u00eb raundet vijuese n\u00eb k\u00ebt\u00eb loj\u00eb.",
       "player_one": "Lojtari 1:",
@@ -17,6 +17,37 @@
       "denars": "{X} denar\u00eb!",
       "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
     },
+    "game_first_round": {
+      "blue": "E KALT\u00cbR.",
+      "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
+      "red": "E KUQE.",
+      "round": "Raundi",
+      "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
+      "your_ball_is_blue": "Topi juaj \u00ebsht\u00eb I KALT\u00cbR.",
+      "your_ball_is_red": "Topi juaj \u00ebsht\u00eb I KUQ."
+    },
+    "game_other_rounds": {
+      "code_guessed_blue": "Kodi q\u00eblloi E KALT\u00cbR.",
+      "code_guessed_red": "Kodi q\u00eblloi E KUQE.",
+      "name_guessed_blue": "Emri q\u00eblloi E KALT\u00cbR.",
+      "name_guessed_red": "Emri q\u00eblloi E KUQE.",
+      "see_what_others_guessed": "Shihni \u00e7far\u00eb supozuan disa lojtar\u00eb t\u00eb tjer\u00eb n\u00eb raundin e fundit:",
+      "your_guess_was_blue": "Supozimi juaj n\u00eb raundin e fundit ishte E KALT\u00cbR.",
+      "your_guess_was_red": "Supozimi juaj n\u00eb raundin e fundit ishte E KUQE."
+    },
+    "game_results": {
+      "better_luck": "Fat m\u00eb t\u00eb mir\u00eb her\u00ebn tjet\u00ebr!",
+      "results": "Rezultatet",
+      "the_computer_chose_blue": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KALT\u00cbR.",
+      "the_computer_chose_red": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KUQE.",
+      "you_won": "Fituat!"
+    },
+    "game_video": {
+      "explanation": "Sqairm.",
+      "feel_free": "Ndjehuni t\u00eb lir\u00eb ta shikoni videon p\u00ebrs\u00ebri p\u00ebr t'i p\u00ebrkujtuar rregullat.",
+      "game": "Loj\u00eb per ushtrim.",
+      "score": "Rezultati."
+    },
     "homepage": {
       "facilitator_password": "Fjal\u00ebkalimi i trajnuesit",
       "facilitator_username": "Emri i p\u00ebrdoruesit i trajnuesit",
@@ -29,37 +60,6 @@
     "intro_practice": {
       "now_you_will_play": "Tani do t\u00eb luani 2 loj\u00ebra p\u00ebr ushtrim p\u00ebr t'i m\u00ebsuar rregullat.",
       "since_these_rules": "Pasiq\u00eb k\u00ebto jan\u00eb raunde ushtruese, nuk do t\u00eb shp\u00ebrblejm\u00eb ask\u00ebnd p\u00ebr performanc\u00ebn e tyre."
-    },
-    "practice_game_first_round": {
-      "blue": "E KALT\u00cbR.",
-      "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
-      "red": "E KUQE.",
-      "round": "Raundi",
-      "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
-      "your_ball_is_blue": "Topi juaj \u00ebsht\u00eb I KALT\u00cbR.",
-      "your_ball_is_red": "Topi juaj \u00ebsht\u00eb I KUQ."
-    },
-    "practice_game_other_rounds": {
-      "code_guessed_blue": "Kodi q\u00eblloi E KALT\u00cbR.",
-      "code_guessed_red": "Kodi q\u00eblloi E KUQE.",
-      "name_guessed_blue": "Emri q\u00eblloi E KALT\u00cbR.",
-      "name_guessed_red": "Emri q\u00eblloi E KUQE.",
-      "see_what_others_guessed": "Shihni \u00e7far\u00eb supozuan disa lojtar\u00eb t\u00eb tjer\u00eb n\u00eb raundin e fundit:",
-      "your_guess_was_blue": "Supozimi juaj n\u00eb raundin e fundit ishte E KALT\u00cbR.",
-      "your_guess_was_red": "Supozimi juaj n\u00eb raundin e fundit ishte E KUQE."
-    },
-    "practice_game_results": {
-      "better_luck": "Fat m\u00eb t\u00eb mir\u00eb her\u00ebn tjet\u00ebr!",
-      "results": "Rezultatet",
-      "the_computer_chose_blue": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KALT\u00cbR.",
-      "the_computer_chose_red": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KUQE.",
-      "you_won": "Fituat!"
-    },
-    "practice_game_video": {
-      "explanation": "Sqairm.",
-      "feel_free": "Ndjehuni t\u00eb lir\u00eb ta shikoni videon p\u00ebrs\u00ebri p\u00ebr t'i p\u00ebrkujtuar rregullat.",
-      "practice_game": "Loj\u00eb per ushtrim.",
-      "score": "Rezultati."
     },
     "quiz_balls": {
       "colors_in_bag": "\u00c7far\u00eb ngjyrash jan\u00eb topat n\u00eb \u00e7ant\u00ebn e kalt\u00ebr?",

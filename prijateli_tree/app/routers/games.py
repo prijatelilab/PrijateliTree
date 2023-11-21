@@ -37,11 +37,9 @@ base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
 
 languages = {}
-for lang in glob.glob("../languages/*.json"):
-    lang_code = lang.split("\\")[1].split(".")[0]
-
+for lang in glob.glob("prijateli_tree/app/languages/*.json"):
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
-        languages[lang_code] = json.load(file)
+        languages.update(json.load(file))
 
 
 def get_bag_color(bag):
@@ -111,25 +109,21 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
 
 
 def did_player_win(
-    game_id: int,
+    game: Game,
     player_id: int,
     db: Session = Depends(get_db),
-    debug: bool = False,
 ):
     """
     Helper function that determines if the player won,
     the color of the bag and their guess
     """
-    game, _ = get_game_and_player(game_id, player_id, db)
+
     # Check if bag is red or blue
     correct_color = get_bag_color(game.game_type.bag)
 
     # Get the player's previous answer
-    if debug:
-        player_guess = random.choice([BALL_BLUE, BALL_RED])
-    else:
-        latest_guess = get_previous_answers(game_id, player_id, db)
-        player_guess = latest_guess["your_previous_answer"]
+    latest_guess = get_previous_answers(game.id, player_id, db)
+    player_guess = latest_guess["your_previous_answer"]
 
     return {
         "correct_color": correct_color,
@@ -272,7 +266,6 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    # Here's where you can get the correct text for your templating.
     # template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     # Get current round
@@ -317,13 +310,13 @@ def route_add_score(
     # we want to count the number of games they are correct, e.g.
     # player_session.n_correct += result["is_correct"]
     # player_session.total_points += result["is_correct"] * WINNING_SCORE
-    url = "/{game_id}/player/{player_id}/score"
+    url = "/{game_id}/player/{player_id}/end_of_game"
 
     return RedirectResponse(url=url, status_code=HTTPStatus.FOUND)
 
 
-@router.get("/{game_id}/player/{player_id}/score")
-def route_end_game(
+@router.get("/{game_id}/player/{player_id}/end_of_game")
+def route_end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
@@ -334,16 +327,27 @@ def route_end_game(
     Function that returns the end of game page and
     template.
     """
-    # Here's where you can get the correct text for your templating.
-    # template_text = languages[player.language.abbr]
+
+    game, player = get_game_and_player(game_id, player_id, db)
+    game_status = did_player_win(game, player_id, db, debug)
+
+    points = 0
+    if game_status["is_correct"]:
+        points = WINNING_SCORE
+
+    template_text = languages[player.language.abbr]
+
     result = {
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "winning_score": WINNING_SCORE,
+        "points": points,
+        "text": template_text,
     }
+
     # add information about winning and ball colors
-    result.update(did_player_win(game_id, player_id, db, debug))
+
+    result.update(game_status)
 
     return templates.TemplateResponse("end_of_game.html", result)
 
@@ -359,11 +363,7 @@ def score_to_denirs(
     given all of their scores
     """
     total_score = 0
-    player = db.query(Player).filter_by(user_id=player_id, game_id=game_id)
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    game, player = get_game_and_player(game_id, player_id, db)
 
     for answer in player.answers:
         if answer.player_answer == answer.correct_answer:
@@ -385,13 +385,7 @@ def confirm_player(
     Confirms if the player is ready for the game
     """
 
-    player_id = body.get("player_id")
-    game_id = body.get("game_id")
-    player = db.query(Player).filter_by(id=player_id, game_id=game_id)
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    game, player = get_game_and_player(game_id, player_id, db)
 
     player.ready = True
     db.commit()

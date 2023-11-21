@@ -171,7 +171,10 @@ def get_previous_answers(
         this_answer = [
             a for a in this_neighbor.answers if a.round == last_round
         ][0]
-        neighbors_names.append(this_neighbor.user.name)
+        complete_name = (
+            f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}"
+        )
+        neighbors_names.append(complete_name)
         neighbors_answers.append(this_answer.player_answer)
 
     return {

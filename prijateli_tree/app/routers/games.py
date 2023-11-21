@@ -374,40 +374,6 @@ def score_to_denirs(
     return {"reward": f"You have made {denirs} denirs!"}
 
 
-@router.get("/{game_id}/player/{player_id}/integrated")
-def integrated_game(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
-):
-    """
-    Logic for handling the integrated game
-    """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    # TODO: We need to go over this one
-    existing_player = (
-        db.query(Player).filter_by(game_id=game_id, id=player_id).one_or_none()
-    )
-    if not existing_player:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
-    # Get current round
-    current_round = get_current_round(game_id, db)
-
-    view_round(game_id, player_id, db)
-    # Update the player's answer if they want to - HOW?!
-    route_add_answer(game_id, player_id, "", current_round, db)
-    # Calculate the score
-    route_add_score(game_id, player_id, db)
-    if current_round == game.rounds:
-        # Final round - calculate the denirs
-        score_to_denirs(game_id, player_id, db, current_round)
-
-
 @router.post("/player_ready")
 def confirm_player(
     player_id: int,

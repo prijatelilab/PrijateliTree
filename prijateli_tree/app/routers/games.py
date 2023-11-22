@@ -162,7 +162,7 @@ def get_previous_answers(
 
     if current_round == 1:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="No previous answers"
+            status_code=HTTPStatus.NOT_FOUND, detail="no previous answers"
         )
     else:
         last_round = current_round - 1
@@ -250,7 +250,7 @@ def route_add_answer(
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="Game not found"
+            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
         )
 
     # Getting correct answer and current round

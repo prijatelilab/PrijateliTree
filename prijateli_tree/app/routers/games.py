@@ -5,7 +5,7 @@ from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -241,8 +241,9 @@ def route_game_player_access(
 def route_add_answer(
     game_id: int,
     player_id: int,
+    player_answer: str,
+    current_round: int,
     db: Session = Depends(get_db),
-    body: dict = Body(...),
 ):
     """
     Function that updates the player's guess in the database
@@ -250,16 +251,12 @@ def route_add_answer(
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     if game is None:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
+            status_code=HTTPStatus.NOT_FOUND, detail="Game not found"
         )
 
     correct_answer = get_bag_color(game.game_type.bag)
 
-    # Extracting player_answer and current_round from the request body
-    player_answer = body.get("player_answer")
-    current_round = body.get("current_round")
-
-    # Record the answer
+    # Record the answer using ORM or CRUD operations
     new_answer = GameAnswer(
         game_player_id=player_id,
         player_answer=player_answer,

@@ -27,26 +27,6 @@ tr.empty-table {
     text-align: center;
 }
 
-.red_text {
-    color: #dc3545;
-    font-size: 24px;
-}
-
-.blue_text {
-    color: #0d6efd;
-    font-size: 24px;
-}
-
-.red_color {
-    color: #dc3545;
-}
-
-.blue_color {
-    color: #0d6efd;
-}
-
-
-
 /* Waiting spinner */
 /* credit: https://dribbble.com/shots/1756041-Spinning-CSS-Loader */
 

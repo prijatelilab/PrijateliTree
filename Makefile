@@ -18,9 +18,17 @@ create_db:
 	@echo "Postgres is up"
 	docker-compose run --rm web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
 
+.PHONY: update_db
+update_db:
+	docker-compose run --rm web alembic --config=./prijateli_tree/migrations/alembic.ini upgrade head
+
 .PHONY: lint
 lint:
 	pre-commit run --all-files
+
+.PHONY: test
+test:
+	pytest -vs ./prijateli_tree/tests/
 
 .PHONY: stop
 stop:

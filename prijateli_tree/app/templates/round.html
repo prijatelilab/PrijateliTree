@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}
+  PrijateliTree - View Round
+{% endblock title %}
+{% block content %}
+  <div class="container-sm general-container">
+    <h1>Round: {{ current_round }}</h1>
+    {% if first_round %}
+      <h2>
+        Your Ball:
+        {% if ball == 'R' %}
+          <span class="text-danger">Red</span>
+        {% elif ball == 'B' %}
+          <span class="text-primary">Blue</span>
+        {% else %}
+          {{ ball }}
+        {% endif %}
+      </h2>
+    {% else %}
+      <h1>Your Previous Guess</h1>
+      <h2>
+        {% if previous_answers.your_previous_answer == 'R' %}
+          <span class="text-danger">Red</span>
+        {% elif previous_answers.your_previous_answer == 'B' %}
+          <span class="text-primary">Blue</span>
+        {% else %}
+          {{ previous_answers.your_previous_answer }}
+        {% endif %}
+      </h2>
+      <h1>Neighbors' Previous Guesses</h1>
+      <ul style="list-style: none; padding: 0;">
+        {% for index in previous_answers.neighbors_previous_answer %}
+          {% set neighbor_answer = previous_answers.neighbors_previous_answer[loop.index-1] %}
+          {% set neighbor_name = previous_answers.neighbors_names[loop.index-1] %}
+          <li style="font-size: 24px; margin-bottom: 20px;">
+            {% if neighbor_answer == 'R' %}
+              <span>{{ neighbor_name }}</span><span class="text-danger">Red</span>
+            {% elif neighbor_answer == 'B' %}
+              <span>{{ neighbor_name }}</span><span class="text-primary">Blue</span>
+            {% else %}
+              {{ neighbor_answer }}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <!-- Dummy buttons -->
+    <h1>Choose a color</h1>
+    <button type="submit" class="btn btn-danger">Red</button>
+    <button type="submit" class="btn btn-primary">Blue</button>
+  </div>
+{% endblock content %}

@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block content %}
   <div style="text-align: center;">
-    <h1 style="margin-bottom: 30px;">Round: {{ current_round }}</h1>
+    <h2 style="margin-bottom: 30px;">Round: {{ current_round }}</h2>
     {% if first_round %}
       <p style="font-size: 24px; margin-bottom: 20px;">
         Your Ball:
@@ -34,9 +34,9 @@
           {% set neighbor_name = previous_answers.neighbors_names[loop.index-1] %}
           <li style="font-size: 24px; margin-bottom: 20px;">
             {% if neighbor_answer == 'R' %}
-              <span>{{ neighbor_name }}:</span><span class="red_color">Red</span>
+              <span>{{ neighbor_name }}</span><span class="red_color">Red</span>
             {% elif neighbor_answer == 'B' %}
-              <span>{{ neighbor_name }}:</span><span class="blue_color">Blue</span>
+              <span>{{ neighbor_name }}</span><span class="blue_color">Blue</span>
             {% else %}
               {{ neighbor_answer }}
             {% endif %}

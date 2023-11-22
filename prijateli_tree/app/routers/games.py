@@ -108,6 +108,20 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     return game, game.game_type
 
 
+def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
+    """
+    Get language form player_id
+    """
+    player = db.query(Player).filter_by(id=player_id).one_or_none()
+
+    if player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="player not found"
+        )
+
+    return player.language.abbr
+
+
 def did_player_win(
     game: Game,
     player_id: int,
@@ -294,6 +308,47 @@ def view_round(
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
     )
+
+
+@router.get("/{game_id}/all_set")
+def all_set(
+    request: Request,
+    game_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Determines if all players have submitted a guess in the current round
+    """
+    players = db.query(Player).filter_by(game_id=game_id).all()
+    n_answers = 0
+    for player in players:
+        n_answers += len(player.answers)
+
+    ready = n_answers % len(players) == 0
+
+    return {"ready": ready}
+
+
+@router.get("/{game_id}/player/{player_id}/waiting")
+def waiting(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Wait screen shows until all players are ready to move to the next section
+    """
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "game_id": game_id,
+        "player_id": player_id,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("waiting.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/update_score")

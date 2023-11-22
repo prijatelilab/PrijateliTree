@@ -1,9 +1,27 @@
 {% extends "base.html" %}
+{% block helper_script %}
+  <script>
+    <!--calls wait again after 5 seconds-->
+    async function check_all_set() {
+      const response = await fetch("/games/{{game_id}}/all_set");
+      const all_set = await response.json();
+
+      if (all_set.ready) {
+        window.location.href = "/games/{{game_id}}/player/{{player_id}}/round";
+      } else {
+        console.log("Other players are not ready, restarting the wait cycle.")
+      }
+    }
+
+    setInterval(function() { check_all_set();}, 5000);
+  </script>
+{% endblock helper_script %}
 {% block title %}
   PrijateliTree - Waiting
 {% endblock title %}
 {% block content %}
   <div class="container-sm general-container">
-    <h1>Waiting for other players...</h1>
+    <h1>{{ text.waiting_screen.waiting }}</h1>
+    <div class="spin-loader"></div>
   </div>
 {% endblock content %}

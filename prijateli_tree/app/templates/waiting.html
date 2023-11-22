@@ -9,7 +9,7 @@
       if (all_set.ready) {
         window.location.href = "/games/{{game_id}}/player/{{player_id}}/round";
       } else {
-        console.log("still waiting ...")
+        console.log("Other players are not ready, restarting the wait cycle.")
       }
     }
 

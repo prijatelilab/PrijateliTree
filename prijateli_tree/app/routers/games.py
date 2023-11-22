@@ -439,7 +439,6 @@ def confirm_player(
     player_id: int,
     game_id: int,
     db: Session = Depends(get_db),
-    body: dict = Body(...),
 ):
     """
     Confirms if the player is ready for the game

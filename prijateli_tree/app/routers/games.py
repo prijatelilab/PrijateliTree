@@ -257,6 +257,16 @@ def route_add_answer(
     correct_answer = get_bag_color(game.game_type.bag)
     current_round = get_current_round(game_id, db)
 
+    if (
+        db.query(GameAnswer)
+        .filter_by(game_player_id=player_id, round=current_round)
+        .one_or_none()
+    ):
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="answer already exists for player and round",
+        )
+
     # Record the answer
     new_answer = GameAnswer(
         game_player_id=player_id,

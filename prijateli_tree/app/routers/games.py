@@ -242,7 +242,6 @@ def route_add_answer(
     game_id: int,
     player_id: int,
     player_answer: str,
-    current_round: int,
     db: Session = Depends(get_db),
 ):
     """
@@ -254,9 +253,11 @@ def route_add_answer(
             status_code=HTTPStatus.NOT_FOUND, detail="Game not found"
         )
 
+    # Getting correct answer and current round
     correct_answer = get_bag_color(game.game_type.bag)
+    current_round = get_current_round(game_id, db)
 
-    # Record the answer using ORM or CRUD operations
+    # Record the answer
     new_answer = GameAnswer(
         game_player_id=player_id,
         player_answer=player_answer,
@@ -431,7 +432,7 @@ def score_to_denirs(
     return {"reward": f"You have made {denirs} denirs!"}
 
 
-@router.post("/player_ready")
+@router.post("/ready")
 def confirm_player(
     player_id: int,
     game_id: int,

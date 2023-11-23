@@ -39,7 +39,7 @@ tr.empty-table {
     --spinner-inner-circle: calc(var(--spinner-size) - var(--spinner-thickness));
     --spinner-color: #005041;
     --spinner-bg: #26A69A;
-    --spinner-inner-bg: #000101;
+    --spinner-inner-bg: #212529;
   }
 
   /* Define .spin-loader class */

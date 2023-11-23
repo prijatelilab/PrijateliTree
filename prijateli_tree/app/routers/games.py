@@ -448,11 +448,6 @@ def view_start_of_game(
     return templates.TemplateResponse("start_of_game.html", result)
 
 
-
-
-
-
-
 @router.post("/{game_id}/player/{player_id}/denirs")
 def score_to_denirs(
     game_id: int,

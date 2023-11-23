@@ -1,9 +1,5 @@
 {
   "sq": {
-    "util": {
-      "blue": "E KALT\u00cbR.",
-      "red": "E KUQE."
-    },
     "different_game_choices": {
       "now_you_can_observe": "Tani mund t\u00eb zgjidhni lojtar\u00ebt q\u00eb do ti v\u00ebzhgoni n\u00eb raundet vijuese n\u00eb k\u00ebt\u00eb loj\u00eb.",
       "player_one": "Lojtari 1:",
@@ -107,6 +103,10 @@
     "thanks_screen": {
       "have_a_great_day": "Kalofshi nj\u00eb dit\u00eb t\u00eb mir\u00eb!",
       "thanks": "Ju faleminderit q\u00eb luajt\u00ebt!"
+    },
+    "util": {
+      "blue": "E KALT\u00cbR.",
+      "red": "E KUQE."
     },
     "waiting_screen": {
       "waiting": "N\u00eb pritje t\u00eb t\u00eb tjer\u00ebve..."

@@ -1,9 +1,5 @@
 {
   "en": {
-    "util": {
-      "blue": "BLUE",
-      "red": "RED"
-    },
     "different_game_choices": {
       "now_you_can_observe": "Now you can choose the players you will observe in the following rounds in this game.",
       "player_one": "Player 1:",
@@ -107,6 +103,10 @@
     "thanks_screen": {
       "have_a_great_day": "Have a great day!",
       "thanks": "Thanks for playing!"
+    },
+    "util": {
+      "blue": "BLUE",
+      "red": "RED"
     },
     "waiting_screen": {
       "waiting": "Waiting for others..."

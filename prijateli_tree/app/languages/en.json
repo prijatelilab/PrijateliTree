@@ -1,5 +1,9 @@
 {
   "en": {
+    "util": {
+      "blue": "BLUE",
+      "red": "RED"
+    },
     "different_game_choices": {
       "now_you_can_observe": "Now you can choose the players you will observe in the following rounds in this game.",
       "player_one": "Player 1:",
@@ -18,9 +22,7 @@
       "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
     },
     "game_first_round": {
-      "blue": "BLUE.",
       "guess_color": "Guess the color of the bag:",
-      "red": "RED.",
       "round": "Round",
       "the_computer_chose": "The computer chose a bag and split the balls randomly to each player.",
       "your_ball_is_blue": "Your ball is BLUE.",

@@ -1,5 +1,9 @@
 {
   "sq": {
+    "util": {
+      "blue": "E KALT\u00cbR.",
+      "red": "E KUQE."
+    },
     "different_game_choices": {
       "now_you_can_observe": "Tani mund t\u00eb zgjidhni lojtar\u00ebt q\u00eb do ti v\u00ebzhgoni n\u00eb raundet vijuese n\u00eb k\u00ebt\u00eb loj\u00eb.",
       "player_one": "Lojtari 1:",
@@ -18,9 +22,7 @@
       "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
     },
     "game_first_round": {
-      "blue": "E KALT\u00cbR.",
       "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
-      "red": "E KUQE.",
       "round": "Raundi",
       "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
       "your_ball_is_blue": "Topi juaj \u00ebsht\u00eb I KALT\u00cbR.",

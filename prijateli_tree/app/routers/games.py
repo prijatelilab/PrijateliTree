@@ -293,7 +293,7 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    # template_text = languages[player.language.abbr]
+    template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     # Get current round
     if current_round == 1:
@@ -303,6 +303,7 @@ def view_round(
             "ball": ball,
             "first_round": first_round,
             "current_round": current_round,
+            "text": template_text,
         }
     else:
         previous_answers = get_previous_answers(game_id, player_id, db)
@@ -311,6 +312,7 @@ def view_round(
             "previous_answers": previous_answers,
             "first_round": first_round,
             "current_round": current_round,
+            "text": template_text,
         }
 
     return templates.TemplateResponse(

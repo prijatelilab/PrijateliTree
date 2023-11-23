@@ -1,5 +1,9 @@
 {
   "tr": {
+    "util": {
+      "blue": "MAV\u0130.",
+      "red": "KIRMIZI."
+    },
     "different_game_choices": {
       "now_you_can_observe": "Art\u0131k bu oyunda ilerleyen turlarda g\u00f6zlemleyece\u011finiz oyuncular\u0131 se\u00e7ebilirsiniz.",
       "player_one": "Oyuncu 1:",
@@ -18,9 +22,7 @@
       "you_guessed_correctly": "{X} oyunda do\u011fru tahmin ettiniz ve {x} puan kazand\u0131n\u0131z, bu da ekstra kazand\u0131\u011f\u0131n\u0131z anlam\u0131na geliyors."
     },
     "game_first_round": {
-      "blue": "MAV\u0130.",
       "guess_color": "Torban\u0131n rengini tahmin edin:",
-      "red": "KIRMIZI.",
       "round": "Yuvarlak",
       "the_computer_chose": "Bilgisayar bir torba se\u00e7ti ve toplar\u0131 her oyuncuya rastgele b\u00f6l\u00fc\u015ft\u00fcrd\u00fc.",
       "your_ball_is_blue": "Topunuz MAV\u0130.",

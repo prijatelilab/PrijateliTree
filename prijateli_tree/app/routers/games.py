@@ -420,6 +420,37 @@ def route_end_of_game(
     return templates.TemplateResponse("end_of_game.html", result)
 
 
+@router.get("/{game_id}/player/{player_id}/start_of_game")
+def view_start_of_game(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    debug: bool = False,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that returns the end of game page and
+    template.
+    """
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "points": WINNING_SCORE,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("start_of_game.html", result)
+
+
+
+
+
+
+
 @router.post("/{game_id}/player/{player_id}/denirs")
 def score_to_denirs(
     game_id: int,

@@ -293,7 +293,7 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    # template_text = languages[player.language.abbr]
+    template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     # Get current round
     if current_round == 1:
@@ -303,6 +303,7 @@ def view_round(
             "ball": ball,
             "first_round": first_round,
             "current_round": current_round,
+            "text": template_text,
         }
     else:
         previous_answers = get_previous_answers(game_id, player_id, db)
@@ -311,6 +312,7 @@ def view_round(
             "previous_answers": previous_answers,
             "first_round": first_round,
             "current_round": current_round,
+            "text": template_text,
         }
 
     return templates.TemplateResponse(
@@ -397,7 +399,7 @@ def route_end_of_game(
     """
 
     game, player = get_game_and_player(game_id, player_id, db)
-    game_status = did_player_win(game, player_id, db, debug)
+    game_status = did_player_win(game, player_id, db)
 
     points = 0
     if game_status["is_correct"]:
@@ -418,6 +420,32 @@ def route_end_of_game(
     result.update(game_status)
 
     return templates.TemplateResponse("end_of_game.html", result)
+
+
+@router.get("/{game_id}/player/{player_id}/start_of_game")
+def view_start_of_game(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    debug: bool = False,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that returns the end of game page and
+    template.
+    """
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "points": WINNING_SCORE,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("start_of_game.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/denirs")

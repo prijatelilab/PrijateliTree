@@ -18,9 +18,7 @@
       "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
     },
     "game_first_round": {
-      "blue": "E KALT\u00cbR.",
       "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
-      "red": "E KUQE.",
       "round": "Raundi",
       "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
       "your_ball_is_blue": "Topi juaj \u00ebsht\u00eb I KALT\u00cbR.",
@@ -105,6 +103,10 @@
     "thanks_screen": {
       "have_a_great_day": "Kalofshi nj\u00eb dit\u00eb t\u00eb mir\u00eb!",
       "thanks": "Ju faleminderit q\u00eb luajt\u00ebt!"
+    },
+    "util": {
+      "blue": "E KALT\u00cbR.",
+      "red": "E KUQE."
     },
     "waiting_screen": {
       "waiting": "N\u00eb pritje t\u00eb t\u00eb tjer\u00ebve..."

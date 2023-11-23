@@ -397,7 +397,7 @@ def route_end_of_game(
     """
 
     game, player = get_game_and_player(game_id, player_id, db)
-    game_status = did_player_win(game, player_id, db, debug)
+    game_status = did_player_win(game, player_id, db)
 
     points = 0
     if game_status["is_correct"]:

@@ -255,6 +255,11 @@ class GameAnswer(Base):
         "Player",
         back_populates="answers",
     )
+    __table_args__ = (
+        UniqueConstraint(
+            "game_player_id", "round", name="game_player_id_round_key"
+        ),
+    )
 
 
 class Survey(Base):

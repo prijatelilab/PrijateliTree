@@ -20,8 +20,6 @@ from prijateli_tree.app.utils.constants import (
 )
 
 
-Base.metadata.create_all(bind=engine)
-
 config = config[os.getenv(KEY_ENV)]
 
 app = FastAPI(debug=config.DEBUG)

@@ -118,9 +118,11 @@ class Denirs(Base):
         nullable=False,
         server_default=sql_func.now(),
     )
-    created_by_game_id = Column(
+    created_by_session_id = Column(
         Integer,
-        ForeignKey("games.id", name="denirs_created_by_game_id_fkey"),
+        ForeignKey(
+            "game_sessions.id", name="denirs_created_by_session_id_fkey"
+        ),
         nullable=True,
     )
     created_by_user_id = Column(
@@ -135,8 +137,8 @@ class Denirs(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "created_by_game_id IS NOT NULL OR created_by_user_id IS NOT NULL",
-            name="created_by_check",
+            "created_by_session_id IS NOT NULL OR created_by_user_id IS NOT NULL",
+            name="creation_check",
         ),
     )
 
@@ -176,6 +178,11 @@ class Game(Base):
         ForeignKey("users.id", name="sessions_created_by_fkey"),
         nullable=False,
     )
+    game_session_id = Column(
+        Integer,
+        ForeignKey("game_sessions.id", name="games_game_session_id_fkey"),
+        nullable=False,
+    )
     game_type_id = Column(
         Integer,
         ForeignKey("game_types.id", name="games_game_type_id_fkey"),
@@ -192,9 +199,10 @@ class Game(Base):
         "GameType", foreign_keys="Game.game_type_id", back_populates="games"
     )
     players = relationship("Player", back_populates="game")
+    session = relationship("GameSession", back_populates="games")
 
 
-class Player(Base):
+class GamePlayer(Base):
     __tablename__ = "game_players"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(
@@ -215,6 +223,11 @@ class Player(Base):
     user_id = Column(
         Integer,
         ForeignKey("users.id", name="game_players_player_id_fkey"),
+        nullable=False,
+    )
+    session_player_id = Column(
+        Integer,
+        ForeignKey("session_players.id", name="session_players_player_id_fkey"),
         nullable=False,
     )
     position = Column(Integer, nullable=False)
@@ -286,10 +299,11 @@ class PlayerSurveyAnswer(Base):
         nullable=False,
         server_default=sql_func.now(),
     )
-    player_id = Column(
+    session_player_id = Column(
         Integer,
         ForeignKey(
-            "game_players.id", name="player_survey_answers_player_id_fkey"
+            "session_players.id",
+            name="player_survey_answers_session_player_id_fkey",
         ),
         nullable=False,
     )
@@ -300,6 +314,57 @@ class PlayerSurveyAnswer(Base):
     )
 
     __table_args__ = (
-        UniqueConstraint("player_id", "survey_id", name="uix_session_answer"),
+        UniqueConstraint(
+            "session_player_id", "survey_id", name="uix_session_survey_answer"
+        ),
         {},
     )
+
+
+class GameSession(Base):
+    __tablename__ = "game_sessions"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="users_created_by_fkey"),
+        nullable=True,
+    )
+    # 16 was used as the default, but it can really be any number.
+    num_games = Column(Integer, nullable=False, server_default=text("16"))
+    games = relationship(
+        "Game",
+        back_populates="session",
+    )
+
+
+class SessionPlayers(Base):
+    __tablename__ = "session_players"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id", name="users_created_by_fkey"),
+        nullable=True,
+    )
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", name="game_players_player_id_fkey"),
+        nullable=False,
+    )
+    user = relationship("User", foreign_keys="SessionPlayers.user_id")
+    points = Column(Integer, nullable=False, server_default=text("0"))
+    correct_answers = Column(Integer, nullable=False, server_default=text("0"))
+
+    @property
+    def language(self, db: Session = next(get_db())):
+        user = db.query(User).filter_by(id=self.user_id).one()
+        return db.query(Language).filter_by(id=user.language_id).one()

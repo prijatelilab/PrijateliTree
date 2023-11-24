@@ -13,8 +13,8 @@ from starlette.datastructures import URL
 from prijateli_tree.app.database import (
     Denirs,
     Game,
+    GamePlayer,
     GameType,
-    Player,
     SessionLocal,
     User,
 )
@@ -194,7 +194,7 @@ def create_game(
 
     for i in range(0, len(pos_players)):
         db.add(
-            Player(
+            GamePlayer(
                 created_by=user.id,
                 game_id=game.id,
                 user_id=pos_players[i],

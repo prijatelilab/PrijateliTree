@@ -77,6 +77,10 @@ class User(Base):
     )
     high_school = relationship("HighSchool", back_populates="users")
 
+    @property
+    def name_str(self):
+        return f"{self.first_name.title()} {self.last_name.title()} ({self.language.abbr.upper()})"
+
     __table_args__ = (
         CheckConstraint(
             "role in ('super-admin', 'admin', 'student')",

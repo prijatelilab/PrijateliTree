@@ -160,6 +160,9 @@ def get_previous_answers(
     # Get current round
     current_round = get_current_round(game_id, db)
 
+    # Check if names are hidden or not
+    names_hidden = game.game_type.names_hidden
+
     if current_round == 1:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="no previous answers"
@@ -185,9 +188,14 @@ def get_previous_answers(
         this_answer = [
             a for a in this_neighbor.answers if a.round == last_round
         ][0]
-        complete_name = (
-            f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
-        )
+
+        # Check if names are hidden
+        if names_hidden:
+            player_id = this_neighbor.user.id
+            complete_name = f"Player {player_id}: "
+        else:
+            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+
         neighbors_names.append(complete_name)
         neighbors_answers.append(this_answer.player_answer)
 

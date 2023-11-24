@@ -198,7 +198,7 @@ class Game(Base):
     game_type = relationship(
         "GameType", foreign_keys="Game.game_type_id", back_populates="games"
     )
-    players = relationship("Player", back_populates="game")
+    players = relationship("GamePlayer", back_populates="game")
     session = relationship("GameSession", back_populates="games")
 
 
@@ -232,7 +232,7 @@ class GamePlayer(Base):
     )
     position = Column(Integer, nullable=False)
     ready = Column(Boolean, nullable=False, default=False)
-    user = relationship("User", foreign_keys="Player.user_id")
+    user = relationship("User", foreign_keys="GamePlayer.user_id")
     game = relationship(
         "Game",
         back_populates="players",
@@ -265,7 +265,7 @@ class GameAnswer(Base):
     correct_answer = Column(String(1), nullable=False)
     round = Column(Integer, nullable=False)
     player = relationship(
-        "Player",
+        "GamePlayer",
         back_populates="answers",
     )
     __table_args__ = (

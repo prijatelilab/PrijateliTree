@@ -336,6 +336,7 @@ class GameSession(Base):
     )
     # 16 was used as the default, but it can really be any number.
     num_games = Column(Integer, nullable=False, server_default=text("16"))
+
     games = relationship(
         "Game",
         back_populates="session",
@@ -366,9 +367,10 @@ class GameSessionPlayer(Base):
         ForeignKey("game_sessions.id", name="session_players_session_id_fkey"),
         nullable=False,
     )
-    user = relationship("User", foreign_keys="GameSessionPlayer.user_id")
     points = Column(Integer, nullable=False, server_default=text("0"))
     correct_answers = Column(Integer, nullable=False, server_default=text("0"))
+
+    user = relationship("User", foreign_keys="GameSessionPlayer.user_id")
     session = relationship("GameSession", back_populates="players")
 
     @property

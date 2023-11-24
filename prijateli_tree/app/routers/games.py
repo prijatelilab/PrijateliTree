@@ -110,7 +110,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
 
 def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
-    Get language form player_id
+    Get language from player_id
     """
     player = db.query(Player).filter_by(id=player_id).one_or_none()
 
@@ -196,6 +196,22 @@ def get_previous_answers(
         "neighbors_previous_answer": neighbors_answers,
         "neighbors_names": neighbors_names,
     }
+
+
+def language_check(player_lang, languages):
+    """
+    Helper function to ensure that the language is in the languages dict
+    """
+    if player_lang not in languages:
+        player_lang = player_lang.lower()
+
+    if player_lang not in languages:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail=f"language {player_lang} not found",
+        )
+
+    return player_lang
 
 
 ###############################
@@ -293,7 +309,9 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    template_text = languages[player.language.abbr]
+
+    player_lang = language_check(player.language.abbr, languages)
+    template_text = languages[player_lang]
     current_round = get_current_round(game_id, db)
     # Get current round
     if current_round == 1:

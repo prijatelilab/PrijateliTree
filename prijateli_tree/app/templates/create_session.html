@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-  PrijateliTree - Create Game
+  PrijateliTree - Create Session
 {% endblock title %}
 {% block helper_script %}
   <script>
@@ -24,19 +24,9 @@
   <div class="container-sm">
     <div class="row">
       <div class="form-container bg-light-subtle col-xs-12 offset-md-1 col-md-10 offset-lg-1 col col-lg-10 offset-xl-3 col col-xl-6">
-        <form method="post" action='{{ url_for("create_game") }}'>
+        <form method="post" action='{{ url_for("create_session") }}'>
           <div class="mb-3 row">
-            <label for="game-type" class="col-sm-4 col-form-label">Game Type</label>
-            <div class="col-sm-8">
-              <select id="game-type" class="form-select form-select-sm" name="game_type">
-                {% for gt in game_types|sort(attribute='network, bag') %}
-                  <option value="{{ gt.id }}">{{ gt.network|title }} with bag: {{ gt.bag }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="mb-3 row">
-            <label for="num-rounds" class="col-sm-4 col-form-label">Number of Rounds</label>
+            <label for="num-games" class="col-sm-4 col-form-label">Number of Games</label>
             <div class="col-sm-8">
               <input type="number"
                      min="1"
@@ -44,12 +34,12 @@
                      max="50"
                      class="form-control form-control-sm"
                      value="1"
-                     id="num-rounds"
-                     name="rounds">
+                     id="num-games"
+                     name="num_games">
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="pos-one" class="col-sm-4 form-label">Position One</label>
+            <label for="pos-one" class="col-sm-4 form-label">Player One</label>
             <div class="col-sm-8">
               <select id="pos-one" class="form-select form-select-sm" name="pos_one">
                 {% for s in students|sort(attribute='last_name') %}
@@ -59,7 +49,7 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="pos-two" class="col-sm-4 form-label">Position Two</label>
+            <label for="pos-two" class="col-sm-4 form-label">Player Two</label>
             <div class="col-sm-8">
               <select id="pos-two" class="form-select form-select-sm" name="pos_two">
                 {% for s in students|sort(attribute='last_name') %}
@@ -69,7 +59,7 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="pos-three" class="col-sm-4 form-label">Position Three</label>
+            <label for="pos-three" class="col-sm-4 form-label">Player Three</label>
             <div class="col-sm-8">
               <select id="pos-three" class="form-select form-select-sm" name="pos_three">
                 {% for s in students|sort(attribute='last_name') %}
@@ -79,7 +69,7 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="pos-four" class="col-sm-4 form-label">Position Four</label>
+            <label for="pos-four" class="col-sm-4 form-label">Player Four</label>
             <div class="col-sm-8">
               <select id="pos-four" class="form-select form-select-sm" name="pos_four">
                 {% for s in students|sort(attribute='last_name') %}
@@ -89,7 +79,7 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="pos-five" class="col-sm-4 form-label">Position Five</label>
+            <label for="pos-five" class="col-sm-4 form-label">Player Five</label>
             <div class="col-sm-8">
               <select id="pos-five"
                       class="col-sm-4 form-select form-select-sm"
@@ -101,7 +91,7 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="pos-six" class="col-sm-4 form-label">Position Six</label>
+            <label for="pos-six" class="col-sm-4 form-label">Player Six</label>
             <div class="col-sm-8">
               <select id="pos-six"
                       class="col-sm-4 form-select form-select-sm"

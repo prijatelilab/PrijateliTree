@@ -1,4 +1,4 @@
-default: build create_db start
+default: build start create_db
 
 .PHONY: build
 build:

@@ -342,7 +342,7 @@ class GameSession(Base):
     )
 
 
-class SessionPlayers(Base):
+class SessionPlayer(Base):
     __tablename__ = "session_players"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(

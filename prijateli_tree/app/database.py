@@ -340,9 +340,10 @@ class GameSession(Base):
         "Game",
         back_populates="session",
     )
+    players = relationship("GameSessionPlayer", back_populates="session")
 
 
-class SessionPlayer(Base):
+class GameSessionPlayer(Base):
     __tablename__ = "session_players"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(
@@ -357,12 +358,18 @@ class SessionPlayer(Base):
     )
     user_id = Column(
         Integer,
-        ForeignKey("users.id", name="game_players_player_id_fkey"),
+        ForeignKey("users.id", name="session_players_user_id_fkey"),
         nullable=False,
     )
-    user = relationship("User", foreign_keys="SessionPlayers.user_id")
+    session_id = Column(
+        Integer,
+        ForeignKey("game_sessions.id", name="session_players_session_id_fkey"),
+        nullable=False,
+    )
+    user = relationship("User", foreign_keys="GameSessionPlayer.user_id")
     points = Column(Integer, nullable=False, server_default=text("0"))
     correct_answers = Column(Integer, nullable=False, server_default=text("0"))
+    session = relationship("GameSession", back_populates="players")
 
     @property
     def language(self, db: Session = next(get_db())):

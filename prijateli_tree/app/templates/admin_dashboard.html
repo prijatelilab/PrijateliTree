@@ -31,32 +31,28 @@
     <div class="row">
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
         <a class="btn btn-primary btn-sm"
-           href='{{ url_for("dashboard_create_game") }}'
-           role="button">New Game</a>
+           href='{{ url_for("dashboard_create_session") }}'
+           role="button">New Session</a>
         <table id="games" class="table table-hover table-bordered caption-top">
-          <caption>List of Games</caption>
+          <caption>List of Sessions</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
-              <th scope="col">Game Type</th>
-              <th scope="col">Rounds</th>
-              <th scope="col">Bag</th>
-              <th scope="col">IsPractice</th>
+              <th scope="col">Number of Games</th>
+              <th scope="col">Players</th>
             </tr>
           </thead>
           <tbody class="table-group-divider">
             {% if games|length == 0 %}
               <tr class="empty-table">
-                <td colspan="5">There are no games currently in the system.</td>
+                <td colspan="3">There are no sessions currently in the system.</td>
               </tr>
             {% endif %}
-            {% for g in games|sort(attribute='-created_at') %}
+            {% for s in sessions|sort(attribute='-created_at') %}
               <tr>
-                <th>{{ g.id }}</th>
-                <td>{{ g.game_type.network|title }}</td>
-                <td>{{ g.rounds }}</td>
-                <td>{{ g.game_type.bag }}</td>
-                <td>{{ g.practice }}</td>
+                <th>{{ s.id }}</th>
+                <td>{{ s.num_games }}</td>
+                <td>{{ s.player_string }}</td>
               </tr>
             {% endfor %}
           </tbody>

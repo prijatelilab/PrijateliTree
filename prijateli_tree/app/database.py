@@ -341,7 +341,7 @@ class GameSession(Base):
     )
     # 16 was used as the default, but it can really be any number.
     num_games = Column(Integer, nullable=False, server_default=text("16"))
-    ready = Column(Boolean, nullable=False, server_default=expression.false())
+    finished = Column(Boolean, nullable=False, server_default=expression.false())
 
     games = relationship(
         "Game",
@@ -373,6 +373,7 @@ class GameSessionPlayer(Base):
         ForeignKey("game_sessions.id", name="session_players_session_id_fkey"),
         nullable=False,
     )
+    ready = Column(Boolean, nullable=False, server_default=expression.false())
     points = Column(Integer, nullable=False, server_default=text("0"))
     correct_answers = Column(Integer, nullable=False, server_default=text("0"))
 

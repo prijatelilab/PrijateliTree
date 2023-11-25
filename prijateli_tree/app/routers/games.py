@@ -16,6 +16,7 @@ from prijateli_tree.app.database import (
     GamePlayer,
     GameSession,
     SessionLocal,
+    GameSessionPlayer,
 )
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
@@ -390,6 +391,15 @@ def waiting(
     return templates.TemplateResponse("waiting.html", result)
 
 
+def get_session_player_from_player(
+    player: GamePlayer,
+    db: Session = Depends(get_db)
+):
+
+    session_p = db.query(GameSessionPlayer).filter_by(id=player.session_player_id).one_or_none()
+
+    return session_p
+
 @router.post("/{game_id}/player/{player_id}/update_score")
 def route_add_score(
     request: Request,
@@ -400,17 +410,19 @@ def route_add_score(
     """
     Function that updates the player's score in the database
     """
+    game, player = get_game_and_player(game_id, player_id, db)
+    game_status = did_player_win(game, player_id, db)
 
-    # There isn't a place to store this right now as far as I can tell
-    # player_session = ...
-
-    # result = did_player_win(game_id, player_id, db)
+    session_player = get_session_player_from_player(player, db)
 
     # we want to count the number of games they are correct, e.g.
-    # player_session.n_correct += result["is_correct"]
-    # player_session.total_points += result["is_correct"] * WINNING_SCORE
-    url = "/{game_id}/player/{player_id}/end_of_game"
+    session_player.correct_answers += game_status["is_correct"]
+    session_player.points += game_status["is_correct"] * WINNING_SCORE
+    db.commit()
+    db.refresh(session_player)
 
+    return {"status": session_player}
+    url = "/{game_id}/player/{player_id}/end_of_game"
     return RedirectResponse(url=url, status_code=HTTPStatus.FOUND)
 
 

@@ -16,8 +16,8 @@ from prijateli_tree.app.database import (
     GameAnswer,
     GamePlayer,
     GameSession,
-    SessionLocal,
     GameSessionPlayer,
+    SessionLocal,
 )
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
@@ -393,8 +393,7 @@ def waiting(
 
 
 def get_session_player_from_player(
-    player: GamePlayer,
-    db: Session = Depends(get_db)
+    player: GamePlayer, db: Session = Depends(get_db)
 ):
     id = player.session_player_id
     session_player = db.query(GameSessionPlayer).filter_by(id=id).one_or_none()
@@ -402,7 +401,7 @@ def get_session_player_from_player(
     if session_player is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail="GameSessionPlayer not found"
+            detail="GameSessionPlayer not found",
         )
     return session_player
 
@@ -437,12 +436,18 @@ def route_get_score(
     session_player_id: int,
     db: Session = Depends(get_db),
 ):
-    session_player = db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
+    session_player = (
+        db.query(GameSessionPlayer)
+        .filter_by(id=session_player_id)
+        .one_or_none()
+    )
     if session_player is None:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="GameSessionPlayer not found"
+            status_code=HTTPStatus.NOT_FOUND,
+            detail="GameSessionPlayer not found",
         )
     return session_player
+
 
 @router.get("/{game_id}/player/{player_id}/end_of_game")
 def route_end_of_game(

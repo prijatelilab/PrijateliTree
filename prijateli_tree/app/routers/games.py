@@ -116,7 +116,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
 
 def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
-    Get language form player_id
+    Get language from player_id
     """
     player = db.query(GamePlayer).filter_by(id=player_id).one_or_none()
 
@@ -191,9 +191,14 @@ def get_previous_answers(
         this_answer = [
             a for a in this_neighbor.answers if a.round == last_round
         ][0]
-        complete_name = (
-            f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
-        )
+
+        # Check if names are hidden
+        if game.game_type.names_hidden:
+            player_id = this_neighbor.user.id
+            complete_name = f"Player {player.position}: "
+        else:
+            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+
         neighbors_names.append(complete_name)
         neighbors_answers.append(this_answer.player_answer)
 
@@ -316,6 +321,7 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
+
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     # Get current round
@@ -413,7 +419,6 @@ def route_end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    debug: bool = False,
     db: Session = Depends(get_db),
 ):
     """

@@ -17,6 +17,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
+from sqlalchemy.sql import expression
 from sqlalchemy.sql import func as sql_func
 
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
@@ -340,6 +341,7 @@ class GameSession(Base):
     )
     # 16 was used as the default, but it can really be any number.
     num_games = Column(Integer, nullable=False, server_default=text("16"))
+    ready = Column(Boolean, nullable=False, server_default=expression.false())
 
     games = relationship(
         "Game",

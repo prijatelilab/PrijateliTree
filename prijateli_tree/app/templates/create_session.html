@@ -41,7 +41,7 @@
           <div class="mb-3 row">
             <label for="pos-one" class="col-sm-4 form-label">Player One</label>
             <div class="col-sm-8">
-              <select id="pos-one" class="form-select form-select-sm" name="pos_one">
+              <select id="pos-one" class="form-select form-select-sm" name="player_one">
                 {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
               </select>
             </div>
@@ -49,7 +49,7 @@
           <div class="mb-3 row">
             <label for="pos-two" class="col-sm-4 form-label">Player Two</label>
             <div class="col-sm-8">
-              <select id="pos-two" class="form-select form-select-sm" name="pos_two">
+              <select id="pos-two" class="form-select form-select-sm" name="player_two">
                 {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
               </select>
             </div>
@@ -57,7 +57,7 @@
           <div class="mb-3 row">
             <label for="pos-three" class="col-sm-4 form-label">Player Three</label>
             <div class="col-sm-8">
-              <select id="pos-three" class="form-select form-select-sm" name="pos_three">
+              <select id="pos-three" class="form-select form-select-sm" name="player_three">
                 {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
               </select>
             </div>
@@ -65,7 +65,7 @@
           <div class="mb-3 row">
             <label for="pos-four" class="col-sm-4 form-label">Player Four</label>
             <div class="col-sm-8">
-              <select id="pos-four" class="form-select form-select-sm" name="pos_four">
+              <select id="pos-four" class="form-select form-select-sm" name="player_four">
                 {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
               </select>
             </div>
@@ -75,7 +75,7 @@
             <div class="col-sm-8">
               <select id="pos-five"
                       class="col-sm-4 form-select form-select-sm"
-                      name="pos_five">
+                      name="player_five">
                 {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
               </select>
             </div>
@@ -85,7 +85,7 @@
             <div class="col-sm-8">
               <select id="pos-six"
                       class="col-sm-4 form-select form-select-sm"
-                      name="pos_six">
+                      name="player_six">
                 {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
               </select>
             </div>

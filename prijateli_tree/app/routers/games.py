@@ -14,6 +14,7 @@ from prijateli_tree.app.database import (
     Game,
     GameAnswer,
     GamePlayer,
+    GameSession,
     SessionLocal,
 )
 from prijateli_tree.app.utils.constants import (
@@ -208,6 +209,23 @@ def get_previous_answers(
 #        BEGIN API
 #
 ###############################
+
+
+@router.get("/session/{session_id}")
+def route_session_access(
+    request: Request, session_id: int, db: Session = Depends(get_db)
+):
+    # Do some logic things
+    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
+
+    if session is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="session not found"
+        )
+
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
 
 
 @router.get("/{game_id}")
@@ -432,7 +450,6 @@ def view_start_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    debug: bool = False,
     db: Session = Depends(get_db),
 ):
     """

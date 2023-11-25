@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
@@ -395,12 +396,18 @@ def get_session_player_from_player(
     player: GamePlayer,
     db: Session = Depends(get_db)
 ):
+    id = player.session_player_id
+    session_player = db.query(GameSessionPlayer).filter_by(id=id).one_or_none()
 
-    session_p = db.query(GameSessionPlayer).filter_by(id=player.session_player_id).one_or_none()
+    if session_player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail="GameSessionPlayer not found"
+        )
+    return session_player
 
-    return session_p
 
-@router.post("/{game_id}/player/{player_id}/update_score")
+@router.put("/{game_id}/player/{player_id}/update_score")
 def route_add_score(
     request: Request,
     game_id: int,
@@ -412,19 +419,30 @@ def route_add_score(
     """
     game, player = get_game_and_player(game_id, player_id, db)
     game_status = did_player_win(game, player_id, db)
-
     session_player = get_session_player_from_player(player, db)
 
-    # we want to count the number of games they are correct, e.g.
     session_player.correct_answers += game_status["is_correct"]
     session_player.points += game_status["is_correct"] * WINNING_SCORE
     db.commit()
     db.refresh(session_player)
 
-    return {"status": session_player}
-    url = "/{game_id}/player/{player_id}/end_of_game"
-    return RedirectResponse(url=url, status_code=HTTPStatus.FOUND)
+    redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
 
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
+
+
+@router.get("/current_score/{session_player_id}")
+def route_get_score(
+    request: Request,
+    session_player_id: int,
+    db: Session = Depends(get_db),
+):
+    session_player = db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
+    if session_player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="GameSessionPlayer not found"
+        )
+    return session_player
 
 @router.get("/{game_id}/player/{player_id}/end_of_game")
 def route_end_of_game(
@@ -456,7 +474,6 @@ def route_end_of_game(
     }
 
     # add information about winning and ball colors
-
     result.update(game_status)
 
     return templates.TemplateResponse("end_of_game.html", result)

@@ -341,7 +341,9 @@ class GameSession(Base):
     )
     # 16 was used as the default, but it can really be any number.
     num_games = Column(Integer, nullable=False, server_default=text("16"))
-    finished = Column(Boolean, nullable=False, server_default=expression.false())
+    finished = Column(
+        Boolean, nullable=False, server_default=expression.false()
+    )
 
     games = relationship(
         "Game",

@@ -18,9 +18,7 @@
       "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
     },
     "game_first_round": {
-      "blue": "BLUE.",
       "guess_color": "Guess the color of the bag:",
-      "red": "RED.",
       "round": "Round",
       "the_computer_chose": "The computer chose a bag and split the balls randomly to each player.",
       "your_ball_is_blue": "Your ball is BLUE.",
@@ -105,6 +103,10 @@
     "thanks_screen": {
       "have_a_great_day": "Have a great day!",
       "thanks": "Thanks for playing!"
+    },
+    "util": {
+      "blue": "BLUE",
+      "red": "RED"
     },
     "waiting_screen": {
       "waiting": "Waiting for others..."

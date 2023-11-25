@@ -13,13 +13,17 @@ from starlette.datastructures import URL
 from prijateli_tree.app.database import (
     Denirs,
     Game,
+    GamePlayer,
+    GameSession,
+    GameSessionPlayer,
     GameType,
-    Player,
     SessionLocal,
     User,
 )
 from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
+    NETWORK_TYPE_INTEGRATED,
+    NUMBER_OF_ROUNDS,
     ROLE_ADMIN,
     ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
@@ -112,9 +116,18 @@ def dashboard(
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
     game_types = db.query(GameType).all()
-    games = db.query(Game).all()
+    sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
     denir_transactions = db.query(Denirs).all()
+    student_dict = {}
+    for s in students:
+        student_dict[s.id] = s
+
+    for s in sessions:
+        players = []
+        for p in s.players:
+            players.append(student_dict[p.user_id].name_str)
+        s.player_string = ", ".join(players)
 
     return templates.TemplateResponse(
         "admin_dashboard.html",
@@ -123,15 +136,16 @@ def dashboard(
             "success": success,
             "user": user,
             "game_types": game_types,
-            "games": games,
+            "sessions": sessions,
             "students": students,
+            "student_dict": student_dict,
             "transactions": denir_transactions,
         },
     )
 
 
-@router.get("/game", response_class=HTMLResponse)
-def dashboard_create_game(
+@router.get("/session", response_class=HTMLResponse)
+def dashboard_create_session(
     request: Request,
     error: str = "",
     user=Depends(login_manager.optional),
@@ -140,73 +154,130 @@ def dashboard_create_game(
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
-    game_types = db.query(GameType).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
 
     return templates.TemplateResponse(
-        "create_game.html",
+        "create_session.html",
         {
             "request": request,
             "error": error,
             "user": user,
-            "game_types": game_types,
             "students": students,
         },
     )
 
 
-@router.post("/game")
-def create_game(
-    game_type: Annotated[str, Form()],
-    rounds: Annotated[int, Form()],
-    pos_one: Annotated[int, Form()],
-    pos_two: Annotated[int, Form()],
-    pos_three: Annotated[int, Form()],
-    pos_four: Annotated[int, Form()],
-    pos_five: Annotated[int, Form()],
-    pos_six: Annotated[int, Form()],
+@router.post("/session")
+def create_session(
+    num_games: Annotated[int, Form()],
+    player_one: Annotated[int, Form()],
+    player_two: Annotated[int, Form()],
+    player_three: Annotated[int, Form()],
+    player_four: Annotated[int, Form()],
+    player_five: Annotated[int, Form()],
+    player_six: Annotated[int, Form()],
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ):
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
-    pos_players = [pos_one, pos_two, pos_three, pos_four, pos_five, pos_six]
+    player_ids = [
+        player_one,
+        player_two,
+        player_three,
+        player_four,
+        player_five,
+        player_six,
+    ]
 
-    if len(set(pos_players)) != 6:
-        redirect_url = URL("/admin/game").include_query_params(
-            error="A game cannot contain the same student at two different positions."
+    players = []
+    for p_id in player_ids:
+        players.append(db.query(User).filter_by(id=p_id).one())
+
+    lang_dict = {}
+    for p in players:
+        if p.language.abbr in lang_dict:
+            lang_dict[p.language.abbr].append(p)
+        else:
+            lang_dict[p.language.abbr] = [p]
+
+    for v in lang_dict.values():
+        if len(v) != 3:
+            redirect_url = URL("/admin/session").include_query_params(
+                error="A session must contain exactly 3 players of different "
+                "ethnicities."
+            )
+            return RedirectResponse(
+                redirect_url,
+                status_code=HTTPStatus.FOUND,
+            )
+
+    if len(set(player_ids)) != 6:
+        redirect_url = URL("/admin/session").include_query_params(
+            error="A session cannot contain the same student twice."
         )
         return RedirectResponse(
             redirect_url,
             status_code=HTTPStatus.FOUND,
         )
 
-    game = Game(
+    session = GameSession(
         created_by=user.id,
-        game_type_id=game_type,
-        rounds=rounds,
+        num_games=num_games,
     )
 
-    db.add(game)
+    db.add(session)
     db.commit()
-    db.refresh(game)
+    db.refresh(session)
 
-    for i in range(0, len(pos_players)):
+    for p_id in player_ids:
         db.add(
-            Player(
+            GameSessionPlayer(
                 created_by=user.id,
-                game_id=game.id,
-                user_id=pos_players[i],
-                position=i + 1,
+                session_id=session.id,
+                user_id=p_id,
             )
         )
 
     db.commit()
+    db.refresh(session)
+
+    game = Game(
+        created_by=user.id,
+        game_session_id=session.id,
+        game_type_id=db.query(GameType)
+        .filter_by(network=NETWORK_TYPE_INTEGRATED, names_hidden=False)
+        .first()
+        .id,
+        rounds=NUMBER_OF_ROUNDS,
+        practice=True,
+    )
+    db.add(game)
+    db.commit()
     db.refresh(game)
 
+    position = 1
+    for p_list in lang_dict.values():
+        for p in p_list:
+            session_player = [
+                sp for sp in session.players if sp.user_id == p.id
+            ][0]
+            db.add(
+                GamePlayer(
+                    created_by=user.id,
+                    game_id=game.id,
+                    user_id=p.id,
+                    session_player_id=session_player.id,
+                    position=position,
+                )
+            )
+            position += 1
+
+    db.commit()
+
     redirect_url = URL("/admin/dashboard").include_query_params(
-        success=f"Your game (ID: {game.id}) has been successfully created!"
+        success=f"Your session (ID: {session.id}) and first game (ID: {game.id}) have been created!"
     )
 
     return RedirectResponse(

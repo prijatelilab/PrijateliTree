@@ -14,10 +14,9 @@ from starlette.datastructures import URL
 from prijateli_tree.app.database import (
     Game,
     GameAnswer,
-    GameType,
-    Player,
+    GamePlayer,
+    GameSession,
     SessionLocal,
-    User,
 )
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
@@ -70,7 +69,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     """
     Gets the game's current round given the game id
     """
-    players = db.query(Player).filter_by(game_id=game_id).all()
+    players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
 
     for player in players:
@@ -119,9 +118,9 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
 
 def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
-    Get language form player_id
+    Get language from player_id
     """
-    player = db.query(Player).filter_by(id=player_id).one_or_none()
+    player = db.query(GamePlayer).filter_by(id=player_id).one_or_none()
 
     if player is None:
         raise HTTPException(
@@ -187,16 +186,21 @@ def get_previous_answers(
     # Get the neighbors' previous answers
     for neighbor_position in neighbors_positions:
         this_neighbor = (
-            db.query(Player)
+            db.query(GamePlayer)
             .filter_by(game_id=game_id, position=neighbor_position)
             .one_or_none()
         )
         this_answer = [
             a for a in this_neighbor.answers if a.round == last_round
         ][0]
-        complete_name = (
-            f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
-        )
+
+        # Check if names are hidden
+        if game.game_type.names_hidden:
+            player_id = this_neighbor.user.id
+            complete_name = f"Player {player.position}: "
+        else:
+            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+
         neighbors_names.append(complete_name)
         neighbors_answers.append(this_answer.player_answer)
 
@@ -212,6 +216,23 @@ def get_previous_answers(
 #        BEGIN API
 #
 ###############################
+
+
+@router.get("/session/{session_id}")
+def route_session_access(
+    request: Request, session_id: int, db: Session = Depends(get_db)
+):
+    # Do some logic things
+    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
+
+    if session is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="session not found"
+        )
+
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
 
 
 @router.get("/{game_id}")
@@ -302,7 +323,8 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    # template_text = languages[player.language.abbr]
+
+    template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     # Get current round
     if current_round == 1:
@@ -312,6 +334,7 @@ def view_round(
             "ball": ball,
             "first_round": first_round,
             "current_round": current_round,
+            "text": template_text,
         }
     else:
         previous_answers = get_previous_answers(game_id, player_id, db)
@@ -320,6 +343,7 @@ def view_round(
             "previous_answers": previous_answers,
             "first_round": first_round,
             "current_round": current_round,
+            "text": template_text,
         }
 
     return templates.TemplateResponse(
@@ -336,7 +360,7 @@ def all_set(
     """
     Determines if all players have submitted a guess in the current round
     """
-    players = db.query(Player).filter_by(game_id=game_id).all()
+    players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
         n_answers += len(player.answers)
@@ -397,7 +421,6 @@ def route_end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    debug: bool = False,
     db: Session = Depends(get_db),
 ):
     """
@@ -406,7 +429,7 @@ def route_end_of_game(
     """
 
     game, player = get_game_and_player(game_id, player_id, db)
-    game_status = did_player_win(game, player_id, db, debug)
+    game_status = did_player_win(game, player_id, db)
 
     points = 0
     if game_status["is_correct"]:
@@ -427,6 +450,31 @@ def route_end_of_game(
     result.update(game_status)
 
     return templates.TemplateResponse("end_of_game.html", result)
+
+
+@router.get("/{game_id}/player/{player_id}/start_of_game")
+def view_start_of_game(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that returns the end of game page and
+    template.
+    """
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "points": WINNING_SCORE,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("start_of_game.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/denirs")

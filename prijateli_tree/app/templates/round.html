@@ -4,14 +4,14 @@
 {% endblock title %}
 {% block content %}
   <div class="container-sm general-container">
-    <h1>Round: {{ current_round }}</h1>
+    <p>Round: {{ current_round }}</p>
     {% if first_round %}
       <h2>
         Your Ball:
         {% if ball == 'R' %}
-          <span class="text-danger">Red</span>
+          <span class="text-danger">{{ text.util.red }}</span>
         {% elif ball == 'B' %}
-          <span class="text-primary">Blue</span>
+          <span class="text-primary">{{ text.util.blue }}</span>
         {% else %}
           {{ ball }}
         {% endif %}
@@ -20,23 +20,23 @@
       <h1>Your Previous Guess</h1>
       <h2>
         {% if previous_answers.your_previous_answer == 'R' %}
-          <span class="text-danger">Red</span>
+          <span class="text-danger">{{ text.util.red }}</span>
         {% elif previous_answers.your_previous_answer == 'B' %}
-          <span class="text-primary">Blue</span>
+          <span class="text-primary">{{ text.util.blue }}</span>
         {% else %}
           {{ previous_answers.your_previous_answer }}
         {% endif %}
       </h2>
-      <h1>Neighbors' Previous Guesses</h1>
+      <h1>{{ text.game_other_rounds.see_what_others_guessed }}</h1>
       <ul style="list-style: none; padding: 0;">
         {% for index in previous_answers.neighbors_previous_answer %}
           {% set neighbor_answer = previous_answers.neighbors_previous_answer[loop.index-1] %}
           {% set neighbor_name = previous_answers.neighbors_names[loop.index-1] %}
           <li style="font-size: 24px; margin-bottom: 20px;">
             {% if neighbor_answer == 'R' %}
-              <span>{{ neighbor_name }}</span><span class="text-danger">Red</span>
+              <span>{{ neighbor_name }}</span><span class="text-danger">{{ text.util.red }}</span>
             {% elif neighbor_answer == 'B' %}
-              <span>{{ neighbor_name }}</span><span class="text-primary">Blue</span>
+              <span>{{ neighbor_name }}</span><span class="text-primary">{{ text.util.blue }}</span>
             {% else %}
               {{ neighbor_answer }}
             {% endif %}
@@ -45,8 +45,8 @@
       </ul>
     {% endif %}
     <!-- Dummy buttons -->
-    <h1>Choose a color</h1>
-    <button type="submit" class="btn btn-danger">Red</button>
-    <button type="submit" class="btn btn-primary">Blue</button>
+    <h1>{{ text.game_first_round.guess_color }}</h1>
+    <button type="submit" class="btn btn-danger">{{ text.util.red }}</button>
+    <button type="submit" class="btn btn-primary">{{ text.util.blue }}</button>
   </div>
 {% endblock content %}

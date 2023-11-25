@@ -20,6 +20,7 @@ NETWORK_TYPE_SELF_SELECTED = "self-selected"
 ROLE_ADMIN = "admin"
 ROLE_STUDENT = "student"
 ROLE_SUPER_ADMIN = "super-admin"
+NUMBER_OF_ROUNDS = 10
 
 # Language Constants
 LANGUAGE_ALBANIAN = "al"

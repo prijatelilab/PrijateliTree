@@ -10,7 +10,13 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import Game, GameAnswer, Player, SessionLocal
+from prijateli_tree.app.database import (
+    Game,
+    GameAnswer,
+    GamePlayer,
+    GameSession,
+    SessionLocal,
+)
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
     BALL_RED,
@@ -61,7 +67,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     """
     Gets the game's current round given the game id
     """
-    players = db.query(Player).filter_by(game_id=game_id).all()
+    players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
 
     for player in players:
@@ -112,7 +118,7 @@ def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
     Get language from player_id
     """
-    player = db.query(Player).filter_by(id=player_id).one_or_none()
+    player = db.query(GamePlayer).filter_by(id=player_id).one_or_none()
 
     if player is None:
         raise HTTPException(
@@ -181,7 +187,7 @@ def get_previous_answers(
     # Get the neighbors' previous answers
     for neighbor_position in neighbors_positions:
         this_neighbor = (
-            db.query(Player)
+            db.query(GamePlayer)
             .filter_by(game_id=game_id, position=neighbor_position)
             .one_or_none()
         )
@@ -227,6 +233,23 @@ def language_check(player_lang, languages):
 #        BEGIN API
 #
 ###############################
+
+
+@router.get("/session/{session_id}")
+def route_session_access(
+    request: Request, session_id: int, db: Session = Depends(get_db)
+):
+    # Do some logic things
+    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
+
+    if session is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="session not found"
+        )
+
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
 
 
 @router.get("/{game_id}")
@@ -355,7 +378,7 @@ def all_set(
     """
     Determines if all players have submitted a guess in the current round
     """
-    players = db.query(Player).filter_by(game_id=game_id).all()
+    players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
         n_answers += len(player.answers)
@@ -453,7 +476,6 @@ def view_start_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    debug: bool = False,
     db: Session = Depends(get_db),
 ):
     """

@@ -14,6 +14,14 @@
       // Used to clear the URL of parameters after the banner alert is closed.
       window.history.replaceState(null, '', window.location.pathname);
     }
+
+    const copyToClipboard = async (id) => {
+      try {
+        await navigator.clipboard.writeText(`${window.location.host}/games/session/${id}`);
+      } catch (error) {
+        console.error("Failed to copy to clipboard:", error);
+      }
+    }
   </script>
 {% endblock helper_script %}
 {% block content %}
@@ -31,39 +39,45 @@
     <div class="row">
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
         <a class="btn btn-primary btn-sm"
-           href='{{ url_for("dashboard_create_game") }}'
-           role="button">New Game</a>
-        <table id="games" class="table table-hover table-bordered caption-top">
-          <caption>List of Games</caption>
+           href='{{ url_for("dashboard_create_session") }}'
+           role="button">New Session</a>
+        <table id="games"
+               class="table table-hover table-bordered caption-top text-center">
+          <caption>List of Sessions</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
-              <th scope="col">Game Type</th>
-              <th scope="col">Rounds</th>
-              <th scope="col">Bag</th>
-              <th scope="col">IsPractice</th>
+              <th scope="col">Number of Games</th>
+              <th scope="col">Players</th>
+              <th scope="col">Copy URL</th>
             </tr>
           </thead>
           <tbody class="table-group-divider">
-            {% if games|length == 0 %}
+            {% if sessions|length == 0 %}
               <tr class="empty-table">
-                <td colspan="5">There are no games currently in the system.</td>
+                <td colspan="4">There are no sessions currently in the system.</td>
               </tr>
             {% endif %}
-            {% for g in games|sort(attribute='-created_at') %}
+            {% for s in sessions|sort(attribute='-created_at') %}
               <tr>
-                <th>{{ g.id }}</th>
-                <td>{{ g.game_type.network|title }}</td>
-                <td>{{ g.rounds }}</td>
-                <td>{{ g.game_type.bag }}</td>
-                <td>{{ g.practice }}</td>
+                <th>{{ s.id }}</th>
+                <td>{{ s.num_games }}</td>
+                <td>{{ s.player_string }}</td>
+                <td>
+                  {% if not s.finished %}
+                    <button role="button"
+                            class="btn btn-primary btn-sm"
+                            onclick="copyToClipboard({{ s.id }})">Copy to Clipboard</button>
+                  {% endif %}
+                </td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="students" class="table table-hover table-bordered caption-top">
+        <table id="students"
+               class="table table-hover table-bordered caption-top text-center">
           <caption>List of Students</caption>
           <thead>
             <tr>
@@ -96,7 +110,7 @@
           </tbody>
         </table>
       </div>
-      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container text-center">
         <table id="denir-transactions"
                class="table table-hover table-bordered caption-top">
           <caption>List of Denir Transactions</caption>
@@ -126,7 +140,8 @@
         </table>
       </div>
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="game-types" class="table table-hover table-bordered caption-top">
+        <table id="game-types"
+               class="table table-hover table-bordered caption-top text-center">
           <caption>List of Game Types</caption>
           <thead>
             <tr>

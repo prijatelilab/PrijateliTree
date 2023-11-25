@@ -206,7 +206,7 @@ def create_session(
             lang_dict[p.language.abbr] = [p]
 
     for v in lang_dict.values():
-        if v != 3:
+        if len(v) != 3:
             redirect_url = URL("/admin/session").include_query_params(
                 error="A session must contain exactly 3 players of different "
                 "ethnicities."
@@ -251,12 +251,13 @@ def create_session(
         game_session_id=session.id,
         game_type_id=db.query(GameType)
         .filter_by(network=NETWORK_TYPE_INTEGRATED, names_hidden=False)
-        .one()
+        .first()
         .id,
         rounds=NUMBER_OF_ROUNDS,
         practice=True,
     )
     db.add(game)
+    db.commit()
     db.refresh(game)
 
     position = 1
@@ -269,7 +270,7 @@ def create_session(
                 GamePlayer(
                     created_by=user.id,
                     game_id=game.id,
-                    user_id=p.user_id,
+                    user_id=p.id,
                     session_player_id=session_player.id,
                     position=position,
                 )

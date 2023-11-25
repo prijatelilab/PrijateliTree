@@ -166,9 +166,6 @@ def get_previous_answers(
     # Get current round
     current_round = get_current_round(game_id, db)
 
-    # Check if names are hidden or not
-    names_hidden = game.game_type.names_hidden
-
     if current_round == 1:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="no previous answers"
@@ -196,7 +193,7 @@ def get_previous_answers(
         ][0]
 
         # Check if names are hidden
-        if names_hidden:
+        if game.game_type.names_hidden:
             player_id = this_neighbor.user.id
             complete_name = f"Player {player_id}: "
         else:
@@ -210,22 +207,6 @@ def get_previous_answers(
         "neighbors_previous_answer": neighbors_answers,
         "neighbors_names": neighbors_names,
     }
-
-
-def language_check(player_lang, languages):
-    """
-    Helper function to ensure that the language is in the languages dict
-    """
-    if player_lang not in languages:
-        player_lang = player_lang.lower()
-
-    if player_lang not in languages:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail=f"language {player_lang} not found",
-        )
-
-    return player_lang
 
 
 ###############################
@@ -341,8 +322,7 @@ def view_round(
     """
     game, player = get_game_and_player(game_id, player_id, db)
 
-    player_lang = language_check(player.language.abbr, languages)
-    template_text = languages[player_lang]
+    template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     # Get current round
     if current_round == 1:
@@ -439,7 +419,6 @@ def route_end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    debug: bool = False,
     db: Session = Depends(get_db),
 ):
     """

@@ -9,7 +9,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi_localization import TranslateJsonResponse
 
 from prijateli_tree.app.config import config
-from prijateli_tree.app.database import Base, engine
 from prijateli_tree.app.routers import administration, games
 from prijateli_tree.app.utils.constants import (
     KEY_ENV,
@@ -19,8 +18,6 @@ from prijateli_tree.app.utils.constants import (
     LANGUAGE_TURKISH,
 )
 
-
-Base.metadata.create_all(bind=engine)
 
 config = config[os.getenv(KEY_ENV)]
 

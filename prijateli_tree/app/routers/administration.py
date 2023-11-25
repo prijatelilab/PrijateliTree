@@ -126,10 +126,7 @@ def dashboard(
     for s in sessions:
         players = []
         for p in s.players:
-            stu = student_dict[p.user_id]
-            players.append(
-                f"{stu.first_name.title()} {stu.last_name.title()} ({stu.language.abbr.upper()})"
-            )
+            players.append(student_dict[p.user_id].name_str)
         s.player_string = ", ".join(players)
 
     return templates.TemplateResponse(

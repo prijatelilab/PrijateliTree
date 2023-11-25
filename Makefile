@@ -1,4 +1,4 @@
-default: build create_db start
+default: build start create_db
 
 .PHONY: build
 build:
@@ -41,3 +41,11 @@ clean: stop ## Remove all containers
 .PHONY: clean_all
 clean_all: clean stop ## Wipe database link
 	docker-compose down -v
+
+.PHONY: stamp_db
+stamp_db: ## Runs the stamp command to set the base state of the db
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini stamp head
+
+.PHONY: create_revision
+create_revision: ## Runs the command that creates the Alembic revision
+	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini revision --autogenerate

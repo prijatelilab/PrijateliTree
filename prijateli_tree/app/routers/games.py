@@ -16,6 +16,7 @@ from prijateli_tree.app.database import (
     GameAnswer,
     GamePlayer,
     GameSession,
+    GameType,
     SessionLocal,
 )
 from prijateli_tree.app.utils.constants import (
@@ -24,14 +25,20 @@ from prijateli_tree.app.utils.constants import (
     DENIR_FACTOR,
     FILE_MODE_READ,
     STANDARD_ENCODING,
-    WINNING_SCORE,
     SYSTEM_ID,
+    WINNING_SCORE,
 )
 from prijateli_tree.app.utils.games import Game as GameUtil
 
 
 router = APIRouter()
 
+
+def raise_exception_if_none(x, detail):
+    if x is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail=detail
+        )
 
 def get_db():
     db = SessionLocal()
@@ -225,10 +232,7 @@ def route_session_access(
     # Do some logic things
     session = db.query(GameSession).filter_by(id=session_id).one_or_none()
 
-    if session is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="session not found"
-        )
+    raise_exception_if_none(session, "session not found")
 
     return templates.TemplateResponse(
         "new_session.html", context={"request": request}
@@ -517,66 +521,33 @@ def confirm_player(
     return {"status": "Player is ready!"}
 
 
-@router.post("/{game_id}/player_id/{player_id}/next_game")
-def create_new_game_from_old_game(
+@router.get("/{game_id}/player/{player_id}/next_game")
+def go_to_next_game(
+    request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db)
 ):
     """
-    Takes previous game and creates the next random game for the same players
+    Moves player to first round of next game or ends the session
     """
-    last_game, player = get_game_and_player(game_id, player_id, db)
+    game, player = get_game_and_player(game_id, player_id, db)
 
-    if last_game.next_game_id is None:
-        game_types = db.query(GameType).filter(
-            GameType.network.in_(['integrated', 'segregated'])).all()
-        game_type = random.choice(game_types)
-        n_rounds = random.choice([3, 4, 5])
+    if game.next_game_id is None:
+        # TODO: end of session screen
+        return
 
-        next_game = Game(
-            created_by=SYSTEM_ID,
-            id=last_game.next_game_id,
-            game_type_id=game_type.id,
-            rounds=n_rounds,
-        )
-
-        db.add(next_game)
-
-        db.query(Game).filter_by(id=game_id).update({"next_game_id": next_game.id})
-
-        db.commit()
-        db.refresh(next_game)
-
-        # randomize location in network conditional on language
-        # one group is always in 1-2-3 and the other 4-5-6
-        group_1 = random.shuffle([p.user_id for p in last_game.players if p in (1, 2, 3)])
-        group_2 = random.shuffle([p.user_id for p in last_game.players if p in (4, 5, 6)])
-
-        pos_players = group_1 + group_2
-
-        for i in range(0, len(pos_players)):
-            db.add(
-                Player(
-                    created_by=SYSTEM_ID,
-                    game_id=next_game.id,
-                    user_id=pos_players[i],
-                    position=i + 1,
-                )
-            )
-
-        db.commit()
-        db.refresh(next_game)
-
-    next_player = db.query(Player).filter_by(
-                    user_id=player.user_id,
-                    game_id=next_game.id
-                    ).one()
-
-    # unclear what next URL will be.
-    redirect_url = URL(f"{next_game.id}/player/{next_player.id}/round").include_query_params(
-        success=f"Your game (ID: {next_game.id}) has been successfully created!"
+    next_player_id = (
+        db.query(GamePlayer)
+        .filter_by(
+            user_id=player.user_id,
+            game_id=game.next_game_id)
+        .one()
+        .id
     )
+    # game.next_game_id
+    # next_player_id
+    redirect_url = request.url_for("view_start_of_game", game_id=game.next_game_id, player_id=next_player_id)
 
     return RedirectResponse(
         redirect_url,

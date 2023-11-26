@@ -10,10 +10,12 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from starlette.datastructures import URL
+from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
     GameAnswer,
+    GameType,
     GamePlayer,
     GameSession,
     GameType,
@@ -27,6 +29,7 @@ from prijateli_tree.app.utils.constants import (
     STANDARD_ENCODING,
     SYSTEM_ID,
     WINNING_SCORE,
+    SYSTEM_ID,
 )
 from prijateli_tree.app.utils.games import Game as GameUtil
 

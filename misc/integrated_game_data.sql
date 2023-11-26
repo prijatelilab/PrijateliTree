@@ -22,9 +22,9 @@ VALUES
 
 /* Create game */
 INSERT INTO games
-    (created_by, game_type_id, rounds, practice)
+    (created_by, game_type_id, rounds, practice, game_session_id)
 VALUES
-    (1, 1, 10, FALSE);
+    (1, 1, 10, FALSE, 1);
 
 /* Add users to game */
 INSERT INTO game_players

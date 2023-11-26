@@ -36,9 +36,8 @@ router = APIRouter()
 
 def raise_exception_if_none(x, detail):
     if x is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=detail
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
+
 
 def get_db():
     db = SessionLocal()
@@ -526,7 +525,7 @@ def go_to_next_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Moves player to first round of next game or ends the session
@@ -539,15 +538,17 @@ def go_to_next_game(
 
     next_player_id = (
         db.query(GamePlayer)
-        .filter_by(
-            user_id=player.user_id,
-            game_id=game.next_game_id)
+        .filter_by(user_id=player.user_id, game_id=game.next_game_id)
         .one()
         .id
     )
     # game.next_game_id
     # next_player_id
-    redirect_url = request.url_for("view_start_of_game", game_id=game.next_game_id, player_id=next_player_id)
+    redirect_url = request.url_for(
+        "view_start_of_game",
+        game_id=game.next_game_id,
+        player_id=next_player_id,
+    )
 
     return RedirectResponse(
         redirect_url,

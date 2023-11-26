@@ -395,8 +395,11 @@ def waiting(
 def get_session_player_from_player(
     player: GamePlayer, db: Session = Depends(get_db)
 ):
-    id = player.session_player_id
-    session_player = db.query(GameSessionPlayer).filter_by(id=id).one_or_none()
+    session_player = (
+        db.query(GameSessionPlayer)
+        .filter_by(id=player.session_player_id)
+        .one_or_none()
+    )
 
     if session_player is None:
         raise HTTPException(
@@ -430,12 +433,16 @@ def route_add_score(
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
 
 
-@router.get("/current_score/{session_player_id}")
+@router.get("/current_score/{player_id}")
 def route_get_score(
     request: Request,
-    session_player_id: int,
+    player_id: int,
     db: Session = Depends(get_db),
 ):
+    session_player_id = (
+        db.query(GamePlayer).filter_by(id=player_id).one().session_player_id
+    )
+
     session_player = (
         db.query(GameSessionPlayer)
         .filter_by(id=session_player_id)
@@ -446,7 +453,7 @@ def route_get_score(
             status_code=HTTPStatus.NOT_FOUND,
             detail="GameSessionPlayer not found",
         )
-    return session_player
+    return session_player.points
 
 
 @router.get("/{game_id}/player/{player_id}/end_of_game")

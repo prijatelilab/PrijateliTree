@@ -15,7 +15,7 @@ VALUES
 
 
 /* Create session */
-INSERT INTO sessions
+INSERT INTO game_sessions
     (id, created_at, created_by, num_games, finished)
 VALUES
     (1, '01/01/2000'::date, 1, 1, FALSE);

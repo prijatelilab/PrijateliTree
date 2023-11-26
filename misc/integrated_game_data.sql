@@ -14,6 +14,12 @@ VALUES
     ('turkish 3', 'name', 'j@email.com', '01/01/2009'::date, 'student', 4, 4, 3);
 
 
+/* Create session */
+INSERT INTO sessions
+    (id, created_at, created_by, num_games, finished)
+VALUES
+    (1, '01/01/2000'::date, 1, 1, FALSE);
+
 /* Create game */
 INSERT INTO games
     (created_by, game_type_id, rounds, practice)

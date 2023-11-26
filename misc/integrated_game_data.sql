@@ -26,13 +26,20 @@ INSERT INTO games
 VALUES
     (1, 1, 10, FALSE, 1);
 
+/* Create Session Players */
+INSERT INTO session_players
+    (id, created_at, created_by, user_id, session_id, ready, points, correct_answers)
+VALUES
+    (1, '01/01/2000'::date, 1, 1, 1, FALSE, 0, 0);
+
+
 /* Add users to game */
 INSERT INTO game_players
-    (created_by, game_id, user_id, position, ready)
+    (created_by, game_id, user_id, position, ready, session_player_id)
 VALUES
-    (1, 1, 2, 1, FALSE),
-    (1, 1, 3, 2, FALSE),
-    (1, 1, 4, 3, FALSE),
-    (1, 1, 5, 4, FALSE),
-    (1, 1, 6, 5, FALSE),
-    (1, 1, 7, 6, FALSE);
+    (1, 1, 2, 1, false, 1),
+    (1, 1, 3, 2, false, 1),
+    (1, 1, 4, 3, false, 1),
+    (1, 1, 5, 4, false, 1),
+    (1, 1, 6, 5, false, 1),
+    (1, 1, 7, 6, false, 1);

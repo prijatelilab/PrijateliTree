@@ -9,14 +9,12 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
     GameAnswer,
     GamePlayer,
     GameSession,
-    GameType,
     SessionLocal,
 )
 from prijateli_tree.app.utils.constants import (
@@ -25,7 +23,6 @@ from prijateli_tree.app.utils.constants import (
     DENIR_FACTOR,
     FILE_MODE_READ,
     STANDARD_ENCODING,
-    SYSTEM_ID,
     WINNING_SCORE,
 )
 from prijateli_tree.app.utils.games import Game as GameUtil

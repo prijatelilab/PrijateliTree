@@ -30,12 +30,12 @@ VALUES
 INSERT INTO session_players
     (id, created_at, created_by, user_id, session_id, ready, points, correct_answers)
 VALUES
-    (1, '01/01/2000'::date, 1, 2, 1, FALSE, 0, 0)
-    (1, '01/01/2000'::date, 1, 3, 1, FALSE, 0, 0),
-    (1, '01/01/2000'::date, 1, 4, 1, FALSE, 0, 0),
-    (1, '01/01/2000'::date, 1, 5, 1, FALSE, 0, 0),
-    (1, '01/01/2000'::date, 1, 6, 1, FALSE, 0, 0),
-    (1, '01/01/2000'::date, 1, 7, 1, FALSE, 0, 0);
+    (1, '01/01/2000'::date, 1, 2, 1, FALSE, 0, 0),
+    (2, '01/01/2000'::date, 1, 3, 1, FALSE, 0, 0),
+    (3, '01/01/2000'::date, 1, 4, 1, FALSE, 0, 0),
+    (4, '01/01/2000'::date, 1, 5, 1, FALSE, 0, 0),
+    (5, '01/01/2000'::date, 1, 6, 1, FALSE, 0, 0),
+    (6, '01/01/2000'::date, 1, 7, 1, FALSE, 0, 0);
 
 
 /* Add users to game */

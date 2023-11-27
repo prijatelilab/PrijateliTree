@@ -47,12 +47,14 @@
     <!-- Dummy buttons -->
     <h1>{{ text.game_first_round.guess_color }}</h1>
     <!-- Button for 'Red' answer -->
-    <form action="/{{ game_id }}/player/{{ player_id }}/answer" method="post">
+    <form action="/games/{{ game_id }}/player/{{ player_id }}/answer"
+          method="post">
       <input type="hidden" name="player_answer" value="R">
       <button type="submit" class="btn btn-danger">{{ text.util.red }}</button>
     </form>
     <!-- Button for 'Blue' answer -->
-    <form action="/{{ game_id }}/player/{{ player_id }}/answer" method="post">
+    <form action="/games/{{ game_id }}/player/{{ player_id }}/answer"
+          method="post">
       <input type="hidden" name="player_answer" value="B">
       <button type="submit" class="btn btn-primary">{{ text.util.blue }}</button>
     </form>

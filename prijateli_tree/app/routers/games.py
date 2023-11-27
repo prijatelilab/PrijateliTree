@@ -309,7 +309,9 @@ def route_add_answer(
     db.commit()
     db.refresh(new_answer)
 
-    return new_answer
+    redirect_url = URL("games/{game_id}/player/{player_id}/waiting")
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
 
 
 @router.get("/{game_id}/player/{player_id}/round")

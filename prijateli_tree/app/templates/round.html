@@ -44,19 +44,14 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <!-- Dummy buttons -->
     <h1>{{ text.game_first_round.guess_color }}</h1>
     <!-- Button for 'Red' answer -->
     <form action="{{ url_for('route_add_answer', game_id=game_id, player_id=player_id) }}"
           method="post">
-      <input type="hidden" name="player_answer" value="R">
-      <button type="submit" class="btn btn-danger">{{ text.util.red }}</button>
-    </form>
-    <!-- Button for 'Blue' answer -->
-    <form action="{{ url_for('route_add_answer', game_id=game_id, player_id=player_id) }}"
-          method="post">
-      <input type="hidden" name="player_answer" value="B">
-      <button type="submit" class="btn btn-primary">{{ text.util.blue }}</button>
+      <div class="d-grid gap-2 d-md-block">
+        <button type="submit" name="player_answer" value="R" class="btn btn-danger">{{ text.util.red }}</button>
+        <button type="submit" name="player_answer" value="B" class="btn btn-primary">{{ text.util.blue }}</button>
+      </div>
     </form>
   </div>
 {% endblock content %}

@@ -14,19 +14,37 @@ VALUES
     ('turkish 3', 'name', 'j@email.com', '01/01/2009'::date, 'student', 4, 4, 3);
 
 
+/* Create session */
+INSERT INTO game_sessions
+    (id, created_at, created_by, num_games, finished)
+VALUES
+    (1, '01/01/2000'::date, 1, 1, FALSE);
+
 /* Create game */
 INSERT INTO games
-    (created_by, game_type_id, rounds, practice)
+    (created_by, game_type_id, rounds, practice, game_session_id)
 VALUES
-    (1, 1, 10, FALSE);
+    (1, 1, 10, FALSE, 1);
+
+/* Create Session Players */
+INSERT INTO session_players
+    (id, created_at, created_by, user_id, session_id, ready, points, correct_answers)
+VALUES
+    (1, '01/01/2000'::date, 1, 2, 1, FALSE, 0, 0),
+    (2, '01/01/2000'::date, 1, 3, 1, FALSE, 0, 0),
+    (3, '01/01/2000'::date, 1, 4, 1, FALSE, 0, 0),
+    (4, '01/01/2000'::date, 1, 5, 1, FALSE, 0, 0),
+    (5, '01/01/2000'::date, 1, 6, 1, FALSE, 0, 0),
+    (6, '01/01/2000'::date, 1, 7, 1, FALSE, 0, 0);
+
 
 /* Add users to game */
 INSERT INTO game_players
-    (created_by, game_id, user_id, position, ready)
+    (created_by, game_id, user_id, position, ready, session_player_id)
 VALUES
-    (1, 1, 2, 1, FALSE),
-    (1, 1, 3, 2, FALSE),
-    (1, 1, 4, 3, FALSE),
-    (1, 1, 5, 4, FALSE),
-    (1, 1, 6, 5, FALSE),
-    (1, 1, 7, 6, FALSE);
+    (1, 1, 2, 1, false, 1),
+    (1, 1, 3, 2, false, 1),
+    (1, 1, 4, 3, false, 1),
+    (1, 1, 5, 4, false, 1),
+    (1, 1, 6, 5, false, 1),
+    (1, 1, 7, 6, false, 1);

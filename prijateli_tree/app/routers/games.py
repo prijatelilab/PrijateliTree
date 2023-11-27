@@ -5,7 +5,7 @@ from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -273,7 +273,7 @@ def route_game_player_access(
 def route_add_answer(
     game_id: int,
     player_id: int,
-    player_answer: str,
+    player_answer: str = Form(...),
     db: Session = Depends(get_db),
 ):
     """
@@ -311,7 +311,9 @@ def route_add_answer(
     db.commit()
     db.refresh(new_answer)
 
-    return new_answer
+    redirect_url = f"/games/{game_id}/player/{player_id}/waiting"
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
 
 @router.get("/{game_id}/player/{player_id}/round")
@@ -328,25 +330,21 @@ def view_round(
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
+    template_data = {
+        "first_round": True,
+        "current_round": current_round,
+        "text": template_text,
+        "player_id": player_id,
+        "game_id": game_id,
+    }
     # Get current round
     if current_round == 1:
-        ball = random.choice(game.game_type.bag)
-        first_round = True
-        template_data = {
-            "ball": ball,
-            "first_round": first_round,
-            "current_round": current_round,
-            "text": template_text,
-        }
+        template_data["ball"] = random.choice(game.game_type.bag)
     else:
-        previous_answers = get_previous_answers(game_id, player_id, db)
-        first_round = False
-        template_data = {
-            "previous_answers": previous_answers,
-            "first_round": first_round,
-            "current_round": current_round,
-            "text": template_text,
-        }
+        template_data["first_round"] = False
+        template_data["previous_answers"] = get_previous_answers(
+            game_id, player_id, db
+        )
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}

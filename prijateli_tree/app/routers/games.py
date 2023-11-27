@@ -33,6 +33,11 @@ from prijateli_tree.app.utils.games import Game as GameUtil
 router = APIRouter()
 
 
+def raise_exception_if_none(x, detail):
+    if x is None:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
+
+
 def get_db():
     db = SessionLocal()
     try:
@@ -225,10 +230,7 @@ def route_session_access(
     # Do some logic things
     session = db.query(GameSession).filter_by(id=session_id).one_or_none()
 
-    if session is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="session not found"
-        )
+    raise_exception_if_none(session, "session not found")
 
     return templates.TemplateResponse(
         "new_session.html", context={"request": request}
@@ -552,3 +554,39 @@ def confirm_player(
     db.commit()
 
     return {"status": "Player is ready!"}
+
+
+@router.get("/{game_id}/player/{player_id}/next_game")
+def go_to_next_game(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Moves player to first round of next game or ends the session
+    """
+    game, player = get_game_and_player(game_id, player_id, db)
+
+    if game.next_game_id is None:
+        # TODO: end of session screen
+        return
+
+    next_player_id = (
+        db.query(GamePlayer)
+        .filter_by(user_id=player.user_id, game_id=game.next_game_id)
+        .one()
+        .id
+    )
+    # game.next_game_id
+    # next_player_id
+    redirect_url = request.url_for(
+        "view_start_of_game",
+        game_id=game.next_game_id,
+        player_id=next_player_id,
+    )
+
+    return RedirectResponse(
+        redirect_url,
+        status_code=HTTPStatus.FOUND,
+    )

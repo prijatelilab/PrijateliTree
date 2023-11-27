@@ -1,4 +1,5 @@
 import os
+import random
 from http import HTTPStatus
 from pathlib import Path
 from typing import Annotated
@@ -275,6 +276,9 @@ def create_session(
             position += 1
 
     db.commit()
+    db.refresh(game)
+
+    create_session_games(session, game, user, db)
 
     redirect_url = URL("/admin/dashboard").include_query_params(
         success=f"Your session (ID: {session.id}) and first game (ID: {game.id}) have been created!"
@@ -284,3 +288,62 @@ def create_session(
         redirect_url,
         status_code=HTTPStatus.FOUND,
     )
+
+
+def create_session_games(
+    session,
+    game,
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
+):
+    print(session.players)
+    print(game.players)
+    for i in range(session.num_games):
+        previous_game = game
+        print(i)
+        print(previous_game.__dict__)
+        game_types = (
+            db.query(GameType)
+            .filter(GameType.network.in_(["integrated", "segregated"]))
+            .all()
+        )
+        game_type = random.choice(game_types)
+        n_rounds = random.choice([3, 4, 5])
+
+        game = Game(
+            created_by=session.created_by,
+            game_session_id=session.id,
+            game_type_id=game_type.id,
+            rounds=n_rounds,
+        )
+
+        db.add(game)
+        db.commit()
+        db.refresh(game)
+
+        previous_game.next_game_id = game.id
+        db.commit()
+
+        # randomize location in network conditional on language
+        # one group is always in 1-2-3 and the other 4-5-6
+        group_1 = [p for p in previous_game.players if p.position in (1, 2, 3)]
+        random.shuffle(group_1)
+
+        group_2 = [p for p in previous_game.players if p.position in (4, 5, 6)]
+        random.shuffle(group_2)
+
+        pos_players = group_1 + group_2
+
+        for i, player in enumerate(pos_players):
+            db.add(
+                GamePlayer(
+                    created_by=session.created_by,
+                    game_id=game.id,
+                    user_id=player.user_id,
+                    session_player_id=player.session_player_id,
+                    position=i + 1,
+                )
+            )
+
+        db.commit()
+        db.refresh(game)

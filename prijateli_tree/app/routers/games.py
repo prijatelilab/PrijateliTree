@@ -346,6 +346,10 @@ def view_round(
             "text": template_text,
         }
 
+    # Add player_id and game_id to template_data
+    template_data["player_id"] = player_id
+    template_data["game_id"] = game_id
+
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
     )

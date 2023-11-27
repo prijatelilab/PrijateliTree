@@ -5,7 +5,7 @@ from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -271,7 +271,7 @@ def route_game_player_access(
 def route_add_answer(
     game_id: int,
     player_id: int,
-    player_answer: str,
+    player_answer: str = Form(...),
     db: Session = Depends(get_db),
 ):
     """

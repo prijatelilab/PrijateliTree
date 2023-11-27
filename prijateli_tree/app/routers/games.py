@@ -328,29 +328,21 @@ def view_round(
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
+    template_data = {
+        "first_round": True,
+        "current_round": current_round,
+        "text": template_text,
+        "player_id": player_id,
+        "game_id": game_id,
+    }
     # Get current round
     if current_round == 1:
-        ball = random.choice(game.game_type.bag)
-        first_round = True
-        template_data = {
-            "ball": ball,
-            "first_round": first_round,
-            "current_round": current_round,
-            "text": template_text,
-        }
+        template_data["ball"] = random.choice(game.game_type.bag)
     else:
-        previous_answers = get_previous_answers(game_id, player_id, db)
-        first_round = False
-        template_data = {
-            "previous_answers": previous_answers,
-            "first_round": first_round,
-            "current_round": current_round,
-            "text": template_text,
-        }
-
-    # Add player_id and game_id to template_data
-    template_data["player_id"] = player_id
-    template_data["game_id"] = game_id
+        template_data["first_round"] = False
+        template_data["previous_answers"] = get_previous_answers(
+            game_id, player_id, db
+        )
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}

@@ -5,7 +5,7 @@
 {% block helper_script %}
   <script>
     // $(document).ready(function () {
-    //   $('#games').DataTable();
+    //   $('#sessions').DataTable();
     //   $('#students').DataTable();
     //   $('#denir-transactions').DataTable();
     //   $('#game-types').DataTable();
@@ -41,7 +41,7 @@
         <a class="btn btn-primary btn-sm"
            href='{{ url_for("dashboard_create_session") }}'
            role="button">New Session</a>
-        <table id="games"
+        <table id="sessions"
                class="table table-hover table-bordered caption-top text-center">
           <caption>List of Sessions</caption>
           <thead>

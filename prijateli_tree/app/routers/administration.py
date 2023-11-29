@@ -258,6 +258,8 @@ def create_session(
     db.commit()
     db.refresh(game)
 
+    bag = game.game_type.bag
+    rand_bag = random.sample(bag, len(bag))
     position = 1
     for p_list in lang_dict.values():
         for p in p_list:
@@ -271,6 +273,7 @@ def create_session(
                     user_id=p.id,
                     session_player_id=session_player.id,
                     position=position,
+                    initial_ball=rand_bag[position - 1]
                 )
             )
             position += 1
@@ -293,7 +296,6 @@ def create_session(
 def create_session_games(
     session,
     game,
-    user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ):
     print(session.players)
@@ -333,17 +335,23 @@ def create_session_games(
         random.shuffle(group_2)
 
         pos_players = group_1 + group_2
+        add_players_to_game(pos_players, game, db)
 
-        for i, player in enumerate(pos_players):
-            db.add(
-                GamePlayer(
-                    created_by=session.created_by,
-                    game_id=game.id,
-                    user_id=player.user_id,
-                    session_player_id=player.session_player_id,
-                    position=i + 1,
-                )
+
+def add_players_to_game(pos_players: list[GamePlayer], game, db):
+    """
+    ...
+    """
+    for i, player in enumerate(pos_players):
+        db.add(
+            GamePlayer(
+                created_by=game.created_by,
+                game_id=game.id,
+                user_id=player.user_id,
+                session_player_id=player.session_player_id,
+                position=i + 1,
+                initial_ball=rand_bag[i],
             )
-
-        db.commit()
-        db.refresh(game)
+        )
+    db.commit()
+    db.refresh(game)

@@ -1,6 +1,5 @@
 import glob
 import json
-import random
 from collections import Counter
 from http import HTTPStatus
 from pathlib import Path

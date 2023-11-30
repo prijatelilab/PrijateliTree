@@ -273,7 +273,7 @@ def create_session(
                     user_id=p.id,
                     session_player_id=session_player.id,
                     position=position,
-                    initial_ball=rand_bag[position - 1]
+                    initial_ball=rand_bag[position - 1],
                 )
             )
             position += 1
@@ -339,9 +339,7 @@ def create_session_games(
 
 
 def add_players_to_game(pos_players: list[GamePlayer], game, db):
-    """
-    
-    """
+    """ """
     rand_bag = random.sample(game.game_type.bag, len(game.game_type.bag))
 
     for i, player in enumerate(pos_players):

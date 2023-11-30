@@ -37,6 +37,10 @@ def raise_exception_if_none(x, detail):
     if x is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
+def raise_exception_if_not(x, detail):
+    if not x:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
+
 
 def get_db():
     db = SessionLocal()
@@ -93,17 +97,12 @@ def get_game_and_player(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     filtered_player = [p for p in game.players if p.id == player_id]
 
-    if not len(filtered_player):
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    raise_exception_if_not(len(filtered_player), detail="player not in game")
+
     return game, filtered_player[0]
 
 
@@ -113,10 +112,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     return game, game.game_type
 
@@ -127,10 +123,7 @@ def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
     player = db.query(GamePlayer).filter_by(id=player_id).one_or_none()
 
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found"
-        )
+    raise_exception_if_none(player, detail="player not found")
 
     return player.language.abbr
 
@@ -173,12 +166,9 @@ def get_previous_answers(
     # Get current round
     current_round = get_current_round(game_id, db)
 
-    if current_round == 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="no previous answers"
-        )
-    else:
-        last_round = current_round - 1
+    raise_exception_if_not(current_round > 1, detail="no previous answers")
+    
+    last_round = current_round - 1
 
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
@@ -240,10 +230,7 @@ def route_session_access(
 @router.get("/{game_id}")
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
     return {
         "game_id": game_id,
         "rounds": game.rounds,
@@ -255,16 +242,8 @@ def route_game_access(game_id: int, db: Session = Depends(get_db)):
 def route_game_player_access(
     game_id: int, player_id: int, db: Session = Depends(get_db)
 ):
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    if len([player for player in game.players if player.id == player_id]) != 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
-        )
+    # tests to ensure game and player exists
+    game, player = get_game_and_player(game_id, player_id, db)
 
     return {"game_id": game_id, "player_id": player_id}
 
@@ -280,10 +259,7 @@ def route_add_answer(
     Function that updates the player's guess in the database
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     # Getting correct answer and current round
     correct_answer = get_bag_color(game.game_type.bag)
@@ -401,11 +377,11 @@ def get_session_player_from_player(
         .one_or_none()
     )
 
-    if session_player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail="GameSessionPlayer not found",
-        )
+    raise_exception_if_none(
+        session_player, 
+        detail="GameSessionPlayer not found"
+    )
+
     return session_player
 
 

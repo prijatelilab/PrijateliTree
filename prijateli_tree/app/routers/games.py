@@ -261,31 +261,27 @@ def route_add_answer(
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     raise_exception_if_none(game, detail="game not found")
 
-    # Getting correct answer and current round
-    correct_answer = get_bag_color(game.game_type.bag)
     current_round = get_current_round(game_id, db)
 
     if (
-        db.query(GameAnswer)
+        not db.query(GameAnswer)
         .filter_by(game_player_id=player_id, round=current_round)
         .one_or_none()
     ):
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail="answer already exists for player and round",
+        # Getting correct answer and current round
+        correct_answer = get_bag_color(game.game_type.bag)
+
+        # Record the answer
+        new_answer = GameAnswer(
+            game_player_id=player_id,
+            player_answer=player_answer,
+            correct_answer=correct_answer,
+            round=current_round,
         )
 
-    # Record the answer
-    new_answer = GameAnswer(
-        game_player_id=player_id,
-        player_answer=player_answer,
-        correct_answer=correct_answer,
-        round=current_round,
-    )
-
-    db.add(new_answer)
-    db.commit()
-    db.refresh(new_answer)
+        db.add(new_answer)
+        db.commit()
+        db.refresh(new_answer)
 
     redirect_url = f"/games/{game_id}/player/{player_id}/waiting"
 

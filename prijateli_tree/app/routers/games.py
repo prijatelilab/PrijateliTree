@@ -396,13 +396,15 @@ def route_add_score(
     Function that updates the player's score in the database
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    game_status = did_player_win(game, player_id, db)
-    session_player = get_session_player_from_player(player, db)
 
-    session_player.correct_answers += game_status["is_correct"]
-    session_player.points += game_status["is_correct"] * WINNING_SCORE
-    db.commit()
-    db.refresh(session_player)
+    if not player.ready:
+        session_player = get_session_player_from_player(player, db)
+        game_status = did_player_win(game, player_id, db)
+        player.ready = True
+        session_player.correct_answers += game_status["is_correct"]
+        session_player.points += game_status["is_correct"] * WINNING_SCORE
+        db.commit()
+        db.refresh(session_player)
 
     redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
 

@@ -281,7 +281,7 @@ def create_session(
     db.commit()
     db.refresh(game)
 
-    create_session_games(session, game, user, db)
+    create_session_games(session, game, db)
 
     redirect_url = URL("/admin/dashboard").include_query_params(
         success=f"Your session (ID: {session.id}) and first game (ID: {game.id}) have been created!"
@@ -340,8 +340,10 @@ def create_session_games(
 
 def add_players_to_game(pos_players: list[GamePlayer], game, db):
     """
-    ...
+    
     """
+    rand_bag = random.sample(game.game_type.bag, len(game.game_type.bag))
+
     for i, player in enumerate(pos_players):
         db.add(
             GamePlayer(

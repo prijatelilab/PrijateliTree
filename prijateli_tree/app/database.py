@@ -236,6 +236,7 @@ class GamePlayer(Base):
         nullable=False,
     )
     position = Column(Integer, nullable=False)
+    initial_ball = Column(String(1), nullable=False)
     ready = Column(Boolean, nullable=False, default=False)
     user = relationship("User", foreign_keys="GamePlayer.user_id")
     game = relationship(

@@ -341,7 +341,7 @@ def view_round(
     if current_round == 1:
         template_data["ball"] = random.choice(game.game_type.bag)
     elif current_round > game.rounds:
-        redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
+        redirect_url = f"/games/{game_id}/player/{player_id}/end_of_game"
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
         template_data["first_round"] = False

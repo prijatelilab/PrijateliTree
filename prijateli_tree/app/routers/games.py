@@ -573,6 +573,14 @@ def go_to_next_game(
         # TODO: end of session screen
         return
 
+    # Check if this game is practice
+    if game.practice:
+        # Check if next game is practice
+        next_game = db.query(Game).filter_by(id=game.next_game_id).one()
+        # If next game is NOT practice
+        if not next_game.practice:
+            pass
+
     next_player_id = (
         db.query(GamePlayer)
         .filter_by(user_id=player.user_id, game_id=game.next_game_id)

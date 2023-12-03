@@ -599,22 +599,31 @@ def go_to_next_game(
         # TODO: end of session screen
         return
 
-    # Check if this game is practice
-    if game.practice:
-        # Check if next game is practice
-        next_game = db.query(Game).filter_by(id=game.next_game_id).one()
-        # If next game is NOT practice
-        if not next_game.practice:
-            # TODO - Show end of practice screen
-            pass
-
     next_player_id = (
         db.query(GamePlayer)
         .filter_by(user_id=player.user_id, game_id=game.next_game_id)
         .one()
         .id
     )
-    # game.next_game_id
+
+    # Check if this game is practice
+    if game.practice:
+        # Check if next game is practice
+        next_game = db.query(Game).filter_by(id=game.next_game_id).one()
+        # If next game is NOT practice
+        if not next_game.practice:
+            # Show end of practice screen
+            redirect_url = request.url_for(
+                "real_game_transition",
+                game_id=game.next_game_id,
+                player_id=next_player_id,
+            )
+
+            return RedirectResponse(
+                redirect_url,
+                status_code=HTTPStatus.FOUND,
+            )
+
     # next_player_id
     redirect_url = request.url_for(
         "view_start_of_game",

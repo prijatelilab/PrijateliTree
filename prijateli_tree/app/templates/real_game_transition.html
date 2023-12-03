@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-  Start of Game
+  Real Game Transition
 {% endblock title %}
 {% block content %}
   <div class="container-sm general-container">
     <div class="pb-4">
-      <h1>{{ text.ready_to_play.get_ready }}</h1>
+      <h2>{{ text.real_game_intro.now_we_practiced }}</h2>
+      <h2>{{ text.real_game_intro.get_ready }}</h2>
     </div>
     {{ text.real_game_intro.if_you_win | replace('{X}', points) }}
     <div class="p-5">

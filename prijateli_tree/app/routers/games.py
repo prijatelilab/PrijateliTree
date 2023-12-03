@@ -540,7 +540,7 @@ def real_game_transition(
         "text": template_text,
     }
 
-    return templates.TemplateResponse("start_of_game.html", result)
+    return templates.TemplateResponse("real_game_transition.html", result)
 
 
 @router.post("/{game_id}/player/{player_id}/denirs")

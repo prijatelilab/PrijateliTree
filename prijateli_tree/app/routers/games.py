@@ -501,7 +501,32 @@ def view_start_of_game(
     db: Session = Depends(get_db),
 ):
     """
-    Function that returns the end of game page and
+    Function that returns the start of game page and
+    template.
+    """
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "points": WINNING_SCORE,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("start_of_game.html", result)
+
+
+@router.get("/{game_id}/player/{player_id}/real_game_transition")
+def real_game_transition(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that returns the start of game page and
     template.
     """
 
@@ -580,6 +605,7 @@ def go_to_next_game(
         next_game = db.query(Game).filter_by(id=game.next_game_id).one()
         # If next game is NOT practice
         if not next_game.practice:
+            # TODO - Show end of practice screen
             pass
 
     next_player_id = (

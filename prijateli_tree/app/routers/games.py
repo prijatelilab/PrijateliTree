@@ -330,6 +330,7 @@ def view_round(
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     template_data = {
+        "practice_game": game.practice,
         "first_round": current_round == 1,
         "current_round": current_round,
         "text": template_text,

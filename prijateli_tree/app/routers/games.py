@@ -1,6 +1,5 @@
 import glob
 import json
-import random
 from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
@@ -303,7 +302,7 @@ def view_round(
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     template_data = {
-        "first_round": True,
+        "first_round": current_round == 1,
         "current_round": current_round,
         "text": template_text,
         "player_id": player_id,
@@ -311,9 +310,8 @@ def view_round(
     }
     # Get current round
     if current_round == 1:
-        template_data["ball"] = random.choice(game.game_type.bag)
+        template_data["ball"] = player.initial_ball
     else:
-        template_data["first_round"] = False
         template_data["previous_answers"] = get_previous_answers(
             game_id, player_id, db
         )

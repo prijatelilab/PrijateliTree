@@ -335,7 +335,7 @@ def all_set(
     players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
-        n_answers += len(player.answers)
+        n_answers += max([a.round for a in player.answers])
 
     ready = n_answers % len(players) == 0
 

@@ -336,11 +336,7 @@ def all_set(
     n_answers = 0
     for player in players:
         if player.answers:
-            round_n = max([a.round for a in player.answers])
-        else:
-            round_n = 0
-
-        n_answers += round_n
+            n_answers += max([a.round for a in player.answers])
 
     ready = n_answers % len(players) == 0
 

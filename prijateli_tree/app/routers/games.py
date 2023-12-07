@@ -36,6 +36,7 @@ def raise_exception_if_none(x, detail):
     if x is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
+
 def raise_exception_if_not(x, detail):
     if not x:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
@@ -166,7 +167,7 @@ def get_previous_answers(
     current_round = get_current_round(game_id, db)
 
     raise_exception_if_not(current_round > 1, detail="no previous answers")
-    
+
     last_round = current_round - 1
 
     player_answer = [a for a in player.answers if a.round == last_round][0]
@@ -373,8 +374,7 @@ def get_session_player_from_player(
     )
 
     raise_exception_if_none(
-        session_player, 
-        detail="GameSessionPlayer not found"
+        session_player, detail="GameSessionPlayer not found"
     )
 
     return session_player
@@ -392,10 +392,10 @@ def route_add_score(
     """
     game, player = get_game_and_player(game_id, player_id, db)
 
-    if not player.ready:
+    if not player.completed_game:
         session_player = get_session_player_from_player(player, db)
         game_status = did_player_win(game, player_id, db)
-        player.ready = True
+        player.completed_game = True
         session_player.correct_answers += game_status["is_correct"]
         session_player.points += game_status["is_correct"] * WINNING_SCORE
         db.commit()

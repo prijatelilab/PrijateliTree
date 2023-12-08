@@ -314,7 +314,7 @@ def view_round(
     if current_round == 1:
         template_data["ball"] = player.initial_ball
     elif current_round > game.rounds:
-        redirect_url = f"/games/{game_id}/player/{player_id}/end_of_game"
+        redirect_url = f"/{game_id}/player/{player_id}/update_score"
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
         template_data["previous_answers"] = get_previous_answers(

@@ -37,6 +37,11 @@ def raise_exception_if_none(x, detail):
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
 
+def raise_exception_if_not(x, detail):
+    if not x:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
+
+
 def get_db():
     db = SessionLocal()
     try:
@@ -92,17 +97,12 @@ def get_game_and_player(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     filtered_player = [p for p in game.players if p.id == player_id]
 
-    if not len(filtered_player):
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    raise_exception_if_not(len(filtered_player), detail="player not in game")
+
     return game, filtered_player[0]
 
 
@@ -112,10 +112,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     return game, game.game_type
 
@@ -126,10 +123,7 @@ def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
     player = db.query(GamePlayer).filter_by(id=player_id).one_or_none()
 
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found"
-        )
+    raise_exception_if_none(player, detail="player not found")
 
     return player.language.abbr
 
@@ -172,12 +166,9 @@ def get_previous_answers(
     # Get current round
     current_round = get_current_round(game_id, db)
 
-    if current_round == 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="no previous answers"
-        )
-    else:
-        last_round = current_round - 1
+    raise_exception_if_not(current_round > 1, detail="no previous answers")
+
+    last_round = current_round - 1
 
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
@@ -239,10 +230,7 @@ def route_session_access(
 @router.get("/{game_id}")
 def route_game_access(game_id: int, db: Session = Depends(get_db)):
     game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
     return {
         "game_id": game_id,
         "rounds": game.rounds,
@@ -254,16 +242,8 @@ def route_game_access(game_id: int, db: Session = Depends(get_db)):
 def route_game_player_access(
     game_id: int, player_id: int, db: Session = Depends(get_db)
 ):
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    if len([player for player in game.players if player.id == player_id]) != 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
-        )
+    # tests to ensure game and player exists
+    game, player = get_game_and_player(game_id, player_id, db)
 
     return {"game_id": game_id, "player_id": player_id}
 
@@ -279,36 +259,29 @@ def route_add_answer(
     Function that updates the player's guess in the database
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
-    # Getting correct answer and current round
-    correct_answer = get_bag_color(game.game_type.bag)
     current_round = get_current_round(game_id, db)
 
     if (
-        db.query(GameAnswer)
+        not db.query(GameAnswer)
         .filter_by(game_player_id=player_id, round=current_round)
         .one_or_none()
     ):
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail="answer already exists for player and round",
+        # Getting correct answer and current round
+        correct_answer = get_bag_color(game.game_type.bag)
+
+        # Record the answer
+        new_answer = GameAnswer(
+            game_player_id=player_id,
+            player_answer=player_answer,
+            correct_answer=correct_answer,
+            round=current_round,
         )
 
-    # Record the answer
-    new_answer = GameAnswer(
-        game_player_id=player_id,
-        player_answer=player_answer,
-        correct_answer=correct_answer,
-        round=current_round,
-    )
-
-    db.add(new_answer)
-    db.commit()
-    db.refresh(new_answer)
+        db.add(new_answer)
+        db.commit()
+        db.refresh(new_answer)
 
     redirect_url = f"/games/{game_id}/player/{player_id}/waiting"
 
@@ -361,7 +334,8 @@ def all_set(
     players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
-        n_answers += len(player.answers)
+        if player.answers:
+            n_answers += max([a.round for a in player.answers])
 
     ready = n_answers % len(players) == 0
 
@@ -399,11 +373,10 @@ def get_session_player_from_player(
         .one_or_none()
     )
 
-    if session_player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail="GameSessionPlayer not found",
-        )
+    raise_exception_if_none(
+        session_player, detail="GameSessionPlayer not found"
+    )
+
     return session_player
 
 
@@ -418,14 +391,15 @@ def route_add_score(
     Function that updates the player's score in the database
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    game_status = did_player_win(game, player_id, db)
-    session_player = get_session_player_from_player(player, db)
 
-    session_player.correct_answers += game_status["is_correct"]
-    session_player.points += game_status["is_correct"] * WINNING_SCORE
-    db.commit()
-    db.refresh(session_player)
-
+    if not player.completed_game:
+        session_player = get_session_player_from_player(player, db)
+        game_status = did_player_win(game, player_id, db)
+        player.completed_game = True
+        session_player.correct_answers += game_status["is_correct"]
+        session_player.points += game_status["is_correct"] * WINNING_SCORE
+        db.commit()
+        db.refresh(session_player)
     redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)

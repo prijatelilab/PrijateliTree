@@ -431,6 +431,17 @@ def route_add_score(
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
 
 
+@router.get("/survey/{player_id}")
+def route_get_score(
+    request: Request,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+
+    return templates.TemplateResponse("qualtrics.html", {"request": request})
+
+
+
 @router.get("/current_score/{player_id}")
 def route_get_score(
     request: Request,

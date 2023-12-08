@@ -41,17 +41,17 @@ VALUES
 
 /* Add users to game */
 INSERT INTO game_players
-    (created_by, game_id, user_id, position, ready, session_player_id, initial_ball)
+    (created_by, game_id, user_id, position, ready, session_player_id, initial_ball, completed_game)
 VALUES
-    (1, 1, 2, 1, false, 1, 'R'),
-    (1, 1, 3, 2, false, 1, 'B'),
-    (1, 1, 4, 3, false, 1, 'B'),
-    (1, 1, 5, 4, false, 1, 'R'),
-    (1, 1, 6, 5, false, 1, 'R'),
-    (1, 1, 7, 6, false, 1, 'B'),
-    (1, 2, 2, 1, false, 1, 'R'),
-    (1, 2, 3, 2, false, 1, 'B'),
-    (1, 2, 4, 3, false, 1, 'R'),
-    (1, 2, 5, 4, false, 1, 'B'),
-    (1, 2, 6, 5, false, 1, 'R'),
-    (1, 2, 7, 6, false, 1, 'B');
+    (1, 1, 2, 1, false, 1, 'R', FALSE),
+    (1, 1, 3, 2, false, 1, 'B', FALSE),
+    (1, 1, 4, 3, false, 1, 'B', FALSE),
+    (1, 1, 5, 4, false, 1, 'R', FALSE),
+    (1, 1, 6, 5, false, 1, 'R', FALSE),
+    (1, 1, 7, 6, false, 1, 'B', FALSE),
+    (1, 2, 2, 1, false, 1, 'R', FALSE),
+    (1, 2, 3, 2, false, 1, 'B', FALSE),
+    (1, 2, 4, 3, false, 1, 'R', FALSE),
+    (1, 2, 5, 4, false, 1, 'B', FALSE),
+    (1, 2, 6, 5, false, 1, 'R', FALSE),
+    (1, 2, 7, 6, false, 1, 'B', FALSE);

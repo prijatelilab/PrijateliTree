@@ -89,7 +89,9 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
     return current_round
 
 
-def get_game_and_player(game_id: int, player_id: int, db: Session = Depends(get_db)):
+def get_game_and_player(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
     """
     Helper function to ensure game and player exist
     """
@@ -183,16 +185,16 @@ def get_previous_answers(
             .filter_by(game_id=game_id, position=neighbor_position)
             .one_or_none()
         )
-        this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
+        this_answer = [
+            a for a in this_neighbor.answers if a.round == last_round
+        ][0]
 
         # Check if names are hidden
         if game.game_type.names_hidden:
             player_id = this_neighbor.user.id
             complete_name = f"Player {player.position}: "
         else:
-            complete_name = (
-                f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
-            )
+            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
 
         neighbors_names.append(complete_name)
         neighbors_answers.append(this_answer.player_answer)
@@ -220,7 +222,9 @@ def route_session_access(
 
     raise_exception_if_none(session, "session not found")
 
-    return templates.TemplateResponse("new_session.html", context={"request": request})
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
 
 
 @router.get("/{game_id}")
@@ -313,7 +317,9 @@ def view_round(
         redirect_url = f"/games/{game_id}/player/{player_id}/end_of_game"
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
-        template_data["previous_answers"] = get_previous_answers(game_id, player_id, db)
+        template_data["previous_answers"] = get_previous_answers(
+            game_id, player_id, db
+        )
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
@@ -362,12 +368,18 @@ def waiting(
     return templates.TemplateResponse("waiting.html", result)
 
 
-def get_session_player_from_player(player: GamePlayer, db: Session = Depends(get_db)):
+def get_session_player_from_player(
+    player: GamePlayer, db: Session = Depends(get_db)
+):
     session_player = (
-        db.query(GameSessionPlayer).filter_by(id=player.session_player_id).one_or_none()
+        db.query(GameSessionPlayer)
+        .filter_by(id=player.session_player_id)
+        .one_or_none()
     )
 
-    raise_exception_if_none(session_player, detail="GameSessionPlayer not found")
+    raise_exception_if_none(
+        session_player, detail="GameSessionPlayer not found"
+    )
 
     return session_player
 
@@ -408,7 +420,9 @@ def route_get_score(
     )
 
     session_player = (
-        db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
+        db.query(GameSessionPlayer)
+        .filter_by(id=session_player_id)
+        .one_or_none()
     )
     if session_player is None:
         raise HTTPException(

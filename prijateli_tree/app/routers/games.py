@@ -465,6 +465,7 @@ def route_end_of_game(
         "game_id": game_id,
         "points": points,
         "text": template_text,
+        "practice_game": game.practice,
     }
 
     # add information about winning and ball colors

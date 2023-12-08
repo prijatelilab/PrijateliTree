@@ -26,7 +26,11 @@
       You chose Red.
     {% endif %}
     <div class="pt-2">
-      <h3>{{ text.real_game_intro.added_points | replace('{X}', points) }}</h3>
+      {% if practice_game %}
+        <h3></h3>
+      {% else %}
+        <h3>{{ text.real_game_intro.added_points | replace('{X}', points) }}</h3>
+      {% endif %}
     </div>
     <div class="p-5">
       <form method="get"

@@ -307,8 +307,9 @@ def route_add_answer(
         db.commit()
         db.refresh(new_answer)
 
-
-    redirect_url = f"/games/{game_id}/player/{player_id}/waiting"
+    redirect_url = request.url_for(
+        "waiting", game_id=game_id, player_id=player_id
+    )
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 

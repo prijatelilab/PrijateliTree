@@ -17,6 +17,7 @@ class BaseConfig:
         # App Settings
         self.DEBUG = False
         self.LANGUAGE = LANGUAGE_ENGLISH
+        self.LOGGING_FORMAT = "%(levelname)s:\t%(message)s"
         self.LOG_LEVEL = logging.DEBUG
         self.TESTING = False
 

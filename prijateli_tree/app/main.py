@@ -21,9 +21,7 @@ from prijateli_tree.app.utils.constants import (
 
 
 config = config[os.getenv(KEY_ENV)]
-logging.basicConfig(
-    level=config.LOG_LEVEL, format="%(levelname)s:\t%(message)s"
-)
+logging.basicConfig(level=config.LOG_LEVEL, format=config.LOGGING_FORMAT)
 logger = logging.getLogger()
 
 app = FastAPI(debug=config.DEBUG)

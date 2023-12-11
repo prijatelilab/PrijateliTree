@@ -19,7 +19,9 @@ class BaseConfig:
         self.TESTING = False
 
         # Database Settings
-        self.SQLALCHEMY_DATABASE_URI = os.getenv(KEY_DATABASE_URI)
+        self.SQLALCHEMY_DATABASE_URI = os.getenv(KEY_DATABASE_URI).replace(
+            "postgres://", "postgresql://", 1
+        )
         self.SQLALCHEMY_ECHO = False
 
         # Protocol Settings

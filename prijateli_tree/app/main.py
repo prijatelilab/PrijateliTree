@@ -21,7 +21,10 @@ from prijateli_tree.app.utils.constants import (
 
 
 config = config[os.getenv(KEY_ENV)]
-logging.basicConfig(level=config.LOG_LEVEL)
+logging.basicConfig(
+    level=config.LOG_LEVEL, format="%(levelname)s:\t%(message)s"
+)
+logger = logging.getLogger()
 
 app = FastAPI(debug=config.DEBUG)
 
@@ -44,6 +47,7 @@ app.include_router(
     prefix="/games",
     tags=["games"],
 )
+logger.debug("Routers loaded and static files mounted.")
 
 
 @app.post(

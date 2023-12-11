@@ -1,3 +1,4 @@
+import logging
 import os
 
 from prijateli_tree.app.utils.constants import (
@@ -16,6 +17,8 @@ class BaseConfig:
         # App Settings
         self.DEBUG = False
         self.LANGUAGE = LANGUAGE_ENGLISH
+        self.LOGGING_FORMAT = "%(levelname)s:\t%(message)s"
+        self.LOG_LEVEL = logging.DEBUG
         self.TESTING = False
 
         # Database Settings
@@ -44,6 +47,7 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     def __init__(self):
         super(ProductionConfig, self).__init__()
+        self.LOG_LEVEL = logging.INFO
         self.SITEMAP_URL_SCHEME = "https"
 
 

@@ -1,5 +1,6 @@
 import glob
 import json
+import logging
 from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
@@ -29,6 +30,7 @@ from prijateli_tree.app.utils.constants import (
 from prijateli_tree.app.utils.games import Game as GameUtil
 
 
+logger = logging.getLogger()
 router = APIRouter()
 
 
@@ -57,6 +59,7 @@ languages = {}
 for lang in glob.glob("prijateli_tree/app/languages/*.json"):
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
         languages.update(json.load(file))
+logger.debug("Language files imported.")
 
 
 def get_bag_color(bag):

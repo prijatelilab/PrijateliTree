@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 from http import HTTPStatus
@@ -34,6 +35,8 @@ from prijateli_tree.app.utils.constants import (
 base_dir = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(Path(base_dir, "../templates")))
 templates.env.globals["URL"] = URL
+
+logger = logging.getLogger()
 
 
 def get_db():
@@ -82,12 +85,17 @@ def confirm_login(
     user = (
         db.query(User)
         .filter_by(
-            email=email.lower(), first_name=first_name, last_name=last_name
+            email=email.lower(),
+            first_name=first_name.lower(),
+            last_name=last_name.lower(),
         )
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
     if user is None:
+        logger.info(
+            f"User submitted invalid credentials: {email} {first_name} {last_name}"
+        )
         return templates.TemplateResponse(
             "admin_login.html",
             {"request": request, "error": "Please submit valid credentials."},

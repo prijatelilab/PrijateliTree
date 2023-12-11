@@ -27,7 +27,7 @@ VALUES
     (1, 1, 2, TRUE, 1),
     (1, 1, 2, FALSE, 1),
     (1, 1, 2, FALSE, 1);
-   
+
 
 /* Create Session Players */
 INSERT INTO session_players
@@ -63,4 +63,3 @@ VALUES
     (1, 3, 5, 4, false, 1, 'B', FALSE),
     (1, 3, 6, 5, false, 1, 'R', FALSE),
     (1, 3, 7, 6, false, 1, 'B', FALSE);
-   

@@ -8,11 +8,14 @@ import prijateli_tree.app.database as models
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 
+print(os.getenv(KEY_DATABASE_URI))
 config = context.config
 config.set_main_option(
     "sqlalchemy.url",
-    os.getenv(KEY_DATABASE_URI).replace("postgres://", "postgresql://"),
+    os.getenv(KEY_DATABASE_URI).replace("postgres://", "postgresql://", 1),
 )
+
+print(config.get_main_option("sqlalchemy.url"))
 
 fileConfig(config.config_file_name)
 

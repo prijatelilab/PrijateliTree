@@ -1,3 +1,4 @@
+import logging
 import os
 
 from prijateli_tree.app.utils.constants import (
@@ -16,10 +17,14 @@ class BaseConfig:
         # App Settings
         self.DEBUG = False
         self.LANGUAGE = LANGUAGE_ENGLISH
+        self.LOGGING_FORMAT = "%(levelname)s:\t%(message)s"
+        self.LOG_LEVEL = logging.DEBUG
         self.TESTING = False
 
         # Database Settings
-        self.SQLALCHEMY_DATABASE_URI = os.getenv(KEY_DATABASE_URI)
+        self.SQLALCHEMY_DATABASE_URI = os.getenv(KEY_DATABASE_URI).replace(
+            "postgres://", "postgresql://", 1
+        )
         self.SQLALCHEMY_ECHO = False
 
         # Protocol Settings
@@ -42,6 +47,7 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     def __init__(self):
         super(ProductionConfig, self).__init__()
+        self.LOG_LEVEL = logging.INFO
         self.SITEMAP_URL_SCHEME = "https"
 
 

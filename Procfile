@@ -1,2 +1,2 @@
-web: uvicorn prijateli_tree.app.main:app --host=0.0.0.0 --port=${PORT:-5000}
+web: uvicorn -w 2 -k prijateli_tree.app.main:app
 release: alembic upgrade head

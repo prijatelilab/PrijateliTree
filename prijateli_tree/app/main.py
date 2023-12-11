@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from typing import Annotated
@@ -20,6 +21,7 @@ from prijateli_tree.app.utils.constants import (
 
 
 config = config[os.getenv(KEY_ENV)]
+logging.basicConfig(level=config.LOG_LEVEL)
 
 app = FastAPI(debug=config.DEBUG)
 

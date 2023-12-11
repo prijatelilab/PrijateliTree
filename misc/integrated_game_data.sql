@@ -25,7 +25,9 @@ INSERT INTO games
     (created_by, game_type_id, rounds, practice, game_session_id)
 VALUES
     (1, 1, 2, TRUE, 1),
+    (1, 1, 2, FALSE, 1),
     (1, 1, 2, FALSE, 1);
+   
 
 /* Create Session Players */
 INSERT INTO session_players
@@ -54,4 +56,11 @@ VALUES
     (1, 2, 4, 3, false, 1, 'R', FALSE),
     (1, 2, 5, 4, false, 1, 'B', FALSE),
     (1, 2, 6, 5, false, 1, 'R', FALSE),
-    (1, 2, 7, 6, false, 1, 'B', FALSE);
+    (1, 2, 7, 6, false, 1, 'B', FALSE),
+    (1, 3, 2, 1, false, 1, 'R', FALSE),
+    (1, 3, 3, 2, false, 1, 'B', FALSE),
+    (1, 3, 4, 3, false, 1, 'R', FALSE),
+    (1, 3, 5, 4, false, 1, 'B', FALSE),
+    (1, 3, 6, 5, false, 1, 'R', FALSE),
+    (1, 3, 7, 6, false, 1, 'B', FALSE);
+   

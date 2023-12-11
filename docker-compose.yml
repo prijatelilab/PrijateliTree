@@ -35,7 +35,7 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'prijateli_tree'
-      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@postgres/prijateli_tree"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres/prijateli_tree"
       LOGIN_SECRET_KEY: '3a5f3125e1af1763756297e040cd05f8f24fcab15f78805e'
     links:
       - 'postgres:postgres'

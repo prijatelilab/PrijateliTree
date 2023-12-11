@@ -24,6 +24,7 @@ from prijateli_tree.app.database import (
 from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
+    NETWORK_TYPE_SEGREGATED,
     NUMBER_OF_ROUNDS,
     ROLE_ADMIN,
     ROLE_STUDENT,
@@ -125,7 +126,7 @@ def dashboard(
         student_dict[s.id] = s
 
     for s in sessions:
-        players = []
+        players: [str] = []
         for p in s.players:
             players.append(student_dict[p.user_id].name_str)
         s.player_string = ", ".join(players)
@@ -284,7 +285,8 @@ def create_session(
     create_session_games(session, game, db)
 
     redirect_url = URL("/admin/dashboard").include_query_params(
-        success=f"Your session (ID: {session.id}) and first game (ID: {game.id}) have been created!"
+        success=f"Your session (ID: {session.id}) and first "
+        f"game (ID: {game.id}) have been created!"
     )
 
     return RedirectResponse(
@@ -306,7 +308,11 @@ def create_session_games(
         print(previous_game.__dict__)
         game_types = (
             db.query(GameType)
-            .filter(GameType.network.in_(["integrated", "segregated"]))
+            .filter(
+                GameType.network.in_(
+                    [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+                )
+            )
             .all()
         )
         game_type = random.choice(game_types)

@@ -17,7 +17,7 @@ class BaseConfig:
         # App Settings
         self.DEBUG = False
         self.LANGUAGE = LANGUAGE_ENGLISH
-        self.LOG_LEVEL = logging.INFO
+        self.LOG_LEVEL = logging.DEBUG
         self.TESTING = False
 
         # Database Settings
@@ -32,7 +32,6 @@ class DevelopmentConfig(BaseConfig):
     def __init__(self):
         super(DevelopmentConfig, self).__init__()
         self.DEBUG = True
-        self.LOG_LEVEL = logging.DEBUG
         self.SQLALCHEMY_ECHO = True
 
 
@@ -45,6 +44,7 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     def __init__(self):
         super(ProductionConfig, self).__init__()
+        self.LOG_LEVEL = logging.INFO
         self.SITEMAP_URL_SCHEME = "https"
 
 

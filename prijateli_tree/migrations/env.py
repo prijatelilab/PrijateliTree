@@ -1,3 +1,4 @@
+import logging
 import os
 from logging.config import fileConfig
 
@@ -23,7 +24,7 @@ target_metadata = models.Base.metadata
 
 def run_migrations_offline() -> None:
     """Run migrations in `offline` mode."""
-    print(config.get_main_option(SQL_ALCHEMY_URL))
+    logging.info(config.get_main_option(SQL_ALCHEMY_URL))
     context.configure(
         url=config.get_main_option(SQL_ALCHEMY_URL),
         target_metadata=target_metadata,

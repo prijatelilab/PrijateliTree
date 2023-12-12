@@ -402,14 +402,13 @@ def update_score(
 
 
 @router.get("/survey/{player_id}")
-def route_get_score(
+def get_qualtrics(
     request: Request,
     player_id: int,
     db: Session = Depends(get_db),
 ):
 
     return templates.TemplateResponse("qualtrics.html", {"request": request})
-
 
 
 @router.get("/current_score/{player_id}")

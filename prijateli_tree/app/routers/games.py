@@ -394,7 +394,7 @@ def update_score(
             session_player.correct_answers += game_status["is_correct"]
             session_player.points += game_status["is_correct"] * WINNING_SCORE
         db.commit()
-        db.refresh(session_player)
+        db.refresh(player)
 
     # redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
     # return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)

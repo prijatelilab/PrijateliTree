@@ -20,11 +20,14 @@ from sqlalchemy.orm import Session, relationship, sessionmaker
 from sqlalchemy.sql import expression
 from sqlalchemy.sql import func as sql_func
 
-from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
+from prijateli_tree.app.config import config
+from prijateli_tree.app.utils.constants import KEY_ENV
 
+
+config = config[os.getenv(KEY_ENV)]
 
 engine = create_engine(
-    os.getenv(KEY_DATABASE_URI),
+    config.SQLALCHEMY_DATABASE_URI,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -238,6 +241,7 @@ class GamePlayer(Base):
     position = Column(Integer, nullable=False)
     initial_ball = Column(String(1), nullable=False)
     ready = Column(Boolean, nullable=False, default=False)
+    completed_game = Column(Boolean, nullable=False, default=False)
     user = relationship("User", foreign_keys="GamePlayer.user_id")
     game = relationship(
         "Game",

@@ -1,5 +1,6 @@
 import glob
 import json
+import logging
 from collections import Counter
 from http import HTTPStatus
 from pathlib import Path
@@ -8,7 +9,6 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
@@ -16,7 +16,7 @@ from prijateli_tree.app.database import (
     GamePlayer,
     GameSession,
     GameSessionPlayer,
-    SessionLocal,
+    get_db,
 )
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
@@ -29,6 +29,8 @@ from prijateli_tree.app.utils.constants import (
 from prijateli_tree.app.utils.games import Game as GameUtil
 
 
+# from starlette.datastructures import URL
+logger = logging.getLogger()
 router = APIRouter()
 
 
@@ -37,12 +39,9 @@ def raise_exception_if_none(x, detail):
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def raise_exception_if_not(x, detail):
+    if not x:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
 
 base_dir = Path(__file__).resolve().parent
@@ -52,6 +51,7 @@ languages = {}
 for lang in glob.glob("prijateli_tree/app/languages/*.json"):
     with open(lang, FILE_MODE_READ, encoding=STANDARD_ENCODING) as file:
         languages.update(json.load(file))
+logger.debug("Language files imported.")
 
 
 def get_bag_color(bag):
@@ -92,17 +92,12 @@ def get_game_and_player(
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     filtered_player = [p for p in game.players if p.id == player_id]
 
-    if not len(filtered_player):
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not in game"
-        )
+    raise_exception_if_not(len(filtered_player), detail="player not in game")
+
     return game, filtered_player[0]
 
 
@@ -112,10 +107,7 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     """
     game = db.query(Game).filter_by(id=game_id).one_or_none()
 
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
+    raise_exception_if_none(game, detail="game not found")
 
     return game, game.game_type
 
@@ -126,10 +118,7 @@ def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
     """
     player = db.query(GamePlayer).filter_by(id=player_id).one_or_none()
 
-    if player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found"
-        )
+    raise_exception_if_none(player, detail="player not found")
 
     return player.language.abbr
 
@@ -172,12 +161,9 @@ def get_previous_answers(
     # Get current round
     current_round = get_current_round(game_id, db)
 
-    if current_round == 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="no previous answers"
-        )
-    else:
-        last_round = current_round - 1
+    raise_exception_if_not(current_round > 1, detail="no previous answers")
+
+    last_round = current_round - 1
 
     player_answer = [a for a in player.answers if a.round == last_round][0]
 
@@ -222,97 +208,29 @@ def get_previous_answers(
 ###############################
 
 
-@router.get("/session/{session_id}")
-def route_session_access(
-    request: Request, session_id: int, db: Session = Depends(get_db)
-):
-    # Do some logic things
-    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
-
-    raise_exception_if_none(session, "session not found")
-
-    return templates.TemplateResponse(
-        "new_session.html", context={"request": request}
-    )
-
-
-@router.get("/{game_id}")
-def route_game_access(game_id: int, db: Session = Depends(get_db)):
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-    return {
-        "game_id": game_id,
-        "rounds": game.rounds,
-        "practice": game.practice,
-    }
-
-
-@router.get("/{game_id}/player/{player_id}")
-def route_game_player_access(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
-):
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
-
-    if len([player for player in game.players if player.id == player_id]) != 1:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="player not found in game"
-        )
-
-    return {"game_id": game_id, "player_id": player_id}
-
-
-@router.post("/{game_id}/player/{player_id}/answer")
-def route_add_answer(
+@router.get("/{game_id}/player/{player_id}/start_of_game")
+def start_of_game(
+    request: Request,
     game_id: int,
     player_id: int,
-    player_answer: str = Form(...),
     db: Session = Depends(get_db),
 ):
     """
-    Function that updates the player's guess in the database
+    Function that returns the start of game page and
+    template.
     """
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
-    if game is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="game not found"
-        )
 
-    # Getting correct answer and current round
-    correct_answer = get_bag_color(game.game_type.bag)
-    current_round = get_current_round(game_id, db)
+    template_text = languages[get_lang_from_player_id(player_id, db)]
 
-    if (
-        db.query(GameAnswer)
-        .filter_by(game_player_id=player_id, round=current_round)
-        .one_or_none()
-    ):
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail="answer already exists for player and round",
-        )
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "points": WINNING_SCORE,
+        "text": template_text,
+    }
 
-    # Record the answer
-    new_answer = GameAnswer(
-        game_player_id=player_id,
-        player_answer=player_answer,
-        correct_answer=correct_answer,
-        round=current_round,
-    )
-
-    db.add(new_answer)
-    db.commit()
-    db.refresh(new_answer)
-
-    redirect_url = f"/games/{game_id}/player/{player_id}/waiting"
-
-    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
+    return templates.TemplateResponse("start_of_game.html", result)
 
 
 @router.get("/{game_id}/player/{player_id}/round")
@@ -330,6 +248,7 @@ def view_round(
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     template_data = {
+        "practice_game": game.practice,
         "first_round": current_round == 1,
         "current_round": current_round,
         "text": template_text,
@@ -339,6 +258,11 @@ def view_round(
     # Get current round
     if current_round == 1:
         template_data["ball"] = player.initial_ball
+    elif current_round > game.rounds:
+        redirect_url = request.url_for(
+            "end_of_game", game_id=game_id, player_id=player_id
+        )
+        return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
         template_data["previous_answers"] = get_previous_answers(
             game_id, player_id, db
@@ -347,6 +271,49 @@ def view_round(
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
     )
+
+
+@router.post("/{game_id}/player/{player_id}/answer")
+def route_add_answer(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    player_answer: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Function that updates the player's guess in the database
+    """
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    raise_exception_if_none(game, detail="game not found")
+
+    current_round = get_current_round(game_id, db)
+
+    if (
+        not db.query(GameAnswer)
+        .filter_by(game_player_id=player_id, round=current_round)
+        .one_or_none()
+    ):
+        # Getting correct answer and current round
+        correct_answer = get_bag_color(game.game_type.bag)
+
+        # Record the answer
+        new_answer = GameAnswer(
+            game_player_id=player_id,
+            player_answer=player_answer,
+            correct_answer=correct_answer,
+            round=current_round,
+        )
+
+        db.add(new_answer)
+        db.commit()
+        db.refresh(new_answer)
+
+    redirect_url = request.url_for(
+        "waiting", game_id=game_id, player_id=player_id
+    )
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
 
 @router.get("/{game_id}/all_set")
@@ -361,11 +328,13 @@ def all_set(
     players = db.query(GamePlayer).filter_by(game_id=game_id).all()
     n_answers = 0
     for player in players:
-        n_answers += len(player.answers)
+        if player.answers:
+            this_round = max([a.round for a in player.answers])
+            n_answers += this_round
 
     ready = n_answers % len(players) == 0
-
-    return {"ready": ready}
+    game_over = player.game.rounds == this_round
+    return {"ready": ready, "game_over": game_over}
 
 
 @router.get("/{game_id}/player/{player_id}/waiting")
@@ -399,16 +368,15 @@ def get_session_player_from_player(
         .one_or_none()
     )
 
-    if session_player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail="GameSessionPlayer not found",
-        )
+    raise_exception_if_none(
+        session_player, detail="GameSessionPlayer not found"
+    )
+
     return session_player
 
 
 @router.put("/{game_id}/player/{player_id}/update_score")
-def route_add_score(
+def update_score(
     request: Request,
     game_id: int,
     player_id: int,
@@ -418,17 +386,19 @@ def route_add_score(
     Function that updates the player's score in the database
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    game_status = did_player_win(game, player_id, db)
-    session_player = get_session_player_from_player(player, db)
+    if not player.completed_game:
+        player.completed_game = True
+        if not game.practice:
+            session_player = get_session_player_from_player(player, db)
+            game_status = did_player_win(game, player_id, db)
+            session_player.correct_answers += game_status["is_correct"]
+            session_player.points += game_status["is_correct"] * WINNING_SCORE
+        db.commit()
+        db.refresh(player)
 
-    session_player.correct_answers += game_status["is_correct"]
-    session_player.points += game_status["is_correct"] * WINNING_SCORE
-    db.commit()
-    db.refresh(session_player)
-
-    redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
-
-    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
+    # redirect_url = URL("games/{game_id}/player/{player_id}/end_of_game")
+    # return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
+    return {"status": "success"}
 
 
 @router.get("/survey/{player_id}")
@@ -466,7 +436,7 @@ def route_get_score(
 
 
 @router.get("/{game_id}/player/{player_id}/end_of_game")
-def route_end_of_game(
+def end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
@@ -492,77 +462,13 @@ def route_end_of_game(
         "game_id": game_id,
         "points": points,
         "text": template_text,
+        "practice_game": game.practice,
     }
 
     # add information about winning and ball colors
     result.update(game_status)
 
     return templates.TemplateResponse("end_of_game.html", result)
-
-
-@router.get("/{game_id}/player/{player_id}/start_of_game")
-def view_start_of_game(
-    request: Request,
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-):
-    """
-    Function that returns the end of game page and
-    template.
-    """
-
-    template_text = languages[get_lang_from_player_id(player_id, db)]
-
-    result = {
-        "request": request,
-        "player_id": player_id,
-        "game_id": game_id,
-        "points": WINNING_SCORE,
-        "text": template_text,
-    }
-
-    return templates.TemplateResponse("start_of_game.html", result)
-
-
-@router.post("/{game_id}/player/{player_id}/denirs")
-def score_to_denirs(
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-):
-    """
-    Function that calculates the denirs for the player
-    given all of their scores
-    """
-    total_score = 0
-    game, player = get_game_and_player(game_id, player_id, db)
-
-    for answer in player.answers:
-        if answer.player_answer == answer.correct_answer:
-            total_score += WINNING_SCORE
-
-    denirs = total_score * DENIR_FACTOR
-
-    return {"reward": f"You have made {denirs} denirs!"}
-
-
-@router.post("/ready")
-def confirm_player(
-    player_id: int,
-    game_id: int,
-    db: Session = Depends(get_db),
-):
-    """
-    Confirms if the player is ready for the game
-    """
-
-    game, player = get_game_and_player(game_id, player_id, db)
-
-    player.ready = True
-    db.commit()
-
-    return {"status": "Player is ready!"}
 
 
 @router.get("/{game_id}/player/{player_id}/next_game")
@@ -587,10 +493,30 @@ def go_to_next_game(
         .one()
         .id
     )
-    # game.next_game_id
+
+    raise_exception_if_none(next_player_id, detail="next player not found")
+
+    # Check if this game is practice
+    if game.practice:
+        # Check if next game is practice
+        next_game = db.query(Game).filter_by(id=game.next_game_id).one()
+        # If next game is NOT practice
+        if not next_game.practice:
+            # Show end of practice screen
+            redirect_url = request.url_for(
+                "real_game_transition",
+                game_id=next_game.id,
+                player_id=next_player_id,
+            )
+
+            return RedirectResponse(
+                redirect_url,
+                status_code=HTTPStatus.FOUND,
+            )
+
     # next_player_id
     redirect_url = request.url_for(
-        "view_start_of_game",
+        "start_of_game",
         game_id=game.next_game_id,
         player_id=next_player_id,
     )
@@ -599,3 +525,113 @@ def go_to_next_game(
         redirect_url,
         status_code=HTTPStatus.FOUND,
     )
+
+
+@router.get("/{game_id}/player/{player_id}/real_game_transition")
+def real_game_transition(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that returns the start of game page and
+    template.
+    """
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "points": WINNING_SCORE,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("real_game_transition.html", result)
+
+
+###########################################
+# Utilities
+###########################################
+
+
+@router.get("/session/{session_id}")
+def route_session_access(
+    request: Request, session_id: int, db: Session = Depends(get_db)
+):
+    # Do some logic things
+    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
+
+    raise_exception_if_none(session, "session not found")
+
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
+
+
+@router.get("/{game_id}")
+def route_game_access(game_id: int, db: Session = Depends(get_db)):
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    raise_exception_if_none(game, detail="game not found")
+    return {
+        "game_id": game_id,
+        "rounds": game.rounds,
+        "practice": game.practice,
+    }
+
+
+@router.get("/{game_id}/player/{player_id}")
+def route_game_player_access(
+    game_id: int, player_id: int, db: Session = Depends(get_db)
+):
+    # tests to ensure game and player exists
+    game, player = get_game_and_player(game_id, player_id, db)
+
+    return {"game_id": game_id, "player_id": player_id}
+
+
+###########################################
+# Unused
+###########################################
+
+
+@router.post("/ready")
+def confirm_player(
+    player_id: int,
+    game_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Confirms if the player is ready for the game
+    """
+
+    game, player = get_game_and_player(game_id, player_id, db)
+
+    player.ready = True
+    db.commit()
+
+    return {"status": "Player is ready!"}
+
+
+@router.post("/{game_id}/player/{player_id}/denirs")
+def score_to_denirs(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Function that calculates the denirs for the player
+    given all of their scores
+    """
+    total_score = 0
+    game, player = get_game_and_player(game_id, player_id, db)
+
+    for answer in player.answers:
+        if answer.player_answer == answer.correct_answer:
+            total_score += WINNING_SCORE
+
+    denirs = total_score * DENIR_FACTOR
+
+    return {"reward": f"You have made {denirs} denirs!"}

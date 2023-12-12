@@ -8,10 +8,12 @@ import prijateli_tree.app.database as models
 from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
 
 
+SQL_ALCHEMY_URL = "sqlalchemy.url"
+
 config = context.config
 config.set_main_option(
-    "sqlalchemy.url",
-    os.getenv(KEY_DATABASE_URI),
+    SQL_ALCHEMY_URL,
+    os.getenv(KEY_DATABASE_URI).replace("postgres://", "postgresql://", 1),
 )
 
 fileConfig(config.config_file_name)
@@ -22,7 +24,7 @@ target_metadata = models.Base.metadata
 def run_migrations_offline() -> None:
     """Run migrations in `offline` mode."""
     context.configure(
-        url=config.get_main_option("sqlalchemy.url"),
+        url=config.get_main_option(SQL_ALCHEMY_URL),
         target_metadata=target_metadata,
         literal_binds=True,
         compare_type=True,

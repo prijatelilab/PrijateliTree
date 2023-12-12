@@ -1,19 +1,36 @@
 {% extends "base.html" %}
 {% block helper_script %}
   <script>
-    <!--calls wait again after 5 seconds-->
+    <!--calls wait again after 3 seconds-->
     async function check_all_set() {
       const response = await fetch("/games/{{game_id}}/all_set");
       const all_set = await response.json();
 
-      if (all_set.ready) {
-        window.location.href = "/games/{{game_id}}/player/{{player_id}}/round";
+      if (all_set.ready && ! all_set.game_over) {
+          window.location.href = "/games/{{game_id}}/player/{{player_id}}/round";
+      } else if (all_set.ready) {
+        fetch("/games/{{game_id}}/player/{{player_id}}/update_score", {
+          method: 'PUT',
+          body: {},
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            window.location.href = "/games/{{game_id}}/player/{{player_id}}/end_of_game";
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
       } else {
         console.log("Other players are not ready, restarting the wait cycle.")
       }
     }
 
-    setInterval(function() { check_all_set();}, 5000);
+    setInterval(function() { check_all_set();}, 2000);
   </script>
 {% endblock helper_script %}
 {% block title %}

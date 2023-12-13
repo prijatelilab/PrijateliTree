@@ -1,7 +1,8 @@
 from collections import Counter
-from sqlalchemy.orm import Session
 from http import HTTPStatus
+
 from fastapi import Depends, HTTPException
+from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
@@ -9,12 +10,7 @@ from prijateli_tree.app.database import (
     GameSessionPlayer,
     get_db,
 )
-
-from prijateli_tree.app.utils.constants import (
-    BALL_BLUE,
-    BALL_RED,
-)
-
+from prijateli_tree.app.utils.constants import BALL_BLUE, BALL_RED
 from prijateli_tree.app.utils.games import Game as GameUtil
 
 
@@ -189,4 +185,3 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     raise_exception_if_none(game, detail="game not found")
 
     return game, game.game_type
-

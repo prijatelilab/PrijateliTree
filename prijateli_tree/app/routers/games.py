@@ -24,6 +24,7 @@ from prijateli_tree.app.routers.game_utils.utils import (
     get_game_and_player,
     get_lang_from_player_id,
     get_previous_answers,
+    get_score_and_name,
     get_session_player_from_player,
     raise_exception_if_none,
 )
@@ -197,10 +198,8 @@ def waiting(
     """
     Wait screen shows until all players are ready to move to the next section
     """
-    game, player = get_game_and_player(game_id, player_id, db)
-    session_player = get_session_player_from_player(player, db)
-    player_name = f"{player.user.first_name} {player.user.last_name}"
-    player_score = session_player.points
+    _, player = get_game_and_player(game_id, player_id, db)
+    player_name, player_score = get_score_and_name(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
     result = {
@@ -286,9 +285,7 @@ def end_of_game(
     game, player = get_game_and_player(game_id, player_id, db)
     game_status = did_player_win(game, player_id, db)
 
-    session_player = get_session_player_from_player(player, db)
-    player_name = f"{player.user.first_name} {player.user.last_name}"
-    player_score = session_player.points
+    player_name, player_score = get_score_and_name(player, db)
 
     points = 0
     if game_status["is_correct"]:
@@ -380,10 +377,8 @@ def real_game_transition(
     Function that returns the start of game page and
     template.
     """
-    game, player = get_game_and_player(game_id, player_id, db)
-    session_player = get_session_player_from_player(player, db)
-    player_name = f"{player.user.first_name} {player.user.last_name}"
-    player_score = session_player.points
+    _, player = get_game_and_player(game_id, player_id, db)
+    player_name, player_score = get_score_and_name(player, db)
 
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
@@ -455,7 +450,7 @@ def confirm_player(
     Confirms if the player is ready for the game
     """
 
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, player = get_game_and_player(game_id, player_id, db)
 
     player.ready = True
     db.commit()
@@ -474,7 +469,7 @@ def score_to_denirs(
     given all of their scores
     """
     total_score = 0
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, player = get_game_and_player(game_id, player_id, db)
 
     for answer in player.answers:
         if answer.player_answer == answer.correct_answer:

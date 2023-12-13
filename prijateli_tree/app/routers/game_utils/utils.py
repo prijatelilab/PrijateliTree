@@ -185,3 +185,15 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     raise_exception_if_none(game, detail="game not found")
 
     return game, game.game_type
+
+
+def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the player's score and name from the session player object
+    by using the game player object
+    """
+    session_player = get_session_player_from_player(player, db)
+    player_name = f"{player.user.first_name} {player.user.last_name}"
+    player_score = session_player.points
+
+    return player_score, player_name

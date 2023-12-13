@@ -196,4 +196,4 @@ def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
     player_name = f"{player.user.first_name} {player.user.last_name}"
     player_score = session_player.points
 
-    return player_score, player_name
+    return player_name, player_score

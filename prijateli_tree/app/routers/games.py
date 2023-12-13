@@ -53,6 +53,52 @@ logger.debug("Language files imported.")
 #        BEGIN API
 #
 ###############################
+@router.get("/{game_id}/player/{player_id}/landing_page")
+def start_session(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+    _, player = get_game_and_player(game_id, player_id, db)
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "name": player.user.name_str,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("ready.html", result)
+
+@router.post("/{game_id}/player/{player_id}/ready")
+def confirm_player(
+    request: Request,
+    player_id: int,
+    game_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Confirms if the player is ready for the game
+    """
+
+    game, player = get_game_and_player(game_id, player_id, db)
+
+    player.ready = True
+    db.commit()
+
+    redirect_url = request.url_for(
+        "waiting", game_id=game_id, player_id=player_id
+    )
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
+
+
+    return {"status": "Player is ready!"}
+
+
 
 
 @router.get("/{game_id}/player/{player_id}/start_of_game")
@@ -420,25 +466,6 @@ def route_game_player_access(
 ###########################################
 # Unused
 ###########################################
-
-
-@router.post("/ready")
-def confirm_player(
-    player_id: int,
-    game_id: int,
-    db: Session = Depends(get_db),
-):
-    """
-    Confirms if the player is ready for the game
-    """
-
-    game, player = get_game_and_player(game_id, player_id, db)
-
-    player.ready = True
-    db.commit()
-
-    return {"status": "Player is ready!"}
-
 
 @router.post("/{game_id}/player/{player_id}/denirs")
 def score_to_denirs(

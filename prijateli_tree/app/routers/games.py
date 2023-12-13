@@ -352,6 +352,10 @@ def waiting(
     """
     Wait screen shows until all players are ready to move to the next section
     """
+    game, player = get_game_and_player(game_id, player_id, db)
+    session_player = get_session_player_from_player(player, db)
+    player_name = f"{player.user.first_name} {player.user.last_name}"
+    player_score = session_player.points
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
     result = {
@@ -359,6 +363,8 @@ def waiting(
         "game_id": game_id,
         "player_id": player_id,
         "text": template_text,
+        "player_name": player_name,
+        "player_score": player_score,
     }
 
     return templates.TemplateResponse("waiting.html", result)

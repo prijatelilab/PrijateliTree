@@ -386,7 +386,6 @@ def real_game_transition(
     """
     _, player = get_game_and_player(game_id, player_id, db)
     player_name, player_score = get_score_and_name(player, db)
-    current_round = get_current_round(game_id, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
     result = {
@@ -397,7 +396,7 @@ def real_game_transition(
         "text": template_text,
         "player_name": player_name,
         "player_score": player_score,
-        "current_round": current_round,
+        "completed_game": True,
     }
 
     return templates.TemplateResponse("real_game_transition.html", result)

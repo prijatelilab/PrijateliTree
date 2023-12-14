@@ -68,6 +68,7 @@ def start_of_game(
     template.
     """
     template_text = languages[get_lang_from_player_id(player_id, db)]
+    game = db.query(Game).filter_by(id=game_id).one_or_none()
 
     result = {
         "request": request,
@@ -75,6 +76,7 @@ def start_of_game(
         "game_id": game_id,
         "points": WINNING_SCORE,
         "text": template_text,
+        "practice_game": game.practice,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)

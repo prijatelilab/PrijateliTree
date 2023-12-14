@@ -1,5 +1,5 @@
 <div class="container-sm general-container">
   <p class="text-end" style="margin-bottom: 5px;">{{ player_name }}</p>
   <p class="text-end" style="margin-bottom: 5px;">Score: {{ player_score }}</p>
-  <p class="text-end" style="margin-bottom: 5px;">Round: {{ current_round }}</p>
+  {% if not completed_game %}<p class="text-end" style="margin-bottom: 5px;">Round: {{ current_round }}</p>{% endif %}
 </div>

@@ -106,6 +106,7 @@ def view_round(
         "game_id": game_id,
         "player_name": player_name,
         "player_score": player_score,
+        "completed_game": player.completed_game,
     }
     # Get current round
     if current_round == 1:
@@ -116,7 +117,9 @@ def view_round(
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
-        template_data["previous_answers"] = get_previous_answers(game_id, player_id, db)
+        template_data["previous_answers"] = get_previous_answers(
+            game_id, player_id, db
+        )
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
@@ -159,7 +162,9 @@ def route_add_answer(
         db.commit()
         db.refresh(new_answer)
 
-    redirect_url = request.url_for("waiting", game_id=game_id, player_id=player_id)
+    redirect_url = request.url_for(
+        "waiting", game_id=game_id, player_id=player_id
+    )
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
@@ -207,6 +212,7 @@ def waiting(
         "player_name": player_name,
         "player_score": player_score,
         "current_round": current_round,
+        "completed_game": player.completed_game,
     }
 
     return templates.TemplateResponse("waiting.html", result)
@@ -256,7 +262,9 @@ def route_get_score(
     )
 
     session_player = (
-        db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
+        db.query(GameSessionPlayer)
+        .filter_by(id=session_player_id)
+        .one_or_none()
     )
     if session_player is None:
         raise HTTPException(
@@ -298,6 +306,7 @@ def end_of_game(
         "practice_game": game.practice,
         "player_name": player_name,
         "player_score": player_score,
+        "completed_game": True,
     }
 
     # add information about winning and ball colors
@@ -405,7 +414,9 @@ def route_session_access(
 
     raise_exception_if_none(session, "session not found")
 
-    return templates.TemplateResponse("new_session.html", context={"request": request})
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
 
 
 @router.get("/{game_id}")

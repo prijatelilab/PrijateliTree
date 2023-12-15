@@ -95,7 +95,6 @@ def view_round(
     game, player = get_game_and_player(game_id, player_id, db)
     player_name, player_score = get_score_and_name(player, db)
 
-
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     template_data = {

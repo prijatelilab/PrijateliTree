@@ -17,7 +17,7 @@ from prijateli_tree.app.database import (
     GameSessionPlayer,
     get_db,
 )
-from prijateli_tree.app.routers.game_utils.utils import (
+from prijateli_tree.app.routers.utils.games_utils import (
     did_player_win,
     get_bag_color,
     get_current_round,
@@ -93,9 +93,8 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    session_player = get_session_player_from_player(player, db)
-    player_name = f"{player.user.first_name} {player.user.last_name}"
-    player_score = session_player.points
+    player_name, player_score = get_score_and_name(player, db)
+
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
@@ -201,7 +200,7 @@ def waiting(
     """
     Wait screen shows until all players are ready to move to the next section
     """
-    _, player = get_game_and_player(game_id, player_id, db)
+    game, player = get_game_and_player(game_id, player_id, db)
     player_name, player_score = get_score_and_name(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
     current_round = get_current_round(game_id, db)
@@ -214,6 +213,7 @@ def waiting(
         "player_name": player_name,
         "player_score": player_score,
         "current_round": current_round,
+        "practice_game": game.practice,
         "completed_game": player.completed_game,
     }
 

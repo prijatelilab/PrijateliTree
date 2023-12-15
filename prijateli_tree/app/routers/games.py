@@ -101,6 +101,7 @@ def view_round(
         "practice_game": game.practice,
         "first_round": current_round == 1,
         "current_round": current_round,
+        "total_rounds": game.rounds,
         "text": template_text,
         "player_id": player_id,
         "game_id": game_id,
@@ -212,6 +213,7 @@ def waiting(
         "player_name": player_name,
         "player_score": player_score,
         "current_round": current_round,
+        "total_rounds": game.rounds,
         "practice_game": game.practice,
         "completed_game": player.completed_game,
     }

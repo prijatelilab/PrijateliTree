@@ -2,7 +2,7 @@
   <div class="row">
     {% if not completed_game %}
       <div class="col text-start">
-        <p style="margin-bottom: 5px;">Round: {{ current_round }}</p>
+        <p style="margin-bottom: 5px;">{{ text.game_first_round.round }}: {{ current_round }} / {{ total_rounds }}</p>
         {% if practice_game %}
           <p style="margin-bottom: 5px;">Practice Game</p>
         {% else %}

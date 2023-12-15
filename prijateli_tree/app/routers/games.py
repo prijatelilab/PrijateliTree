@@ -77,7 +77,7 @@ def route_session_access(
     )
 
 
-@router.get("/{game_id}/landing_page")
+@router.get("/{game_id}/ready")
 def start_session(
     request: Request,
     game_id: int,

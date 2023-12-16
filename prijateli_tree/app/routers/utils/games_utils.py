@@ -199,9 +199,9 @@ def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
     return player_name, player_score
 
 
-def get_num_games(player: GamePlayer, db: Session = Depends(get_db)):
+def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     """
-    Gets the number of games played by the player
+    Gets the player's progress in the overall session
     """
     session_player = get_session_player_from_player(player, db)
     session_id = session_player.session_id
@@ -218,26 +218,30 @@ def get_num_games(player: GamePlayer, db: Session = Depends(get_db)):
         .count()
     )
 
-    return num_practice_games, num_real_games
-
-
-def get_num_completed_games(player: GamePlayer, db: Session = Depends(get_db)):
-    """
-    Gets the number of completed games played by the player
-    """
-    session_player = get_session_player_from_player(player, db)
-    session_id = session_player.session_id
-
-    num_practice_games = (
+    completed_practice_games = (
         db.query(Game)
         .filter_by(session_id=session_id, is_practice=True, is_completed=True)
         .count()
     )
 
-    num_real_games = (
+    completed_real_games = (
         db.query(Game)
         .filter_by(session_id=session_id, is_practice=False, is_completed=True)
         .count()
     )
 
-    return num_practice_games, num_real_games
+    current_practice_game = completed_practice_games + 1
+    current_real_game = completed_real_games + 1
+
+    # Ensure current game is not higher than the number of games
+
+    if current_practice_game > num_practice_games:
+        current_practice_game = num_practice_games
+
+    if current_real_game > num_real_games:
+        current_real_game = num_real_games
+
+    practice_game_progress = f"{current_practice_game}/{num_practice_games}"
+    real_game_progress = f"{current_real_game}/{num_real_games}"
+
+    return practice_game_progress, real_game_progress

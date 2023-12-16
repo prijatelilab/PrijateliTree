@@ -236,7 +236,7 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     # Select completed games by player
     completed_games = (
         db.query(GamePlayer)
-        .filter_by(session_player_id=session_player.id, completed=True)
+        .filter_by(session_player_id=session_player.id, completed_game=True)
         .all()
     )
 

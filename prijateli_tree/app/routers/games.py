@@ -26,6 +26,7 @@ from prijateli_tree.app.routers.utils.games_utils import (
     get_previous_answers,
     get_score_and_name,
     get_session_player_from_player,
+    get_games_progress,
     raise_exception_if_none,
 )
 from prijateli_tree.app.utils.constants import (
@@ -94,6 +95,7 @@ def view_round(
     """
     game, player = get_game_and_player(game_id, player_id, db)
     player_name, player_score = get_score_and_name(player, db)
+    practice_game_progress, real_game_progress = get_games_progress(player, db)
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
@@ -108,6 +110,8 @@ def view_round(
         "player_name": player_name,
         "player_score": player_score,
         "completed_game": player.completed_game,
+        "practice_game_progress": practice_game_progress,
+        "real_game_progress": real_game_progress,
     }
     # Get current round
     if current_round == 1:
@@ -118,9 +122,7 @@ def view_round(
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
-        template_data["previous_answers"] = get_previous_answers(
-            game_id, player_id, db
-        )
+        template_data["previous_answers"] = get_previous_answers(game_id, player_id, db)
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
@@ -163,9 +165,7 @@ def route_add_answer(
         db.commit()
         db.refresh(new_answer)
 
-    redirect_url = request.url_for(
-        "waiting", game_id=game_id, player_id=player_id
-    )
+    redirect_url = request.url_for("waiting", game_id=game_id, player_id=player_id)
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
@@ -203,6 +203,7 @@ def waiting(
     game, player = get_game_and_player(game_id, player_id, db)
     player_name, player_score = get_score_and_name(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
+    practice_game_progress, real_game_progress = get_games_progress(player, db)
     current_round = get_current_round(game_id, db)
 
     result = {
@@ -216,6 +217,8 @@ def waiting(
         "total_rounds": game.rounds,
         "practice_game": game.practice,
         "completed_game": player.completed_game,
+        "practice_game_progress": practice_game_progress,
+        "real_game_progress": real_game_progress,
     }
 
     return templates.TemplateResponse("waiting.html", result)
@@ -265,9 +268,7 @@ def route_get_score(
     )
 
     session_player = (
-        db.query(GameSessionPlayer)
-        .filter_by(id=session_player_id)
-        .one_or_none()
+        db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
     )
     if session_player is None:
         raise HTTPException(
@@ -293,6 +294,7 @@ def end_of_game(
     game_status = did_player_win(game, player_id, db)
 
     player_name, player_score = get_score_and_name(player, db)
+    practice_game_progress, real_game_progress = get_games_progress(player, db)
 
     points = 0
     if game_status["is_correct"]:
@@ -310,6 +312,8 @@ def end_of_game(
         "player_name": player_name,
         "player_score": player_score,
         "completed_game": True,
+        "practice_game_progress": practice_game_progress,
+        "real_game_progress": real_game_progress,
     }
 
     # add information about winning and ball colors
@@ -388,6 +392,7 @@ def real_game_transition(
     _, player = get_game_and_player(game_id, player_id, db)
     player_name, player_score = get_score_and_name(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
+    practice_game_progress, real_game_progress = get_games_progress(player, db)
 
     result = {
         "request": request,
@@ -398,6 +403,8 @@ def real_game_transition(
         "player_name": player_name,
         "player_score": player_score,
         "completed_game": True,
+        "practice_game_progress": practice_game_progress,
+        "real_game_progress": real_game_progress,
     }
 
     return templates.TemplateResponse("real_game_transition.html", result)
@@ -417,9 +424,7 @@ def route_session_access(
 
     raise_exception_if_none(session, "session not found")
 
-    return templates.TemplateResponse(
-        "new_session.html", context={"request": request}
-    )
+    return templates.TemplateResponse("new_session.html", context={"request": request})
 
 
 @router.get("/{game_id}")

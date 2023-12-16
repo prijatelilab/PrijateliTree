@@ -4,9 +4,9 @@
       <div class="col text-start">
         <p style="margin-bottom: 5px;">{{ text.game_first_round.round }}: {{ current_round }} / {{ total_rounds }}</p>
         {% if practice_game %}
-          <p style="margin-bottom: 5px;">{{ text.game_video.game }}</p>
+          <p style="margin-bottom: 5px;">{{ text.game_video.game }} {{ practice_game_progress }}</p>
         {% else %}
-          <p style="margin-bottom: 5px;">Real Game</p>
+          <p style="margin-bottom: 5px;">Real Game {{ real_game_progress }}</p>
         {% endif %}
       </div>
     {% endif %}

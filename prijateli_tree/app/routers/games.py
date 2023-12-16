@@ -22,11 +22,11 @@ from prijateli_tree.app.routers.utils.games_utils import (
     get_bag_color,
     get_current_round,
     get_game_and_player,
+    get_games_progress,
     get_lang_from_player_id,
     get_previous_answers,
     get_score_and_name,
     get_session_player_from_player,
-    get_games_progress,
     raise_exception_if_none,
 )
 from prijateli_tree.app.utils.constants import (
@@ -122,7 +122,9 @@ def view_round(
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
-        template_data["previous_answers"] = get_previous_answers(game_id, player_id, db)
+        template_data["previous_answers"] = get_previous_answers(
+            game_id, player_id, db
+        )
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
@@ -165,7 +167,9 @@ def route_add_answer(
         db.commit()
         db.refresh(new_answer)
 
-    redirect_url = request.url_for("waiting", game_id=game_id, player_id=player_id)
+    redirect_url = request.url_for(
+        "waiting", game_id=game_id, player_id=player_id
+    )
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
@@ -268,7 +272,9 @@ def route_get_score(
     )
 
     session_player = (
-        db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
+        db.query(GameSessionPlayer)
+        .filter_by(id=session_player_id)
+        .one_or_none()
     )
     if session_player is None:
         raise HTTPException(
@@ -424,7 +430,9 @@ def route_session_access(
 
     raise_exception_if_none(session, "session not found")
 
-    return templates.TemplateResponse("new_session.html", context={"request": request})
+    return templates.TemplateResponse(
+        "new_session.html", context={"request": request}
+    )
 
 
 @router.get("/{game_id}")

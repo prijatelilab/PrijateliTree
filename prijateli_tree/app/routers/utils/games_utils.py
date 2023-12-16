@@ -206,33 +206,51 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     session_player = get_session_player_from_player(player, db)
     session_id = session_player.session_id
 
+    # Get number of games
     num_practice_games = (
         db.query(Game)
-        .filter_by(game_session_id=session_id, is_practice=True)
+        .filter_by(game_session_id=session_id, practice=True)
         .count()
     )
-
     num_real_games = (
         db.query(Game)
-        .filter_by(game_session_id=session_id, is_practice=False)
+        .filter_by(game_session_id=session_id, practice=False)
         .count()
     )
 
-    completed_practice_games = (
+    # Get game ids
+    practice_game_ids = (
         db.query(Game)
-        .filter_by(
-            game_session_id=session_id, is_practice=True, is_completed=True
-        )
-        .count()
+        .filter_by(game_session_id=session_id, practice=True)
+        .order_by(Game.id)
+        .all()
     )
 
-    completed_real_games = (
+    real_game_ids = (
         db.query(Game)
-        .filter_by(
-            game_session_id=session_id, is_practice=False, is_completed=True
-        )
-        .count()
+        .filter_by(game_session_id=session_id, practice=False)
+        .order_by(Game.id)
+        .all()
     )
+
+    # Select completed games by player
+    completed_games = (
+        db.query(GamePlayer)
+        .filter_by(session_player_id=session_player.id, completed=True)
+        .all()
+    )
+
+    # Get number of completed games
+    completed_practice_games = 0
+    completed_real_games = 0
+
+    for real_game in real_game_ids:
+        if real_game in completed_games:
+            completed_real_games += 1
+
+    for practice_game in practice_game_ids:
+        if practice_game in completed_games:
+            completed_practice_games += 1
 
     current_practice_game = completed_practice_games + 1
     current_real_game = completed_real_games + 1

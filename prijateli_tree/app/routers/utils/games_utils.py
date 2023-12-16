@@ -219,3 +219,25 @@ def get_num_games(player: GamePlayer, db: Session = Depends(get_db)):
     )
 
     return num_practice_games, num_real_games
+
+
+def get_num_completed_games(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the number of completed games played by the player
+    """
+    session_player = get_session_player_from_player(player, db)
+    session_id = session_player.session_id
+
+    num_practice_games = (
+        db.query(Game)
+        .filter_by(session_id=session_id, is_practice=True, is_completed=True)
+        .count()
+    )
+
+    num_real_games = (
+        db.query(Game)
+        .filter_by(session_id=session_id, is_practice=False, is_completed=True)
+        .count()
+    )
+
+    return num_practice_games, num_real_games

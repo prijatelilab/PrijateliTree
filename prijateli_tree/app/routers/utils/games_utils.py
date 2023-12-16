@@ -197,3 +197,25 @@ def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
     player_score = session_player.points
 
     return player_name, player_score
+
+
+def get_num_games(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the number of games played by the player
+    """
+    session_player = get_session_player_from_player(player, db)
+    session_id = session_player.session_id
+
+    num_practice_games = (
+        db.query(Game)
+        .filter_by(session_id=session_id, is_practice=True)
+        .count()
+    )
+
+    num_real_games = (
+        db.query(Game)
+        .filter_by(session_id=session_id, is_practice=False)
+        .count()
+    )
+
+    return num_practice_games, num_real_games

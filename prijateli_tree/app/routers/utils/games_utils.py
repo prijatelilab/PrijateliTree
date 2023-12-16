@@ -208,25 +208,29 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
 
     num_practice_games = (
         db.query(Game)
-        .filter_by(session_id=session_id, is_practice=True)
+        .filter_by(game_session_id=session_id, is_practice=True)
         .count()
     )
 
     num_real_games = (
         db.query(Game)
-        .filter_by(session_id=session_id, is_practice=False)
+        .filter_by(game_session_id=session_id, is_practice=False)
         .count()
     )
 
     completed_practice_games = (
         db.query(Game)
-        .filter_by(session_id=session_id, is_practice=True, is_completed=True)
+        .filter_by(
+            game_session_id=session_id, is_practice=True, is_completed=True
+        )
         .count()
     )
 
     completed_real_games = (
         db.query(Game)
-        .filter_by(session_id=session_id, is_practice=False, is_completed=True)
+        .filter_by(
+            game_session_id=session_id, is_practice=False, is_completed=True
+        )
         .count()
     )
 

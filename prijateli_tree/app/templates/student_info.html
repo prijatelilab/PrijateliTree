@@ -1,15 +1,15 @@
 <div class="container-sm general-container">
   <div class="row">
-    {% if not completed_game %}
-      <div class="col text-start">
+    <div class="col text-start">
+      {% if not completed_game %}
         <p style="margin-bottom: 5px;">{{ text.game_first_round.round }}: {{ current_round }} / {{ total_rounds }}</p>
-        {% if practice_game %}
-          <p style="margin-bottom: 5px;">{{ text.game_video.game }} {{ practice_game_progress }}</p>
-        {% else %}
-          <p style="margin-bottom: 5px;">Real Game {{ real_game_progress }}</p>
-        {% endif %}
-      </div>
-    {% endif %}
+      {% endif %}
+      {% if practice_game %}
+        <p style="margin-bottom: 5px;">{{ text.game_video.game }} {{ practice_game_progress }}</p>
+      {% else %}
+        <p style="margin-bottom: 5px;">Real Game {{ real_game_progress }}</p>
+      {% endif %}
+    </div>
     <div class="col text-end">
       <p style="margin-bottom: 5px;">{{ player_name }}</p>
       <p style="margin-bottom: 5px;">Score: {{ player_score }}</p>

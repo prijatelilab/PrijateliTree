@@ -23,6 +23,7 @@ from prijateli_tree.app.routers.utils.games_utils import (
     get_current_round,
     get_game_and_player,
     get_games_progress,
+    get_header_data,
     get_lang_from_player_id,
     get_previous_answers,
     get_score_and_name,
@@ -94,8 +95,7 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    player_name, player_score = get_score_and_name(player, db)
-    practice_game_progress, real_game_progress = get_games_progress(player, db)
+    header = get_header_data(player, db)
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
@@ -107,11 +107,9 @@ def view_round(
         "text": template_text,
         "player_id": player_id,
         "game_id": game_id,
-        "player_name": player_name,
-        "player_score": player_score,
         "completed_game": player.completed_game,
-        "practice_game_progress": practice_game_progress,
-        "real_game_progress": real_game_progress,
+        **header,
+
     }
     # Get current round
     if current_round == 1:
@@ -205,9 +203,8 @@ def waiting(
     Wait screen shows until all players are ready to move to the next section
     """
     game, player = get_game_and_player(game_id, player_id, db)
-    player_name, player_score = get_score_and_name(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
-    practice_game_progress, real_game_progress = get_games_progress(player, db)
+    header = get_header_data(player, db)
     current_round = get_current_round(game_id, db)
 
     result = {
@@ -215,14 +212,11 @@ def waiting(
         "game_id": game_id,
         "player_id": player_id,
         "text": template_text,
-        "player_name": player_name,
-        "player_score": player_score,
         "current_round": current_round,
         "total_rounds": game.rounds,
         "practice_game": game.practice,
         "completed_game": player.completed_game,
-        "practice_game_progress": practice_game_progress,
-        "real_game_progress": real_game_progress,
+        **header,
     }
 
     return templates.TemplateResponse("waiting.html", result)
@@ -299,8 +293,7 @@ def end_of_game(
     game, player = get_game_and_player(game_id, player_id, db)
     game_status = did_player_win(game, player_id, db)
 
-    player_name, player_score = get_score_and_name(player, db)
-    practice_game_progress, real_game_progress = get_games_progress(player, db)
+    header = get_header_data(player, db)
 
     points = 0
     if game_status["is_correct"]:
@@ -315,11 +308,9 @@ def end_of_game(
         "points": points,
         "text": template_text,
         "practice_game": game.practice,
-        "player_name": player_name,
-        "player_score": player_score,
         "completed_game": True,
-        "practice_game_progress": practice_game_progress,
-        "real_game_progress": real_game_progress,
+        **header,
+
     }
 
     # add information about winning and ball colors
@@ -396,21 +387,17 @@ def real_game_transition(
     template.
     """
     _, player = get_game_and_player(game_id, player_id, db)
-    player_name, player_score = get_score_and_name(player, db)
+    header = get_header_data(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
-    practice_game_progress, real_game_progress = get_games_progress(player, db)
-
+   
     result = {
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
         "points": WINNING_SCORE,
         "text": template_text,
-        "player_name": player_name,
-        "player_score": player_score,
         "completed_game": True,
-        "practice_game_progress": practice_game_progress,
-        "real_game_progress": real_game_progress,
+        **header,
     }
 
     return templates.TemplateResponse("real_game_transition.html", result)

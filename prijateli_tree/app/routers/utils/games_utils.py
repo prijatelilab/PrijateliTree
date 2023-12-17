@@ -187,6 +187,16 @@ def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
     return game, game.game_type
 
 
+def get_header_data(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the player's score, name and game progress
+    """
+    score_dict = get_score_and_name(player, db)
+    progress_dict = get_games_progress(player, db)
+
+    return {**score_dict, **progress_dict}
+
+
 def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
     """
     Gets the player's score and name from the session player object
@@ -196,7 +206,7 @@ def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
     player_name = f"{player.user.first_name} {player.user.last_name}"
     player_score = session_player.points
 
-    return player_name, player_score
+    return {"player_name": player_name, "player_score": player_score}
 
 
 def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
@@ -255,4 +265,5 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     practice_game_progress = f"{current_practice_game}/{num_practice_games}"
     real_game_progress = f"{current_real_game}/{num_real_games}"
 
-    return practice_game_progress, real_game_progress
+    return {"practice_game_progress": practice_game_progress, 
+            "real_game_progress": real_game_progress}

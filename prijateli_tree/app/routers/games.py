@@ -102,12 +102,11 @@ def view_round(
     template_data = {
         "practice_game": game.practice,
         "first_round": current_round == 1,
-        "current_round": current_round,
-        "total_rounds": game.rounds,
         "text": template_text,
         "player_id": player_id,
         "game_id": game_id,
         "completed_game": player.completed_game,
+        "round_progress": f"{current_round}/{game.rounds}",
         **header,
 
     }
@@ -212,8 +211,7 @@ def waiting(
         "game_id": game_id,
         "player_id": player_id,
         "text": template_text,
-        "current_round": current_round,
-        "total_rounds": game.rounds,
+        "round_progress": f"{current_round}/{game.rounds}",
         "practice_game": game.practice,
         "completed_game": player.completed_game,
         **header,

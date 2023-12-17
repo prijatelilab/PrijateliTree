@@ -219,7 +219,6 @@ def waiting(
 
 @router.put("/{game_id}/player/{player_id}/update_score")
 def update_score(
-    request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
@@ -244,33 +243,8 @@ def update_score(
 @router.get("/survey/{player_id}")
 def get_qualtrics(
     request: Request,
-    player_id: int,
-    db: Session = Depends(get_db),
 ):
     return templates.TemplateResponse("qualtrics.html", {"request": request})
-
-
-@router.get("/current_score/{player_id}")
-def route_get_score(
-    request: Request,
-    player_id: int,
-    db: Session = Depends(get_db),
-):
-    session_player_id = (
-        db.query(GamePlayer).filter_by(id=player_id).one().session_player_id
-    )
-
-    session_player = (
-        db.query(GameSessionPlayer)
-        .filter_by(id=session_player_id)
-        .one_or_none()
-    )
-    if session_player is None:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail="GameSessionPlayer not found",
-        )
-    return session_player.points
 
 
 @router.get("/{game_id}/player/{player_id}/end_of_game")
@@ -432,7 +406,7 @@ def route_game_player_access(
     game_id: int, player_id: int, db: Session = Depends(get_db)
 ):
     # tests to ensure game and player exists
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, _ = get_game_and_player(game_id, player_id, db)
 
     return {"game_id": game_id, "player_id": player_id}
 
@@ -480,3 +454,25 @@ def score_to_denirs(
     denirs = total_score * DENIR_FACTOR
 
     return {"reward": f"You have made {denirs} denirs!"}
+
+
+@router.get("/current_score/{player_id}")
+def route_get_score(
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    session_player_id = (
+        db.query(GamePlayer).filter_by(id=player_id).one().session_player_id
+    )
+
+    session_player = (
+        db.query(GameSessionPlayer)
+        .filter_by(id=session_player_id)
+        .one_or_none()
+    )
+    if session_player is None:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail="GameSessionPlayer not found",
+        )
+    return session_player.points

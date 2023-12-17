@@ -265,5 +265,7 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     practice_game_progress = f"{current_practice_game}/{num_practice_games}"
     real_game_progress = f"{current_real_game}/{num_real_games}"
 
-    return {"practice_game_progress": practice_game_progress, 
-            "real_game_progress": real_game_progress}
+    return {
+        "practice_game_progress": practice_game_progress,
+        "real_game_progress": real_game_progress,
+    }

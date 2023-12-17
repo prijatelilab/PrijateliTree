@@ -22,11 +22,9 @@ from prijateli_tree.app.routers.utils.games_utils import (
     get_bag_color,
     get_current_round,
     get_game_and_player,
-    get_games_progress,
     get_header_data,
     get_lang_from_player_id,
     get_previous_answers,
-    get_score_and_name,
     get_session_player_from_player,
     raise_exception_if_none,
 )
@@ -70,7 +68,7 @@ def start_of_game(
     template.
     """
     template_text = languages[get_lang_from_player_id(player_id, db)]
-    game = db.query(Game).filter_by(id=game_id).one_or_none()
+    game, _ = get_game_and_player(game_id, player_id, db)
 
     result = {
         "request": request,
@@ -108,7 +106,6 @@ def view_round(
         "completed_game": player.completed_game,
         "round_progress": f"{current_round}/{game.rounds}",
         **header,
-
     }
     # Get current round
     if current_round == 1:
@@ -308,7 +305,6 @@ def end_of_game(
         "practice_game": game.practice,
         "completed_game": True,
         **header,
-
     }
 
     # add information about winning and ball colors
@@ -387,7 +383,7 @@ def real_game_transition(
     _, player = get_game_and_player(game_id, player_id, db)
     header = get_header_data(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
-   
+
     result = {
         "request": request,
         "player_id": player_id,

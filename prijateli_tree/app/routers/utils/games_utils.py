@@ -249,11 +249,12 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
 
     for real_game in real_games:
         real_game_id = real_game.id
-        if real_game_id in completed_games:
+        if real_game_id in completed_games_ids:
             completed_real_games += 1
 
     for practice_game in practice_games:
-        if practice_game in completed_games_ids:
+        practice_game_id = practice_game.id
+        if practice_game_id in completed_games_ids:
             completed_practice_games += 1
 
     current_practice_game = completed_practice_games + 1

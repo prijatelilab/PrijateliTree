@@ -216,22 +216,22 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     session_player = get_session_player_from_player(player, db)
     session_id = session_player.session_id
 
-    # Get game ids
-    practice_game_ids = (
+    # Get practice and real game ids
+    practice_games = (
         db.query(Game)
         .filter_by(game_session_id=session_id, practice=True)
         .order_by(Game.id)
         .all()
     )
-    num_practice_games = len(practice_game_ids)
+    num_practice_games = len(practice_games)
 
-    real_game_ids = (
+    real_games = (
         db.query(Game)
         .filter_by(game_session_id=session_id, practice=False)
         .order_by(Game.id)
         .all()
     )
-    num_real_games = len(real_game_ids)
+    num_real_games = len(real_games)
 
     # Select completed games by player
     completed_games = (
@@ -244,12 +244,16 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
     completed_practice_games = 0
     completed_real_games = 0
 
-    for real_game in real_game_ids:
-        if real_game in completed_games:
+    # List of ids of completed games
+    completed_games_ids = [game.game_id for game in completed_games]
+
+    for real_game in real_games:
+        real_game_id = real_game.id
+        if real_game_id in completed_games:
             completed_real_games += 1
 
-    for practice_game in practice_game_ids:
-        if practice_game in completed_games:
+    for practice_game in practice_games:
+        if practice_game in completed_games_ids:
             completed_practice_games += 1
 
     current_practice_game = completed_practice_games + 1

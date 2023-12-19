@@ -75,7 +75,7 @@ def admin_login(request: Request) -> Response:
     return templates.TemplateResponse("admin_login.html", {"request": request})
 
 
-@router.post("/login")
+@router.post("/login", response_class=HTMLResponse)
 def confirm_login(
     request: Request,
     first_name: Annotated[str, Form()],

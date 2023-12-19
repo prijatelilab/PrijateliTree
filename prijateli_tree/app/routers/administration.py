@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
 from sqlalchemy.orm import Session
@@ -58,12 +58,12 @@ login_manager = LoginManager(
 
 
 @login_manager.user_loader(db_session=SessionLocal())
-def query_user(user_uuid: int, db_session: Session):
+def query_user(user_uuid: int, db_session: Session) -> User | None:
     return db_session.query(User).filter_by(uuid=user_uuid).one_or_none()
 
 
 @router.get("/", response_class=HTMLResponse)
-def admin_page(user=Depends(login_manager.optional)):
+def admin_page(user=Depends(login_manager.optional)) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
     else:
@@ -71,7 +71,7 @@ def admin_page(user=Depends(login_manager.optional)):
 
 
 @router.get("/login", response_class=HTMLResponse)
-def admin_login(request: Request):
+def admin_login(request: Request) -> Response:
     return templates.TemplateResponse("admin_login.html", {"request": request})
 
 
@@ -82,7 +82,7 @@ def confirm_login(
     last_name: Annotated[str, Form()],
     email: Annotated[str, Form()],
     db: Session = Depends(get_db),
-):
+) -> Response:
     user = (
         db.query(User)
         .filter_by(
@@ -109,7 +109,7 @@ def confirm_login(
 
 
 @router.get("/logout", response_class=HTMLResponse)
-def logout():
+def logout() -> RedirectResponse:
     resp = RedirectResponse(url="login", status_code=HTTPStatus.FOUND)
     login_manager.set_cookie(resp, "")
     return resp
@@ -121,7 +121,7 @@ def dashboard(
     success: str = "",
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
-):
+) -> Response:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
@@ -160,7 +160,7 @@ def dashboard_create_session(
     error: str = "",
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
-):
+) -> Response:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
@@ -177,7 +177,7 @@ def dashboard_create_session(
     )
 
 
-@router.post("/session")
+@router.post("/session", response_class=HTMLResponse)
 def create_session(
     num_games: Annotated[int, Form()],
     player_one: Annotated[int, Form()],
@@ -188,7 +188,7 @@ def create_session(
     player_six: Annotated[int, Form()],
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
-):
+) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
@@ -307,13 +307,9 @@ def create_session_games(
     session,
     game,
     db: Session = Depends(get_db),
-):
-    print(session.players)
-    print(game.players)
+) -> None:
     for i in range(session.num_games):
         previous_game = game
-        print(i)
-        print(previous_game.__dict__)
         game_types = (
             db.query(GameType)
             .filter(
@@ -352,7 +348,7 @@ def create_session_games(
         add_players_to_game(pos_players, game, db)
 
 
-def add_players_to_game(pos_players: list[GamePlayer], game, db):
+def add_players_to_game(pos_players: list[GamePlayer], game, db) -> None:
     """ """
     rand_bag = random.sample(game.game_type.bag, len(game.game_type.bag))
 

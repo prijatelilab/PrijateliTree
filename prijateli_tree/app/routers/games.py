@@ -282,7 +282,7 @@ def get_qualtrics(
     request: Request,
     player_id: int,
     game_id: int,
-):
+) -> Response:
     return templates.TemplateResponse(
         "qualtrics.html",
         {"request": request, "player_id": player_id, "game_id": game_id},

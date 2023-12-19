@@ -54,7 +54,7 @@ logger.debug("Routers loaded and static files mounted.")
 )
 def set_language(
     accept_language: Annotated[str | None, Header()] = None
-) -> Response:
+) -> JSONResponse:
     if accept_language in [
         LANGUAGE_ENGLISH,
         LANGUAGE_TURKISH,
@@ -69,15 +69,15 @@ def set_language(
 
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
+def home(request: Request) -> Response:
     return templates.TemplateResponse("home_page.html", {"request": request})
 
 
 @app.get("/ready", response_class=HTMLResponse)
-def ready(request: Request):
+def ready(request: Request) -> Response:
     return templates.TemplateResponse("ready.html", {"request": request})
 
 
 @app.get("/waiting", response_class=HTMLResponse)
-def waiting(request: Request):
+def waiting(request: Request) -> Response:
     return templates.TemplateResponse("waiting.html", {"request": request})

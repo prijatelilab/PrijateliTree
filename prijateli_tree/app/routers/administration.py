@@ -177,7 +177,7 @@ def dashboard_create_session(
     )
 
 
-@router.post("/session")
+@router.post("/session", response_class=HTMLResponse)
 def create_session(
     num_games: Annotated[int, Form()],
     player_one: Annotated[int, Form()],

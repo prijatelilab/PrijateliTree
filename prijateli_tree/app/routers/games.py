@@ -87,7 +87,7 @@ def view_round(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-) -> Response | RedirectResponse:
+) -> Response:
     """
     Function that returns the current round
     """
@@ -309,7 +309,7 @@ def go_to_next_game(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-) -> RedirectResponse | JSONResponse:
+):
     """
     Moves player to first round of next game or ends the session
     """

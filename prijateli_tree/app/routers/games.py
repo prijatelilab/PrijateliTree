@@ -4,8 +4,8 @@ import logging
 from http import HTTPStatus
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -55,13 +55,15 @@ logger.debug("Language files imported.")
 ###############################
 
 
-@router.get("/{game_id}/player/{player_id}/start_of_game")
+@router.get(
+    "/{game_id}/player/{player_id}/start_of_game", response_class=HTMLResponse
+)
 def start_of_game(
     request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response:
     """
     Function that returns the start of game page and
     template.
@@ -85,7 +87,7 @@ def view_round(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response | RedirectResponse:
     """
     Function that returns the current round
     """
@@ -126,7 +128,7 @@ def route_add_answer(
     player_id: int,
     player_answer: str = Form(...),
     db: Session = Depends(get_db),
-):
+) -> RedirectResponse:
     """
     Function that updates the player's guess in the database
     """
@@ -162,11 +164,11 @@ def route_add_answer(
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
 
-@router.get("/{game_id}/all_set")
+@router.get("/{game_id}/all_set", response_class=JSONResponse)
 def all_set(
     game_id: int,
     db: Session = Depends(get_db),
-):
+) -> JSONResponse:
     """
     Determines if all players have submitted a guess in the current round
     """
@@ -179,16 +181,18 @@ def all_set(
 
     ready = n_answers % len(players) == 0
     game_over = player.game.rounds == this_round
-    return {"ready": ready, "game_over": game_over}
+    return JSONResponse(content={"ready": ready, "game_over": game_over})
 
 
-@router.get("/{game_id}/player/{player_id}/waiting")
+@router.get(
+    "/{game_id}/player/{player_id}/waiting", response_class=HTMLResponse
+)
 def waiting(
     request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response:
     """
     Wait screen shows until all players are ready to move to the next section
     """
@@ -204,13 +208,14 @@ def waiting(
     return templates.TemplateResponse("waiting.html", result)
 
 
-@router.put("/{game_id}/player/{player_id}/update_score")
+@router.put(
+    "/{game_id}/player/{player_id}/update_score", response_class=JSONResponse
+)
 def update_score(
-    request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> JSONResponse:
     """
     Function that updates the player's score in the database
     """
@@ -225,24 +230,24 @@ def update_score(
         db.commit()
         db.refresh(player)
 
-    return {"status": "success"}
+    return JSONResponse(content={"status": "success"})
 
 
-@router.get("/survey/{player_id}")
+@router.get("/survey/{player_id}", response_class=HTMLResponse)
 def get_qualtrics(
     request: Request,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response:
     return templates.TemplateResponse("qualtrics.html", {"request": request})
 
 
-@router.get("/current_score/{player_id}")
+@router.get("/current_score/{player_id}", response_class=JSONResponse)
 def route_get_score(
     request: Request,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> JSONResponse:
     session_player_id = (
         db.query(GamePlayer).filter_by(id=player_id).one().session_player_id
     )
@@ -257,16 +262,18 @@ def route_get_score(
             status_code=HTTPStatus.NOT_FOUND,
             detail="GameSessionPlayer not found",
         )
-    return session_player.points
+    return JSONResponse(content={"points": session_player.points})
 
 
-@router.get("/{game_id}/player/{player_id}/end_of_game")
+@router.get(
+    "/{game_id}/player/{player_id}/end_of_game", response_class=HTMLResponse
+)
 def end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response:
     """
     Function that returns the end of game page and
     template.
@@ -302,7 +309,7 @@ def go_to_next_game(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> RedirectResponse | JSONResponse:
     """
     Moves player to first round of next game or ends the session
     """
@@ -310,7 +317,7 @@ def go_to_next_game(
 
     if game.next_game_id is None:
         # TODO: end of session screen
-        return {"to be continued": "end of round"}
+        return JSONResponse(content={"to be continued": "end of round"})
 
     next_player_id = (
         db.query(GamePlayer)
@@ -352,13 +359,16 @@ def go_to_next_game(
     )
 
 
-@router.get("/{game_id}/player/{player_id}/real_game_transition")
+@router.get(
+    "/{game_id}/player/{player_id}/real_game_transition",
+    response_class=HTMLResponse,
+)
 def real_game_transition(
     request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response:
     """
     Function that returns the start of game page and
     template.
@@ -382,10 +392,10 @@ def real_game_transition(
 ###########################################
 
 
-@router.get("/session/{session_id}")
+@router.get("/session/{session_id}", response_class=HTMLResponse)
 def route_session_access(
     request: Request, session_id: int, db: Session = Depends(get_db)
-):
+) -> Response:
     # Do some logic things
     session = db.query(GameSession).filter_by(id=session_id).one_or_none()
 
@@ -396,25 +406,29 @@ def route_session_access(
     )
 
 
-@router.get("/{game_id}")
-def route_game_access(game_id: int, db: Session = Depends(get_db)):
+@router.get("/{game_id}", response_class=JSONResponse)
+def route_game_access(
+    game_id: int, db: Session = Depends(get_db)
+) -> JSONResponse:
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     raise_exception_if_none(game, detail="game not found")
-    return {
-        "game_id": game_id,
-        "rounds": game.rounds,
-        "practice": game.practice,
-    }
+    return JSONResponse(
+        content={
+            "game_id": game_id,
+            "rounds": game.rounds,
+            "practice": game.practice,
+        }
+    )
 
 
-@router.get("/{game_id}/player/{player_id}")
+@router.get("/{game_id}/player/{player_id}", response_class=JSONResponse)
 def route_game_player_access(
     game_id: int, player_id: int, db: Session = Depends(get_db)
-):
+) -> JSONResponse:
     # tests to ensure game and player exists
     game, player = get_game_and_player(game_id, player_id, db)
 
-    return {"game_id": game_id, "player_id": player_id}
+    return JSONResponse(content={"game_id": game_id, "player_id": player_id})
 
 
 ###########################################
@@ -422,12 +436,12 @@ def route_game_player_access(
 ###########################################
 
 
-@router.post("/ready")
+@router.post("/ready", response_class=JSONResponse)
 def confirm_player(
     player_id: int,
     game_id: int,
     db: Session = Depends(get_db),
-):
+) -> JSONResponse:
     """
     Confirms if the player is ready for the game
     """
@@ -437,15 +451,17 @@ def confirm_player(
     player.ready = True
     db.commit()
 
-    return {"status": "Player is ready!"}
+    return JSONResponse(content={"status": "Player is ready!"})
 
 
-@router.post("/{game_id}/player/{player_id}/denirs")
+@router.post(
+    "/{game_id}/player/{player_id}/denirs", response_class=JSONResponse
+)
 def score_to_denirs(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> JSONResponse:
     """
     Function that calculates the denirs for the player
     given all of their scores
@@ -459,4 +475,4 @@ def score_to_denirs(
 
     denirs = total_score * DENIR_FACTOR
 
-    return {"reward": f"You have made {denirs} denirs!"}
+    return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})

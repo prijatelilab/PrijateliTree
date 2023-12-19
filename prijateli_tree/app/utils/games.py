@@ -235,3 +235,92 @@ def get_game_and_type(
     raise_exception_if_none(game, detail="game not found")
 
     return game, game.game_type
+
+
+def get_score_and_name(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the player's score and name from the session player object
+    by using the game player object
+    """
+    session_player = get_session_player_from_player(player, db)
+    player_name = f"{player.user.first_name} {player.user.last_name}"
+    player_score = session_player.points
+
+    return {"player_name": player_name, "player_score": player_score}
+
+
+def get_header_data(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the player's score, name and game progress
+    """
+    score_dict = get_score_and_name(player, db)
+    progress_dict = get_games_progress(player, db)
+
+    return {**score_dict, **progress_dict}
+
+
+def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
+    """
+    Gets the player's progress in the overall session
+    """
+    session_player = get_session_player_from_player(player, db)
+    session_id = session_player.session_id
+
+    # Get practice and real game ids
+    practice_games = (
+        db.query(Game)
+        .filter_by(game_session_id=session_id, practice=True)
+        .order_by(Game.id)
+        .all()
+    )
+    num_practice_games = len(practice_games)
+
+    real_games = (
+        db.query(Game)
+        .filter_by(game_session_id=session_id, practice=False)
+        .order_by(Game.id)
+        .all()
+    )
+    num_real_games = len(real_games)
+
+    # Select completed games by player
+    completed_games = (
+        db.query(GamePlayer)
+        .filter_by(session_player_id=session_player.id, completed_game=True)
+        .all()
+    )
+
+    # Get number of completed games
+    completed_practice_games = 0
+    completed_real_games = 0
+
+    # List of ids of completed games
+    completed_games_ids = [game.game_id for game in completed_games]
+
+    for real_game in real_games:
+        real_game_id = real_game.id
+        if real_game_id in completed_games_ids:
+            completed_real_games += 1
+
+    for practice_game in practice_games:
+        practice_game_id = practice_game.id
+        if practice_game_id in completed_games_ids:
+            completed_practice_games += 1
+
+    current_practice_game = completed_practice_games + 1
+    current_real_game = completed_real_games + 1
+
+    # Ensure current game is not higher than the number of games
+    if current_practice_game > num_practice_games:
+        current_practice_game = num_practice_games
+
+    if current_real_game > num_real_games:
+        current_real_game = num_real_games
+
+    practice_game_progress = f"{current_practice_game}/{num_practice_games}"
+    real_game_progress = f"{current_real_game}/{num_real_games}"
+
+    return {
+        "practice_game_progress": practice_game_progress,
+        "real_game_progress": real_game_progress,
+    }

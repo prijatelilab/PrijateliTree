@@ -17,13 +17,7 @@ from prijateli_tree.app.database import (
     GameSessionPlayer,
     get_db,
 )
-from prijateli_tree.app.utils.constants import (
-    DENIR_FACTOR,
-    FILE_MODE_READ,
-    STANDARD_ENCODING,
-    WINNING_SCORE,
-)
-from prijateli_tree.app.utils.games import (
+from prijateli_tree.app.routers.utils.games_utils import (
     did_player_win,
     get_bag_color,
     get_current_round,
@@ -33,6 +27,12 @@ from prijateli_tree.app.utils.games import (
     get_previous_answers,
     get_session_player_from_player,
     raise_exception_if_none,
+)
+from prijateli_tree.app.utils.constants import (
+    DENIR_FACTOR,
+    FILE_MODE_READ,
+    STANDARD_ENCODING,
+    WINNING_SCORE,
 )
 
 

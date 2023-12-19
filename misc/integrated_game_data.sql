@@ -18,7 +18,7 @@ VALUES
 INSERT INTO game_sessions
     (id, created_at, created_by, num_games, finished)
 VALUES
-    (1, '01/01/2000'::date, 1, 1, FALSE);
+    (1, '01/01/2000'::date, 1, 3, FALSE);
 
 /* Create game */
 INSERT INTO games
@@ -46,20 +46,20 @@ INSERT INTO game_players
     (created_by, game_id, user_id, position, ready, session_player_id, initial_ball, completed_game)
 VALUES
     (1, 1, 2, 1, false, 1, 'R', FALSE),
-    (1, 1, 3, 2, false, 1, 'B', FALSE),
-    (1, 1, 4, 3, false, 1, 'B', FALSE),
-    (1, 1, 5, 4, false, 1, 'R', FALSE),
-    (1, 1, 6, 5, false, 1, 'R', FALSE),
-    (1, 1, 7, 6, false, 1, 'B', FALSE),
+    (1, 1, 3, 2, false, 2, 'B', FALSE),
+    (1, 1, 4, 3, false, 3, 'B', FALSE),
+    (1, 1, 5, 4, false, 4, 'R', FALSE),
+    (1, 1, 6, 5, false, 5, 'R', FALSE),
+    (1, 1, 7, 6, false, 6, 'B', FALSE),
     (1, 2, 2, 1, false, 1, 'R', FALSE),
-    (1, 2, 3, 2, false, 1, 'B', FALSE),
-    (1, 2, 4, 3, false, 1, 'R', FALSE),
-    (1, 2, 5, 4, false, 1, 'B', FALSE),
-    (1, 2, 6, 5, false, 1, 'R', FALSE),
-    (1, 2, 7, 6, false, 1, 'B', FALSE),
+    (1, 2, 3, 2, false, 2, 'B', FALSE),
+    (1, 2, 4, 3, false, 3, 'R', FALSE),
+    (1, 2, 5, 4, false, 4, 'B', FALSE),
+    (1, 2, 6, 5, false, 5, 'R', FALSE),
+    (1, 2, 7, 6, false, 6, 'B', FALSE),
     (1, 3, 2, 1, false, 1, 'R', FALSE),
-    (1, 3, 3, 2, false, 1, 'B', FALSE),
-    (1, 3, 4, 3, false, 1, 'R', FALSE),
-    (1, 3, 5, 4, false, 1, 'B', FALSE),
-    (1, 3, 6, 5, false, 1, 'R', FALSE),
-    (1, 3, 7, 6, false, 1, 'B', FALSE);
+    (1, 3, 3, 2, false, 2, 'B', FALSE),
+    (1, 3, 4, 3, false, 3, 'R', FALSE),
+    (1, 3, 5, 4, false, 4, 'B', FALSE),
+    (1, 3, 6, 5, false, 5, 'R', FALSE),
+    (1, 3, 7, 6, false, 6, 'B', FALSE);

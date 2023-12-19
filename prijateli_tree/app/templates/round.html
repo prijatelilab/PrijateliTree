@@ -3,13 +3,8 @@
   PrijateliTree - View Round
 {% endblock title %}
 {% block content %}
+  {% include "student_info.html" %}
   <div class="container-sm general-container">
-    {% if practice_game %}
-      <p class="text-end">Practice Game</p>
-    {% else %}
-      <p class="text-end">Real Game</p>
-    {% endif %}
-    <p>Round: {{ current_round }}</p>
     {% if first_round %}
       <h2>
         Your Ball:

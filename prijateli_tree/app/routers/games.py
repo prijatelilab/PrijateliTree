@@ -27,6 +27,7 @@ from prijateli_tree.app.utils.games import (
     get_bag_color,
     get_current_round,
     get_game_and_player,
+    get_header_data,
     get_lang_from_player_id,
     get_previous_answers,
     get_session_player_from_player,
@@ -112,6 +113,7 @@ def start_of_game(
     template.
     """
     template_text = languages[get_lang_from_player_id(player_id, db)]
+    game, _ = get_game_and_player(game_id, player_id, db)
 
     result = {
         "request": request,
@@ -119,6 +121,7 @@ def start_of_game(
         "game_id": game_id,
         "points": WINNING_SCORE,
         "text": template_text,
+        "practice_game": game.practice,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
@@ -135,16 +138,19 @@ def view_round(
     Function that returns the current round
     """
     game, player = get_game_and_player(game_id, player_id, db)
+    header = get_header_data(player, db)
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
     template_data = {
         "practice_game": game.practice,
         "first_round": current_round == 1,
-        "current_round": current_round,
         "text": template_text,
         "player_id": player_id,
         "game_id": game_id,
+        "completed_game": player.completed_game,
+        "round_progress": f"{current_round}/{game.rounds}",
+        **header,
     }
     # Get current round
     if current_round == 1:
@@ -239,13 +245,20 @@ def waiting(
     """
     Wait screen shows until all players are ready to move to the next section
     """
+    game, player = get_game_and_player(game_id, player_id, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
+    header = get_header_data(player, db)
+    current_round = get_current_round(game_id, db)
 
     result = {
         "request": request,
         "game_id": game_id,
         "player_id": player_id,
         "text": template_text,
+        "round_progress": f"{current_round}/{game.rounds}",
+        "practice_game": game.practice,
+        "completed_game": player.completed_game,
+        **header,
     }
 
     return templates.TemplateResponse("waiting.html", result)
@@ -328,6 +341,8 @@ def end_of_game(
     game, player = get_game_and_player(game_id, player_id, db)
     game_status = did_player_win(game, player_id, db)
 
+    header = get_header_data(player, db)
+
     points = 0
     if game_status["is_correct"]:
         points = WINNING_SCORE
@@ -341,6 +356,9 @@ def end_of_game(
         "points": points,
         "text": template_text,
         "practice_game": game.practice,
+        "completed_game": True,
+        "player_answer": game_status["player_guess"],
+        **header,
     }
 
     # add information about winning and ball colors
@@ -419,7 +437,8 @@ def real_game_transition(
     Function that returns the start of game page and
     template.
     """
-
+    _, player = get_game_and_player(game_id, player_id, db)
+    header = get_header_data(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
     result = {
@@ -428,6 +447,8 @@ def real_game_transition(
         "game_id": game_id,
         "points": WINNING_SCORE,
         "text": template_text,
+        "completed_game": True,
+        **header,
     }
 
     return templates.TemplateResponse("real_game_transition.html", result)
@@ -458,7 +479,7 @@ def route_game_player_access(
     game_id: int, player_id: int, db: Session = Depends(get_db)
 ) -> JSONResponse:
     # tests to ensure game and player exists
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, _ = get_game_and_player(game_id, player_id, db)
 
     return JSONResponse(content={"game_id": game_id, "player_id": player_id})
 
@@ -481,7 +502,7 @@ def score_to_denirs(
     given all of their scores
     """
     total_score = 0
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, player = get_game_and_player(game_id, player_id, db)
 
     for answer in player.answers:
         if answer.player_answer == answer.correct_answer:

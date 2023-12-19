@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 {% block helper_script %}
+  <script>
+  window.addEventListener("message", receiveMessage, false);
+
+  function receiveMessage(event) {
+    if(event.data.includes("End of Survey")){
+        console.log("We're getting information across iframe")
+        window.location.href = "/games/{{game_id}}/player/{{player_id}}/round"
+    }
+  }
+  </script>
 {% endblock helper_script %}
 {% block title %}
   PrijateliTree - Survey

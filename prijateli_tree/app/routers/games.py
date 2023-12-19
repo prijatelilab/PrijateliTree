@@ -13,7 +13,6 @@ from prijateli_tree.app.database import (
     Game,
     GameAnswer,
     GamePlayer,
-    GameSession,
     GameSessionPlayer,
     get_db,
 )
@@ -33,6 +32,7 @@ from prijateli_tree.app.utils.games import (
     get_previous_answers,
     get_session_player_from_player,
     raise_exception_if_none,
+    raise_exception_if_not,
 )
 
 
@@ -56,9 +56,50 @@ logger.debug("Language files imported.")
 ###############################
 
 
-@router.get(
-    "/{game_id}/player/{player_id}/start_of_game", response_class=HTMLResponse
-)
+@router.get("/session/{session_id}", response_class=HTMLResponse)
+def route_session_access(
+    request: Request, session_id: int, db: Session = Depends(get_db)
+):
+    games = db.query(Game).filter_by(game_session_id=session_id).all()
+    raise_exception_if_not(games, "session not found or games not created")
+
+    first_game = [
+        game for game in games if game.id == min([game.id for game in games])
+    ][0]
+    players = first_game.players
+
+    return templates.TemplateResponse(
+        "new_session.html",
+        context={
+            "request": request,
+            "players": players,
+            "game_id": first_game.id,
+        },
+    )
+
+
+@router.get("/{game_id}/ready", response_class=HTMLResponse)
+def start_session(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    _, player = get_game_and_player(game_id, player_id, db)
+    template_text = languages[player.language.abbr]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "name": player.user.name_str,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("ready.html", result)
+
+
+@router.get("/{game_id}/player/{player_id}/start_of_game", response_class=HTMLResponse)
 def start_of_game(
     request: Request,
     game_id: int,
@@ -118,9 +159,7 @@ def view_round(
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
-        template_data["previous_answers"] = get_previous_answers(
-            game_id, player_id, db
-        )
+        template_data["previous_answers"] = get_previous_answers(game_id, player_id, db)
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
@@ -163,9 +202,7 @@ def route_add_answer(
         db.commit()
         db.refresh(new_answer)
 
-    redirect_url = request.url_for(
-        "waiting", game_id=game_id, player_id=player_id
-    )
+    redirect_url = request.url_for("waiting", game_id=game_id, player_id=player_id)
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
@@ -190,9 +227,7 @@ def all_set(
     return JSONResponse(content={"ready": ready, "game_over": game_over})
 
 
-@router.get(
-    "/{game_id}/player/{player_id}/waiting", response_class=HTMLResponse
-)
+@router.get("/{game_id}/player/{player_id}/waiting", response_class=HTMLResponse)
 def waiting(
     request: Request,
     game_id: int,
@@ -221,9 +256,7 @@ def waiting(
     return templates.TemplateResponse("waiting.html", result)
 
 
-@router.put(
-    "/{game_id}/player/{player_id}/update_score", response_class=JSONResponse
-)
+@router.put("/{game_id}/player/{player_id}/update_score", response_class=JSONResponse)
 def update_score(
     game_id: int,
     player_id: int,
@@ -246,13 +279,16 @@ def update_score(
     return JSONResponse(content={"status": "success"})
 
 
-@router.get("/survey/{player_id}", response_class=HTMLResponse)
+@router.get("/{game_id}/player/{player_id}/survey", response_class=HTMLResponse)
 def get_qualtrics(
     request: Request,
     player_id: int,
-    db: Session = Depends(get_db),
+    game_id: int,
 ) -> Response:
-    return templates.TemplateResponse("qualtrics.html", {"request": request})
+    return templates.TemplateResponse(
+        "qualtrics.html",
+        {"request": request, "player_id": player_id, "game_id": game_id},
+    )
 
 
 @router.get("/current_score/{player_id}", response_class=JSONResponse)
@@ -266,9 +302,7 @@ def route_get_score(
     )
 
     session_player = (
-        db.query(GameSessionPlayer)
-        .filter_by(id=session_player_id)
-        .one_or_none()
+        db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
     )
     if session_player is None:
         raise HTTPException(
@@ -278,9 +312,7 @@ def route_get_score(
     return JSONResponse(content={"points": session_player.points})
 
 
-@router.get(
-    "/{game_id}/player/{player_id}/end_of_game", response_class=HTMLResponse
-)
+@router.get("/{game_id}/player/{player_id}/end_of_game", response_class=HTMLResponse)
 def end_of_game(
     request: Request,
     game_id: int,
@@ -412,24 +444,8 @@ def real_game_transition(
 ###########################################
 
 
-@router.get("/session/{session_id}", response_class=HTMLResponse)
-def route_session_access(
-    request: Request, session_id: int, db: Session = Depends(get_db)
-) -> Response:
-    # Do some logic things
-    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
-
-    raise_exception_if_none(session, "session not found")
-
-    return templates.TemplateResponse(
-        "new_session.html", context={"request": request}
-    )
-
-
 @router.get("/{game_id}", response_class=JSONResponse)
-def route_game_access(
-    game_id: int, db: Session = Depends(get_db)
-) -> JSONResponse:
+def route_game_access(game_id: int, db: Session = Depends(get_db)) -> JSONResponse:
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     raise_exception_if_none(game, detail="game not found")
     return JSONResponse(
@@ -456,27 +472,7 @@ def route_game_player_access(
 ###########################################
 
 
-@router.post("/ready", response_class=JSONResponse)
-def confirm_player(
-    player_id: int,
-    game_id: int,
-    db: Session = Depends(get_db),
-) -> JSONResponse:
-    """
-    Confirms if the player is ready for the game
-    """
-
-    _, player = get_game_and_player(game_id, player_id, db)
-
-    player.ready = True
-    db.commit()
-
-    return JSONResponse(content={"status": "Player is ready!"})
-
-
-@router.post(
-    "/{game_id}/player/{player_id}/denirs", response_class=JSONResponse
-)
+@router.post("/{game_id}/player/{player_id}/denirs", response_class=JSONResponse)
 def score_to_denirs(
     game_id: int,
     player_id: int,
@@ -496,3 +492,26 @@ def score_to_denirs(
     denirs = total_score * DENIR_FACTOR
 
     return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})
+
+
+@router.post("/{game_id}/player/{player_id}/ready")
+def confirm_player(
+    request: Request,
+    player_id: int,
+    game_id: int,
+    db: Session = Depends(get_db),
+) -> RedirectResponse:
+    """
+    Confirms if the player is ready for the game
+    """
+
+    _, player = get_game_and_player(game_id, player_id, db)
+    if not player.ready:
+        player.ready = True
+        db.commit()
+
+    redirect_url = request.url_for(
+        "get_qualtrics", game_id=game_id, player_id=player_id
+    )
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)

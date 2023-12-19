@@ -14,17 +14,17 @@ from prijateli_tree.app.utils.constants import BALL_BLUE, BALL_RED
 from prijateli_tree.app.utils.games import Game as GameUtil
 
 
-def raise_exception_if_none(x, detail):
+def raise_exception_if_none(x, detail) -> None:
     if x is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
 
-def raise_exception_if_not(x, detail):
+def raise_exception_if_not(x, detail) -> None:
     if not x:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
 
-def get_bag_color(bag):
+def get_bag_color(bag) -> str:
     """
     Gets color of the bag based on the number of red and blue balls
     """
@@ -56,7 +56,7 @@ def get_current_round(game_id: int, db: Session = Depends(get_db)) -> int:
 
 def get_game_and_player(
     game_id: int, player_id: int, db: Session = Depends(get_db)
-):
+) -> (Game, GamePlayer):
     """
     Helper function to ensure game and player exist
     """
@@ -71,7 +71,7 @@ def get_game_and_player(
     return game, filtered_player[0]
 
 
-def get_lang_from_player_id(player_id: int, db: Depends(get_db)):
+def get_lang_from_player_id(player_id: int, db: Depends(get_db)) -> str:
     """
     Get language from player_id
     """
@@ -86,7 +86,7 @@ def did_player_win(
     game: Game,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> dict:
     """
     Helper function that determines if the player won,
     the color of the bag and their guess
@@ -108,7 +108,7 @@ def did_player_win(
 
 def get_session_player_from_player(
     player: GamePlayer, db: Session = Depends(get_db)
-):
+) -> GameSessionPlayer | None:
     session_player = (
         db.query(GameSessionPlayer)
         .filter_by(id=player.session_player_id)
@@ -126,7 +126,7 @@ def get_previous_answers(
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> dict:
     """
     Function that returns the player's previous answer
     from the last round, along with the answers of their neighbors
@@ -176,7 +176,9 @@ def get_previous_answers(
     }
 
 
-def get_game_and_type(game_id: int, db: Session = Depends(get_db)):
+def get_game_and_type(
+    game_id: int, db: Session = Depends(get_db)
+) -> (Game, str):
     """
     Helper function to ensure game and game type exist
     """

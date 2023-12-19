@@ -75,14 +75,14 @@ def admin_login(request: Request) -> Response:
     return templates.TemplateResponse("admin_login.html", {"request": request})
 
 
-@router.post("/login", response_class=HTMLResponse)
+@router.post("/login")
 def confirm_login(
     request: Request,
     first_name: Annotated[str, Form()],
     last_name: Annotated[str, Form()],
     email: Annotated[str, Form()],
     db: Session = Depends(get_db),
-) -> Response | RedirectResponse:
+) -> Response:
     user = (
         db.query(User)
         .filter_by(

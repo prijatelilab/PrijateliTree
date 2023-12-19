@@ -13,7 +13,6 @@ from prijateli_tree.app.database import (
     Game,
     GameAnswer,
     GamePlayer,
-    GameSession,
     GameSessionPlayer,
     get_db,
 )
@@ -32,6 +31,7 @@ from prijateli_tree.app.utils.games import (
     get_previous_answers,
     get_session_player_from_player,
     raise_exception_if_none,
+    raise_exception_if_not,
 )
 
 
@@ -53,6 +53,49 @@ logger.debug("Language files imported.")
 #        BEGIN API
 #
 ###############################
+
+
+@router.get("/session/{session_id}", response_class=HTMLResponse)
+def route_session_access(
+    request: Request, session_id: int, db: Session = Depends(get_db)
+):
+    games = db.query(Game).filter_by(game_session_id=session_id).all()
+    raise_exception_if_not(games, "session not found or games not created")
+
+    first_game = [
+        game for game in games if game.id == min([game.id for game in games])
+    ][0]
+    players = first_game.players
+
+    return templates.TemplateResponse(
+        "new_session.html",
+        context={
+            "request": request,
+            "players": players,
+            "game_id": first_game.id,
+        },
+    )
+
+
+@router.get("/{game_id}/ready", response_class=HTMLResponse)
+def start_session(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+):
+    _, player = get_game_and_player(game_id, player_id, db)
+    template_text = languages[player.language.abbr]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "name": player.user.name_str,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("ready.html", result)
 
 
 @router.get(
@@ -233,13 +276,16 @@ def update_score(
     return JSONResponse(content={"status": "success"})
 
 
-@router.get("/survey/{player_id}", response_class=HTMLResponse)
+@router.get("/{game_id}/player/{player_id}/survey", response_class=HTMLResponse)
 def get_qualtrics(
     request: Request,
     player_id: int,
-    db: Session = Depends(get_db),
+    game_id: int,
 ) -> Response:
-    return templates.TemplateResponse("qualtrics.html", {"request": request})
+    return templates.TemplateResponse(
+        "qualtrics.html",
+        {"request": request, "player_id": player_id, "game_id": game_id},
+    )
 
 
 @router.get("/current_score/{player_id}", response_class=JSONResponse)
@@ -392,20 +438,6 @@ def real_game_transition(
 ###########################################
 
 
-@router.get("/session/{session_id}", response_class=HTMLResponse)
-def route_session_access(
-    request: Request, session_id: int, db: Session = Depends(get_db)
-) -> Response:
-    # Do some logic things
-    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
-
-    raise_exception_if_none(session, "session not found")
-
-    return templates.TemplateResponse(
-        "new_session.html", context={"request": request}
-    )
-
-
 @router.get("/{game_id}", response_class=JSONResponse)
 def route_game_access(
     game_id: int, db: Session = Depends(get_db)
@@ -436,24 +468,6 @@ def route_game_player_access(
 ###########################################
 
 
-@router.post("/ready", response_class=JSONResponse)
-def confirm_player(
-    player_id: int,
-    game_id: int,
-    db: Session = Depends(get_db),
-) -> JSONResponse:
-    """
-    Confirms if the player is ready for the game
-    """
-
-    game, player = get_game_and_player(game_id, player_id, db)
-
-    player.ready = True
-    db.commit()
-
-    return JSONResponse(content={"status": "Player is ready!"})
-
-
 @router.post(
     "/{game_id}/player/{player_id}/denirs", response_class=JSONResponse
 )
@@ -476,3 +490,26 @@ def score_to_denirs(
     denirs = total_score * DENIR_FACTOR
 
     return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})
+
+
+@router.post("/{game_id}/player/{player_id}/ready")
+def confirm_player(
+    request: Request,
+    player_id: int,
+    game_id: int,
+    db: Session = Depends(get_db),
+) -> RedirectResponse:
+    """
+    Confirms if the player is ready for the game
+    """
+
+    _, player = get_game_and_player(game_id, player_id, db)
+    if not player.ready:
+        player.ready = True
+        db.commit()
+
+    redirect_url = request.url_for(
+        "get_qualtrics", game_id=game_id, player_id=player_id
+    )
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)

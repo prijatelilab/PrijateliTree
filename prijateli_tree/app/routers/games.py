@@ -357,6 +357,7 @@ def end_of_game(
         "text": template_text,
         "practice_game": game.practice,
         "completed_game": True,
+        "player_answer": game_status["player_guess"],
         **header,
     }
 

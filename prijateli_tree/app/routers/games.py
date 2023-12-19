@@ -276,7 +276,6 @@ def update_score(
     return JSONResponse(content={"status": "success"})
 
 
-
 @router.get("/{game_id}/player/{player_id}/survey", response_class=HTMLResponse)
 def get_qualtrics(
     request: Request,
@@ -439,21 +438,6 @@ def real_game_transition(
 ###########################################
 
 
-
-@router.get("/session/{session_id}", response_class=HTMLResponse)
-def route_session_access(
-    request: Request, session_id: int, db: Session = Depends(get_db)
-) -> Response:
-    # Do some logic things
-    session = db.query(GameSession).filter_by(id=session_id).one_or_none()
-
-    raise_exception_if_none(session, "session not found")
-
-    return templates.TemplateResponse(
-        "new_session.html", context={"request": request}
-    )
-
-
 @router.get("/{game_id}", response_class=JSONResponse)
 def route_game_access(
     game_id: int, db: Session = Depends(get_db)
@@ -507,7 +491,7 @@ def score_to_denirs(
 
     return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})
 
-  
+
 @router.post("/{game_id}/player/{player_id}/ready")
 def confirm_player(
     request: Request,
@@ -529,4 +513,3 @@ def confirm_player(
     )
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
-

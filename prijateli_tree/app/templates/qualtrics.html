@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% block helper_script %}
-<script>
-
+  <script>
   window.addEventListener("message", receiveMessage, false);
-  
+
   function receiveMessage(event) {
     if(event.data.includes("End of Survey")){
         console.log("We're getting information across iframe")

@@ -17,14 +17,12 @@ from prijateli_tree.app.database import (
     GameSessionPlayer,
     get_db,
 )
-
 from prijateli_tree.app.utils.constants import (
     DENIR_FACTOR,
     FILE_MODE_READ,
     STANDARD_ENCODING,
     WINNING_SCORE,
 )
-
 from prijateli_tree.app.utils.games import (
     did_player_win,
     get_bag_color,
@@ -210,7 +208,6 @@ def waiting(
     return templates.TemplateResponse("waiting.html", result)
 
 
-
 @router.put(
     "/{game_id}/player/{player_id}/update_score", response_class=JSONResponse
 )
@@ -242,15 +239,6 @@ def get_qualtrics(
     player_id: int,
     db: Session = Depends(get_db),
 ) -> Response:
-    return templates.TemplateResponse("qualtrics.html", {"request": request})
-
-
-@router.get("/survey/{player_id}")
-def get_qualtrics(
-    request: Request,
-    player_id: int,
-    db: Session = Depends(get_db),
-):
     return templates.TemplateResponse("qualtrics.html", {"request": request})
 
 
@@ -330,7 +318,6 @@ def go_to_next_game(
     if game.next_game_id is None:
         # TODO: end of session screen
         return JSONResponse(content={"to be continued": "end of round"})
-
 
     next_player_id = (
         db.query(GamePlayer)

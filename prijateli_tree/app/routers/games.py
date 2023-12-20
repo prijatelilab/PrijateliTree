@@ -462,7 +462,7 @@ def real_game_transition(
 
 
 @router.get(
-    "/games/{{game_id}}/player/{{player_id}}/end_of_session",
+    "/games/{game_id}}/player/{player_id}/end_of_session",
     response_class=HTMLResponse,
 )
 def end_of_session(
@@ -481,6 +481,7 @@ def end_of_session(
     # Get points and won games from session player
     total_points = session_player.points
     won_games = session_player.correct_answers
+    denars = total_points * DENIR_FACTOR
 
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
@@ -490,6 +491,7 @@ def end_of_session(
         "points": total_points,
         "won_games": won_games,
         "text": template_text,
+        "denars": denars,
     }
 
     return templates.TemplateResponse("end_of_session.html", result)

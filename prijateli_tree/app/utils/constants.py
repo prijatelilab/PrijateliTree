@@ -36,9 +36,9 @@ WINNING_SCORE = 100
 DENIR_FACTOR = 0.25
 
 # Survey Links
-RULE_SURVEY_LINK = (
+PRE_SURVEY_LINK = (
     "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
 )
-END_SURVEY_LINK = (
+POST_SURVEY_LINK = (
     "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"
 )

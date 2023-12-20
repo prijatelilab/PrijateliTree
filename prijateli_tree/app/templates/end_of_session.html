@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-  End of Game
+  End of Session
 {% endblock title %}
 {% block content %}
   <div class="container-sm general-container">
@@ -15,6 +15,12 @@
     </div>
     <div class="pt-2">
       <h4>{{ text.final_score.ask_your_teachers }}</h4>
+    </div>
+    <div class="p-5">
+      <form method="get"
+            action="{{ url_for('thank_you', player_id=player_id, game_id=game_id) }}">
+        <button class="btn btn-primary" type="submit" value="submit">{{ text.rules_screen.next }}</button>
+      </form>
     </div>
   </div>
 {% endblock content %}

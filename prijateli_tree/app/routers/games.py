@@ -524,11 +524,18 @@ def end_of_session(
     "/{game_id}/player/{player_id}/thank_you",
     response_class=HTMLResponse,
 )
-def thank_you(request: Request) -> Response:
+def thank_you(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+) -> Response:
     """
     Sends player to thank you page
     """
-    return templates.TemplateResponse("thank_you.html", {"request": request})
+    return templates.TemplateResponse(
+        "thanks_for_playing.html", {"request": request}
+    )
 
 
 ###########################################

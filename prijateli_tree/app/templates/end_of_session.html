@@ -7,5 +7,11 @@
     <div class="pb-4">
       <h1>{{ text.final_score.congratulations }}</h1>
     </div>
+    <div class="pt-2">
+      <h4>{{ text.final_score.you_guessed_correctly | replace('{X}', won_games) | replace('{x}', points) }}</h4>
+    </div>
+    <div class="pb-4">
+      <h1>{{ text.final_score.denars | replace('{X}', denars) }}</h1>
+    </div>
   </div>
 {% endblock content %}

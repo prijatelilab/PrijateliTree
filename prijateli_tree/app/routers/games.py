@@ -515,6 +515,8 @@ def end_of_session(
         "won_games": won_games,
         "text": template_text,
         "denars": denars,
+        "player_id": player_id,
+        "game_id": game_id,
     }
 
     return templates.TemplateResponse("end_of_session.html", result)
@@ -533,9 +535,14 @@ def thank_you(
     """
     Sends player to thank you page
     """
-    return templates.TemplateResponse(
-        "thanks_for_playing.html", {"request": request}
-    )
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "text": template_text,
+    }
+    return templates.TemplateResponse("thanks_for_playing.html", result)
 
 
 ###########################################

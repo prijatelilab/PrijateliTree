@@ -6,6 +6,7 @@
   {% include "student_info.html" %}
   <div class="container-sm general-container">
     {% if first_round %}
+      {{ text.game_first_round.the_computer_chose }}
       <h2>
         Your Ball:
         {% if ball == 'R' %}

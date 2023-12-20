@@ -209,7 +209,6 @@ def get_previous_answers(
 
         # Check if names are hidden
         if game.game_type.names_hidden:
-            player_id = this_neighbor.user.id
             complete_name = f"Player {this_neighbor.position}: "
         else:
             complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "

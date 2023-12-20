@@ -33,4 +33,8 @@ LANGUAGE_TURKISH = "tr"
 
 # Point Constants
 WINNING_SCORE = 100
-DENAR_FACTOR = 0.25
+DENIR_FACTOR = 0.25
+
+# Survey Links
+PRE_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
+POST_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"

@@ -17,7 +17,7 @@ from prijateli_tree.app.database import (
     get_db,
 )
 from prijateli_tree.app.utils.constants import (
-    DENIR_FACTOR,
+    DENAR_FACTOR,
     FILE_MODE_READ,
     POST_SURVEY_LINK,
     PRE_SURVEY_LINK,
@@ -484,6 +484,65 @@ def real_game_transition(
     return templates.TemplateResponse("real_game_transition.html", result)
 
 
+@router.get(
+    "/{game_id}/player/{player_id}/end_of_session",
+    response_class=HTMLResponse,
+)
+def end_of_session(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+) -> Response:
+    """
+    Function that returns the end of session page and
+    template.
+    """
+    game, player = get_game_and_player(game_id, player_id, db)
+    session_player = get_session_player_from_player(player, db)
+
+    # Get points and won games from session player
+    total_points = session_player.points
+    n_correct_answers = session_player.correct_answers
+    denars = int(total_points * DENAR_FACTOR)
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "game_id": game_id,
+        "total_points": total_points,
+        "won_games": n_correct_answers,
+        "text": template_text,
+        "denars": denars,
+        "player_id": player_id,
+        "game_id": game_id,
+    }
+
+    return templates.TemplateResponse("end_of_session.html", result)
+
+
+@router.get(
+    "/{game_id}/player/{player_id}/thank_you",
+    response_class=HTMLResponse,
+)
+def thank_you(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+) -> Response:
+    """
+    Sends player to thank you page
+    """
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+    result = {
+        "request": request,
+        "text": template_text,
+    }
+    return templates.TemplateResponse("thanks_for_playing.html", result)
+
+
 ###########################################
 # Utilities
 ###########################################
@@ -517,30 +576,6 @@ def route_game_player_access(
 ###########################################
 # Unused
 ###########################################
-
-
-@router.post(
-    "/{game_id}/player/{player_id}/denirs", response_class=JSONResponse
-)
-def score_to_denirs(
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-) -> JSONResponse:
-    """
-    Function that calculates the denirs for the player
-    given all of their scores
-    """
-    total_score = 0
-    _, player = get_game_and_player(game_id, player_id, db)
-
-    for answer in player.answers:
-        if answer.player_answer == answer.correct_answer:
-            total_score += WINNING_SCORE
-
-    denirs = total_score * DENIR_FACTOR
-
-    return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})
 
 
 @router.post("/{game_id}/player/{player_id}/ready")

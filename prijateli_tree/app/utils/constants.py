@@ -33,7 +33,7 @@ LANGUAGE_TURKISH = "tr"
 
 # Point Constants
 WINNING_SCORE = 100
-DENIR_FACTOR = 0.25
+DENAR_FACTOR = 0.25
 
 # Survey Links
 PRE_SURVEY_LINK = (

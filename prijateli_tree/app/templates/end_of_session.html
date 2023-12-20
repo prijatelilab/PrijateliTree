@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}
+  End of Session
+{% endblock title %}
+{% block content %}
+  <div class="container-sm general-container">
+    <div class="pb-4">
+      <h1>{{ text.final_score.congratulations }}</h1>
+    </div>
+    <div class="pt-2">
+      <h4>{{ text.final_score.you_guessed_correctly | replace('{X}', won_games) | replace('{x}', total_points) }}</h4>
+    </div>
+    <div class="pb-4">
+      <h1>{{ text.final_score.denars | replace('{X}', denars) }}</h1>
+    </div>
+    <div class="pt-2">
+      <h4>{{ text.final_score.ask_your_teachers }}</h4>
+    </div>
+    <div class="p-5">
+      <form method="get"
+            action="{{ url_for('thank_you', player_id=player_id, game_id=game_id) }}">
+        <button class="btn btn-primary" type="submit" value="submit">{{ text.rules_screen.next }}</button>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

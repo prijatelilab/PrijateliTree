@@ -503,7 +503,7 @@ def end_of_session(
 
     # Get points and won games from session player
     total_points = session_player.points
-    won_games = session_player.correct_answers
+    n_correct_answers = session_player.correct_answers
     denars = int(total_points * DENAR_FACTOR)
 
     template_text = languages[get_lang_from_player_id(player_id, db)]
@@ -512,7 +512,7 @@ def end_of_session(
         "request": request,
         "game_id": game_id,
         "total_points": total_points,
-        "won_games": won_games,
+        "won_games": n_correct_answers,
         "text": template_text,
         "denars": denars,
         "player_id": player_id,
@@ -538,8 +538,6 @@ def thank_you(
     template_text = languages[get_lang_from_player_id(player_id, db)]
     result = {
         "request": request,
-        "player_id": player_id,
-        "game_id": game_id,
         "text": template_text,
     }
     return templates.TemplateResponse("thanks_for_playing.html", result)
@@ -578,30 +576,6 @@ def route_game_player_access(
 ###########################################
 # Unused
 ###########################################
-
-
-@router.post(
-    "/{game_id}/player/{player_id}/denirs", response_class=JSONResponse
-)
-def score_to_denirs(
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-) -> JSONResponse:
-    """
-    Function that calculates the denirs for the player
-    given all of their scores
-    """
-    total_score = 0
-    _, player = get_game_and_player(game_id, player_id, db)
-
-    for answer in player.answers:
-        if answer.player_answer == answer.correct_answer:
-            total_score += WINNING_SCORE
-
-    denirs = total_score * DENAR_FACTOR
-
-    return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})
 
 
 @router.post("/{game_id}/player/{player_id}/ready")

@@ -462,7 +462,7 @@ def real_game_transition(
 
 
 @router.get(
-    "/games/{game_id}}/player/{player_id}/end_of_session",
+    "/{game_id}}/player/{player_id}/end_of_session",
     response_class=HTMLResponse,
 )
 def end_of_session(

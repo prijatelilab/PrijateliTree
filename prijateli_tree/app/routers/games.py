@@ -488,7 +488,7 @@ def end_of_session(
     result = {
         "request": request,
         "game_id": game_id,
-        "points": total_points,
+        "total_points": total_points,
         "won_games": won_games,
         "text": template_text,
         "denars": denars,
@@ -551,7 +551,7 @@ def score_to_denirs(
         if answer.player_answer == answer.correct_answer:
             total_score += WINNING_SCORE
 
-    denirs = total_score * DENIR_FACTOR
+    denirs = total_score * DENAR_FACTOR
 
     return JSONResponse(content={"reward": f"You have made {denirs} denirs!"})
 

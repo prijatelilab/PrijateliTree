@@ -4,9 +4,11 @@
   window.addEventListener("message", receiveMessage, false);
 
   function receiveMessage(event) {
-    if(event.data.includes("End of Survey")){
+    if(event.data.includes("End of Pre-Survey")){
         console.log("We're getting information across iframe")
         window.location.href = "/games/{{game_id}}/player/{{player_id}}/round"
+    } else if (event.data.includes("End of Post-Survey")) {
+      window.location.href = "/games/{{game_id}}/player/{{player_id}}/end_of_session"
     }
   }
   </script>
@@ -16,10 +18,6 @@
 {% endblock title %}
 {% block content %}
   <div class="container-sm general-container">
-    <iframe src="https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
-            title="Pre-survey"
-            frameborder="0"
-            height="1200px"
-            width="1000px"></iframe>    </iframe>
+    <iframe src={{ survey_link }} title="Survey" frameborder="0" height="1200px" width="1000px"></iframe>    </iframe>
   </div>
 {% endblock content %}

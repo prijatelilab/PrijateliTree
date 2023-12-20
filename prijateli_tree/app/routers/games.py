@@ -19,6 +19,8 @@ from prijateli_tree.app.database import (
 from prijateli_tree.app.utils.constants import (
     DENIR_FACTOR,
     FILE_MODE_READ,
+    POST_SURVEY_LINK,
+    PRE_SURVEY_LINK,
     STANDARD_ENCODING,
     WINNING_SCORE,
 )
@@ -294,10 +296,33 @@ def get_qualtrics(
     request: Request,
     player_id: int,
     game_id: int,
+    db: Session = Depends(get_db),
 ) -> Response:
+    _, player = get_game_and_player(game_id, player_id, db)
+
+    if player.completed_game:
+        survey_link = POST_SURVEY_LINK
+    else:
+        survey_link = PRE_SURVEY_LINK
+
+    lang = player.language.abbr.upper()
+    if lang == "SQ":
+        lang = "SQI"
+    cid = player.user.qualtrics_id
+
+    if cid:
+        survey_link = survey_link + "?Q_Language=" + lang + "&cid=" + cid
+    else:
+        survey_link = survey_link + "?Q_Language=" + lang
+
     return templates.TemplateResponse(
         "qualtrics.html",
-        {"request": request, "player_id": player_id, "game_id": game_id},
+        {
+            "request": request,
+            "player_id": player_id,
+            "game_id": game_id,
+            "survey_link": survey_link,
+        },
     )
 
 
@@ -381,7 +406,12 @@ def go_to_next_game(
 
     if game.next_game_id is None:
         # TODO: end of session screen
-        return JSONResponse(content={"to be continued": "end of round"})
+        redirect_url = request.url_for(
+            "get_qualtrics", game_id=game_id, player_id=player_id
+        )
+        return RedirectResponse(
+            url=redirect_url, status_code=HTTPStatus.SEE_OTHER
+        )
 
     next_player_id = (
         db.query(GamePlayer)

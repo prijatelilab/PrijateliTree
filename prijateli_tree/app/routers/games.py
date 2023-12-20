@@ -18,7 +18,9 @@ from prijateli_tree.app.database import (
 )
 from prijateli_tree.app.utils.constants import (
     DENIR_FACTOR,
+    END_SURVEY_LINK,
     FILE_MODE_READ,
+    RULE_SURVEY_LINK,
     STANDARD_ENCODING,
     WINNING_SCORE,
 )
@@ -294,10 +296,29 @@ def get_qualtrics(
     request: Request,
     player_id: int,
     game_id: int,
+    db: Session = Depends(get_db),
 ) -> Response:
+    _, player = get_game_and_player(game_id, player_id, db)
+
+    if player.completed_game:
+        survey_link = RULE_SURVEY_LINK
+    else:
+        survey_link = END_SURVEY_LINK
+
+    lang = player.language.abbr.upper()
+    if lang == "SQ":
+        lang = "SQI"
+
+    survey_link = survey_link + "?Q_Language=" + lang
+    print(survey_link)
     return templates.TemplateResponse(
         "qualtrics.html",
-        {"request": request, "player_id": player_id, "game_id": game_id},
+        {
+            "request": request,
+            "player_id": player_id,
+            "game_id": game_id,
+            "survey_link": survey_link,
+        },
     )
 
 

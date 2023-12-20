@@ -381,7 +381,14 @@ def go_to_next_game(
 
     if game.next_game_id is None:
         # TODO: end of session screen
-        return JSONResponse(content={"to be continued": "end of round"})
+        redirect_url = request.url_for(
+            "end_of_session", game_id=game_id, player_id=player_id
+        )
+
+        return RedirectResponse(
+            redirect_url,
+            status_code=HTTPStatus.FOUND,
+        )
 
     next_player_id = (
         db.query(GamePlayer)
@@ -452,6 +459,40 @@ def real_game_transition(
     }
 
     return templates.TemplateResponse("real_game_transition.html", result)
+
+
+@router.get(
+    "/games/{{game_id}}/player/{{player_id}}/end_of_session",
+    response_class=HTMLResponse,
+)
+def end_of_session(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+) -> Response:
+    """
+    Function that returns the end of session page and
+    template.
+    """
+    game, player = get_game_and_player(game_id, player_id, db)
+    session_player = get_session_player_from_player(player, db)
+
+    # Get points and won games from session player
+    total_points = session_player.points
+    won_games = session_player.correct_answers
+
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "game_id": game_id,
+        "points": total_points,
+        "won_games": won_games,
+        "text": template_text,
+    }
+
+    return templates.TemplateResponse("end_of_session.html", result)
 
 
 ###########################################

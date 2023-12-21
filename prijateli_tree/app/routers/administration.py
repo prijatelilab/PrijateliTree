@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
@@ -85,11 +86,9 @@ def confirm_login(
 ) -> Response:
     user = (
         db.query(User)
-        .filter_by(
-            email=email.lower(),
-            first_name=first_name.lower(),
-            last_name=last_name.lower(),
-        )
+        .filter(func.lower(User.email) == email.lower())
+        .filter(func.lower(User.first_name) == first_name.lower())
+        .filter(func.lower(User.last_name) == last_name.lower())
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )

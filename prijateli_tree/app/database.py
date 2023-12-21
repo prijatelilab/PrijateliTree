@@ -73,7 +73,7 @@ class User(Base):
         nullable=False,
     )
     language = relationship("Language", back_populates="users")
-    denirs = relationship("Denirs", back_populates="user")
+    denars = relationship("Denars", back_populates="user")
     high_school_id = Column(
         Integer,
         ForeignKey("high_schools.id", name="users_high_schools_id_fkey"),
@@ -118,8 +118,8 @@ class Language(Base):
     users = relationship("User", back_populates="language")
 
 
-class Denirs(Base):
-    __tablename__ = "denirs"
+class Denars(Base):
+    __tablename__ = "denars"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(
         DateTime(timezone=True),
@@ -129,19 +129,19 @@ class Denirs(Base):
     created_by_session_id = Column(
         Integer,
         ForeignKey(
-            "game_sessions.id", name="denirs_created_by_session_id_fkey"
+            "game_sessions.id", name="denars_created_by_session_id_fkey"
         ),
         nullable=True,
     )
     created_by_user_id = Column(
         Integer,
-        ForeignKey("users.id", name="denirs_created_by_user_id_fkey"),
+        ForeignKey("users.id", name="denars_created_by_user_id_fkey"),
         nullable=True,
     )
     # Used for external auditing
     external_id = Column(String, nullable=True, unique=True)
     amount = Column(Integer, nullable=False)
-    user = relationship("User", back_populates="denirs")
+    user = relationship("User", back_populates="denars")
 
     __table_args__ = (
         CheckConstraint(

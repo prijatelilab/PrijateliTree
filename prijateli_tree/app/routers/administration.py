@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
-    Denirs,
+    Denars,
     Game,
     GamePlayer,
     GameSession,
@@ -127,7 +127,7 @@ def dashboard(
     game_types = db.query(GameType).all()
     sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
-    denir_transactions = db.query(Denirs).all()
+    denar_transactions = db.query(Denars).all()
     student_dict = {}
     for s in students:
         student_dict[s.id] = s
@@ -148,7 +148,7 @@ def dashboard(
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,
-            "transactions": denir_transactions,
+            "transactions": denar_transactions,
         },
     )
 

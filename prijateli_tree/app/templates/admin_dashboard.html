@@ -7,7 +7,7 @@
     // $(document).ready(function () {
     //   $('#sessions').DataTable();
     //   $('#students').DataTable();
-    //   $('#denir-transactions').DataTable();
+    //   $('#denar-transactions').DataTable();
     //   $('#game-types').DataTable();
     // });
     function cleanParams() {
@@ -111,9 +111,9 @@
         </table>
       </div>
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container text-center">
-        <table id="denir-transactions"
+        <table id="denar-transactions"
                class="table table-hover table-bordered caption-top">
-          <caption>List of Denir Transactions</caption>
+          <caption>List of Denar Transactions</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -125,7 +125,7 @@
           <tbody class="table-group-divider">
             {% if transactions|length == 0 %}
               <tr class="empty-table">
-                <td colspan="5">There are no denir transactions currently in the system.</td>
+                <td colspan="5">There are no denar transactions currently in the system.</td>
               </tr>
             {% endif %}
             {% for t in transactions %}

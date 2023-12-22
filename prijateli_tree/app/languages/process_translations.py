@@ -1,6 +1,7 @@
 """This script processes the translations file  and creates a json file for each language."""
 
 # Global imports
+import json
 
 import pandas as pd
 
@@ -53,6 +54,19 @@ class Translator:
                     self.translations[language][game_section][
                         subcolumn
                     ] = translation
+
+    def save_to_jsons(self):
+        """Saves the translations to json files"""
+
+        # Iterate over the languages
+        for language in self.languages:
+            # Get the translations for the current language
+            language_dict = self.translations[language]
+
+            # Iterate over the game sections
+            file_name = f"{language}_test.json"
+            with open(file_name, "w", encoding="utf-8") as file:
+                json.dump(language_dict, file, indent=4, ensure_ascii=False)
 
 
 if __name__ == "__main__":

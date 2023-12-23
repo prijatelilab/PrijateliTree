@@ -9,11 +9,12 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
-    Denirs,
+    Denars,
     Game,
     GamePlayer,
     GameSession,
@@ -85,11 +86,9 @@ def confirm_login(
 ) -> Response:
     user = (
         db.query(User)
-        .filter_by(
-            email=email.lower(),
-            first_name=first_name.lower(),
-            last_name=last_name.lower(),
-        )
+        .filter(func.lower(User.email) == email.lower())
+        .filter(func.lower(User.first_name) == first_name.lower())
+        .filter(func.lower(User.last_name) == last_name.lower())
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
@@ -128,7 +127,7 @@ def dashboard(
     game_types = db.query(GameType).all()
     sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
-    denir_transactions = db.query(Denirs).all()
+    denar_transactions = db.query(Denars).all()
     student_dict = {}
     for s in students:
         student_dict[s.id] = s
@@ -149,7 +148,7 @@ def dashboard(
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,
-            "transactions": denir_transactions,
+            "transactions": denar_transactions,
         },
     )
 

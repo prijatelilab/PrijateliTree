@@ -5,13 +5,21 @@
 {% block content %}
   <div class="container-sm general-container">
     <div class="pb-4">
-      <h1>{{ text.ready_to_play.get_ready }}</h1>
-    </div>
+      <h1> 
     {% if practice_game %}
-      <h3>{{ text.intro_practice.since_these_rules }}</h3>
+     {{ text.intro_practice.now_you_will_play }}
     {% else %}
-      <h3>{{ text.real_game_intro.added_points | replace('{X}', points) }}</h3>
+      {{ text.ready_to_play.get_ready }}
     {% endif %}
+    </h1>
+    </div>
+    <h3>
+    {% if practice_game %}
+     {{ text.intro_practice.since_these_rules }}
+    {% else %}
+      {{ text.real_game_intro.added_points | replace('{X}', points) }}
+    {% endif %}
+  </h3>
     <div class="p-5">
       <form method="get"
             action="{{ url_for('view_round', player_id=player_id, game_id=game_id) }}">

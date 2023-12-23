@@ -6,7 +6,7 @@
   function receiveMessage(event) {
     if(event.data.includes("End of Pre-Survey")){
         console.log("We're getting information across iframe")
-        window.location.href = "/games/{{game_id}}/player/{{player_id}}/round"
+        window.location.href = "/games/{{game_id}}/player/{{player_id}}/start_of_game"
     } else if (event.data.includes("End of Post-Survey")) {
       window.location.href = "/games/{{game_id}}/player/{{player_id}}/end_of_session"
     }

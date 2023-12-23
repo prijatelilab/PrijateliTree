@@ -5,7 +5,16 @@ from http import HTTPStatus
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, Request
+import pandas as pd
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    HTTPException,
+    Request,
+    UploadFile,
+)
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
@@ -32,6 +41,7 @@ from prijateli_tree.app.utils.constants import (
     ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
 )
+from prijateli_tree.app.utils.games import raise_exception_if_not
 
 
 base_dir = Path(__file__).resolve().parent
@@ -364,3 +374,71 @@ def add_players_to_game(pos_players: list[GamePlayer], game, db) -> None:
         )
     db.commit()
     db.refresh(game)
+
+
+@router.get("/add_students", response_class=HTMLResponse)
+def dashboard_add_students(
+    request: Request,
+    user=Depends(login_manager.optional),
+) -> Response:
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    return templates.TemplateResponse(
+        "admin_bulk_add.html",
+        {
+            "request": request,
+        },
+    )
+
+
+@router.post("/add_students", response_class=HTMLResponse)
+def add_students(
+    file: UploadFile = File(...),
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
+) -> RedirectResponse:
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    try:
+        student_df = pd.read_csv(file.file)
+        expected_fields = [
+            "first_name",
+            "last_name",
+            "grade_level",
+            "high_school_id",
+            "language_id",
+            "qualtrics_id",
+        ]
+        raise_exception_if_not(
+            all([x in student_df.columns for x in expected_fields]),
+            detail="Upload file is missing expected fields",
+        )
+
+        for index, student in student_df.iterrows():
+            student_in = User(
+                created_by=user.id,
+                **student,
+                role="student",
+            )
+            db.add(student_in)
+        db.commit()
+
+    except Exception as e:
+        # Rollback the transaction if an error occurs
+        raise HTTPException(
+            status_code=500, detail=f"Internal Server Error: {str(e)}"
+        )
+
+    finally:
+        file.file.close()
+
+    redirect_url = URL("/admin/dashboard").include_query_params(
+        success=f"{index + 1} students added to the database."
+    )
+
+    return RedirectResponse(
+        redirect_url,
+        status_code=HTTPStatus.FOUND,
+    )

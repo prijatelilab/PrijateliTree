@@ -6,8 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DATABASE_URL=""
 
-RUN apt-get update && apt-get -y install libpq-dev python-dev \
-    xvfb firefox-esr python3-dev libsqlite3-0 && apt-get clean
+RUN apt-get update && apt-get -y install gcc libpq-dev python3-dev \
+    xvfb firefox-esr libsqlite3-0 && apt-get clean
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .

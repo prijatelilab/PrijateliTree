@@ -16,6 +16,7 @@ fastapi-login==1.9.2 ; python_version >= "3.11" and python_version < "4.0"
 fastapi-sqlalchemy==0.2.1 ; python_version >= "3.11" and python_version < "4.0"
 fastapi==0.103.2 ; python_version >= "3.11" and python_version < "4.0"
 greenlet==3.0.2 ; python_version >= "3.11" and python_version < "4.0" and (platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "x86_64" or platform_machine == "amd64" or platform_machine == "AMD64" or platform_machine == "win32" or platform_machine == "WIN32")
+h11==0.14.0 ; python_version >= "3.11" and python_version < "4.0"
 httpcore==1.0.2 ; python_version >= "3.11" and python_version < "4.0"
 httptools==0.6.1 ; python_version >= "3.11" and python_version < "4.0"
 httpx==0.26.0 ; python_version >= "3.11" and python_version < "4.0"

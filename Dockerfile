@@ -5,9 +5,9 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update \
-  && apt-get -y install netcat gcc postgresql libpq-dev python-dev \
-  && apt-get clean
+RUN apt-get update && apt-get -y install netcat gcc postgresql libpq-dev python-dev \
+    && apt-get install -y xvfb firefox-esr libpq-dev python3-dev \
+    && apt-get install -y libsqlite3-0 && apt-get clean
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .

@@ -40,6 +40,3 @@ PRE_SURVEY_LINK = (
 POST_SURVEY_LINK = (
     "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"
 )
-
-# System Constants
-TEST_SQL_URI = "sqlite:///:memory:"

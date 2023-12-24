@@ -8,7 +8,6 @@ from prijateli_tree.app.utils.constants import (
     KEY_ENV_PROD,
     KEY_ENV_TESTING,
     LANGUAGE_ENGLISH,
-    TEST_SQL_URI,
 )
 
 
@@ -42,7 +41,6 @@ class DevelopmentConfig(BaseConfig):
 class TestingConfig(BaseConfig):
     def __init__(self):
         super(TestingConfig, self).__init__()
-        self.SQLALCHEMY_DATABASE_URI = TEST_SQL_URI
         self.TESTING = True
 
 

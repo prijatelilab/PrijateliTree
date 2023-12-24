@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -y install netcat gcc postgresql libpq-dev python-
     xvfb firefox-esr libpq-dev python3-dev libsqlite3-0 && apt-get clean
 
 RUN pip install --upgrade pip
-COPY ./requirements.txt .
+COPY ../requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY .. .

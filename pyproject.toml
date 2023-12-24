@@ -25,6 +25,7 @@ pytest = "^7.4.3"
 requests = "^2.31.0"
 sqlmodel = "^0.0.14"
 httpx = "^0.26.0"
+pandas = "^2.1.4"
 
 
 [build-system]

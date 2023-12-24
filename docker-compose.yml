@@ -22,7 +22,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: dockerfiles/Dockerfile
     command: uvicorn prijateli_tree.app.main:app --reload --host 0.0.0.0 --port 8000
     volumes:
       - .:/usr/src/app
@@ -39,3 +39,15 @@ services:
       LOGIN_SECRET_KEY: '3a5f3125e1af1763756297e040cd05f8f24fcab15f78805e'
     links:
       - 'postgres:postgres'
+
+  web-test:
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile-test
+    volumes:
+      - .:/usr/src/app
+    environment:
+      ENV: "testing"
+      DATABASE_URL: "sqlite:///:memory:"
+      LOGIN_SECRET_KEY: 'f07014cc557aeb5ff75fdc9e0938331291dbf8a7dc93cd8fbae6d619b9f80f95'

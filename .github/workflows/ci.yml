@@ -1,4 +1,5 @@
-name: Format-and-Fail
+name: Continuous-Integration
+
 on:
   pull_request:
     branches:
@@ -7,7 +8,21 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      ENV: "testing"
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run:  make test
+
   pre-commit:
     runs-on: ubuntu-latest
     steps:

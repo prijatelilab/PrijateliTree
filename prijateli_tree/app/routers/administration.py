@@ -401,6 +401,7 @@ def add_students(
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
+    students_added = 0
     try:
         student_df = pd.read_csv(file.file)
         expected_fields = [
@@ -423,6 +424,7 @@ def add_students(
                 role="student",
             )
             db.add(student_in)
+            students_added += 1
         db.commit()
 
     except Exception as e:
@@ -435,7 +437,7 @@ def add_students(
         file.file.close()
 
     redirect_url = URL("/admin/dashboard").include_query_params(
-        success=f"{index + 1} students added to the database."
+        success=f"{students_added} students added to the database."
     )
 
     return RedirectResponse(

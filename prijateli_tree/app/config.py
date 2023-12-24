@@ -41,6 +41,7 @@ class DevelopmentConfig(BaseConfig):
 class TestingConfig(BaseConfig):
     def __init__(self):
         super(TestingConfig, self).__init__()
+        self.SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
         self.TESTING = True
 
 

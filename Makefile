@@ -31,7 +31,7 @@ lint:
 
 .PHONY: test
 test: start
-	ENV=testing docker-compose run --rm web pytest --cov -n auto --dist=loadfile -v prijateli_tree/tests/;
+	ENV=testing docker-compose run --rm web pytest -vsx ./prijateli_tree/tests/;
 
 .PHONY: stop
 stop:

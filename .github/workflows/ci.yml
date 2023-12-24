@@ -12,9 +12,9 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
-      ENV: "${ENV-development}"
+      ENV: "testing"
     strategy:
       matrix:
         python-version: ["3.11"]

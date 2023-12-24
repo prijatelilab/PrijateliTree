@@ -23,15 +23,6 @@ jobs:
       - name: Run tests
         run:  make test
 
-  export-requirements-txt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: divideprojects/poetry-export-requirements-action@v1
-        with:
-          without-hashes: true
-          outfile-name: requirements.txt
-
   pre-commit:
     runs-on: ubuntu-latest
     steps:

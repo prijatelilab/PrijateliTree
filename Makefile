@@ -30,8 +30,8 @@ lint:
 	pre-commit run --all-files
 
 .PHONY: test
-test:
-	pytest -vs ./prijateli_tree/tests/
+test: start
+	ENV=testing docker-compose run --rm web pytest --cov -n auto --dist=loadfile -v prijateli_tree/tests/;
 
 .PHONY: stop
 stop:

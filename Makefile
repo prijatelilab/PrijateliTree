@@ -32,7 +32,6 @@ lint:
 .PHONY: test
 test: start
 	docker-compose run --rm web-test pytest -vsx ./prijateli_tree/tests/;
-	docker-compose rm -f web-test
 
 .PHONY: stop
 stop:

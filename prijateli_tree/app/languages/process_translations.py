@@ -60,17 +60,17 @@ class Translator:
 
         # Iterate over the languages
         for language in self.languages:
+            print(language)
             # Get the translations for the current language
             language_dict = self.translations[language]
-
-            # Iterate over the game sections
-            file_name = f"{language}_test.json"
+            file_name = f"{language}_auto.json"
             with open(file_name, "w", encoding="utf-8") as file:
-                json.dump(language_dict, file, indent=4, ensure_ascii=False)
+                json.dump(language_dict, file, ensure_ascii=False)
 
 
 if __name__ == "__main__":
     translator = Translator(FILE_PATH)
     translator.generate_dict()
+    translator.save_to_jsons()
 
     print(translator.translations)

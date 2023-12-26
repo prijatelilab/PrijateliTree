@@ -1,11 +1,11 @@
 default: build start create_db
 
 .PHONY: build
-build: create-requirements
+build: create_requirements
 	docker-compose build
 
-.PHONY: create-requirements
-create-requirements:
+.PHONY: create_requirements
+create_requirements:
 	poetry export --without-hashes --format=requirements.txt > requirements.txt
 
 .PHONY: start
@@ -30,8 +30,8 @@ lint:
 	pre-commit run --all-files
 
 .PHONY: test
-test:
-	pytest -vs ./prijateli_tree/tests/
+test: start
+	docker-compose run --rm web-test pytest -vsx ./prijateli_tree/tests/;
 
 .PHONY: stop
 stop:

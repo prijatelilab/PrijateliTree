@@ -5,15 +5,18 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 import prijateli_tree.app.database as models
-from prijateli_tree.app.utils.constants import KEY_DATABASE_URI
+from prijateli_tree.app.config import config
+from prijateli_tree.app.utils.constants import KEY_ENV
 
 
 SQL_ALCHEMY_URL = "sqlalchemy.url"
+app_config = config[os.getenv(KEY_ENV)]
+
 
 config = context.config
 config.set_main_option(
     SQL_ALCHEMY_URL,
-    os.getenv(KEY_DATABASE_URI).replace("postgres://", "postgresql://", 1),
+    app_config.SQLALCHEMY_DATABASE_URI,
 )
 
 fileConfig(config.config_file_name)

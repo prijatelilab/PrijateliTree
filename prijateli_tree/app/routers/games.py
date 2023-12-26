@@ -58,7 +58,7 @@ logger.debug("Language files imported.")
 ###############################
 
 
-@router.get("/session/", response_class=HTMLResponse)
+@router.get("/sessions", response_class=HTMLResponse)
 def choose_session_id(request: Request) -> Response:
     return templates.TemplateResponse(
         "new_session.html",

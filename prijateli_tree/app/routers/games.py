@@ -223,22 +223,32 @@ def route_add_answer(
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
 
-@router.get("/{game_id}/all_set", response_class=JSONResponse)
+@router.get(
+    "/{game_id}/player/{player_id}/all_set", response_class=JSONResponse
+)
 def all_set(
     game_id: int,
+    player_id: int,
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """
     Determines if all players have submitted a guess in the current round
     """
-    players = db.query(GamePlayer).filter_by(game_id=game_id).all()
+    game, _ = get_game_and_player(game_id, player_id, db)
     n_answers = 0
-    for player in players:
+    this_players_round = 0
+    for player in game.players:
         if player.answers:
             this_round = max([a.round for a in player.answers])
             n_answers += this_round
+            if player.id == player_id:
+                this_players_round = this_round
 
-    ready = n_answers % len(players) == 0
+    # if laggy internet, we don't want anyone stuck on the waiting screen
+    ready = (
+        n_answers % len(game.players) == 0
+        or (n_answers / len(game.players)) > this_players_round
+    )
     game_over = player.game.rounds == this_round
     return JSONResponse(content={"ready": ready, "game_over": game_over})
 

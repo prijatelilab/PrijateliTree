@@ -261,43 +261,55 @@ def create_session(
 
     db.commit()
     db.refresh(session)
+    game = None
+    previous_game = None
+    network_type = [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+    for i in range(2):
 
-    game = Game(
-        created_by=user.id,
-        game_session_id=session.id,
-        game_type_id=db.query(GameType)
-        .filter_by(network=NETWORK_TYPE_INTEGRATED, names_hidden=False)
-        .first()
-        .id,
-        rounds=NUMBER_OF_ROUNDS,
-        practice=True,
-    )
-    db.add(game)
-    db.commit()
-    db.refresh(game)
+        if game:
+            previous_game = game
+        
+        game = Game(
+            created_by=user.id,
+            game_session_id=session.id,
+            game_type_id=db.query(GameType)
+            .filter_by(network=network_type[i], names_hidden=False)
+            .first()
+            .id,
+            rounds=NUMBER_OF_ROUNDS,
+            practice=True,
+        )    
 
-    bag = game.game_type.bag
-    rand_bag = random.sample(bag, len(bag))
-    position = 1
-    for p_list in lang_dict.values():
-        for p in p_list:
-            session_player = [
-                sp for sp in session.players if sp.user_id == p.id
-            ][0]
-            db.add(
-                GamePlayer(
-                    created_by=user.id,
-                    game_id=game.id,
-                    user_id=p.id,
-                    session_player_id=session_player.id,
-                    position=position,
-                    initial_ball=rand_bag[position - 1],
+        db.add(game)
+        db.commit()
+        db.refresh(game)
+
+        if previous_game:
+            previous_game.next_game_id = game.id
+            db.commit()
+
+        bag = game.game_type.bag
+        rand_bag = random.sample(bag, len(bag))
+        position = 1
+        for p_list in lang_dict.values():
+            for p in p_list:
+                session_player = [
+                    sp for sp in session.players if sp.user_id == p.id
+                ][0]
+                db.add(
+                    GamePlayer(
+                        created_by=user.id,
+                        game_id=game.id,
+                        user_id=p.id,
+                        session_player_id=session_player.id,
+                        position=position,
+                        initial_ball=rand_bag[position - 1],
+                    )
                 )
-            )
-            position += 1
+                position += 1
 
-    db.commit()
-    db.refresh(game)
+        db.commit()
+        db.refresh(game)
 
     create_session_games(session, game, db)
 

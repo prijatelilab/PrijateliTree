@@ -5,14 +5,21 @@ import json
 
 import pandas as pd
 
-
-FILE_PATH = "C:/Users/fdmol/Desktop/Prijateli-project/language_6person.xlsx"
+# Local imports
+from prijateli_tree.app.utils.constants import (
+    LANGUAGE_PATH,
+    LANGUAGE_FILE,
+)
 
 
 class Translator:
-    def __init__(self, file_path):
-        self.file_path = file_path
-        self.df = pd.read_excel(file_path, sheet_name="Sheet1", header=0)
+    """Class for processing the translations file."""
+
+    file_path = f"{LANGUAGE_PATH}/{LANGUAGE_FILE}"
+    language_path = f"{LANGUAGE_PATH}"
+
+    def __init__(self):
+        self.df = pd.read_excel(self.file_path, sheet_name="Sheet1", header=0)
 
     def parse_file(self):
         """Parses the file"""
@@ -38,9 +45,7 @@ class Translator:
             # Iterate over the game sections
             for game_section in self.game_sections:
                 # Get the rows for the current game section
-                game_section_df = self.df.loc[
-                    self.df["game_section"] == game_section
-                ]
+                game_section_df = self.df.loc[self.df["game_section"] == game_section]
                 # Add empty dictionary for the current game section
                 self.translations[language][game_section] = {}
 
@@ -51,26 +56,21 @@ class Translator:
                     translation = row[language]
 
                     # Add translation to the dictionary
-                    self.translations[language][game_section][
-                        subcolumn
-                    ] = translation
+                    self.translations[language][game_section][subcolumn] = translation
 
     def save_to_jsons(self):
         """Saves the translations to json files"""
 
         # Iterate over the languages
         for language in self.languages:
-            print(language)
             # Get the translations for the current language
             language_dict = self.translations[language]
-            file_name = f"{language}_auto.json"
+            file_name = f"{self.language_path}/{language}_auto.json"
             with open(file_name, "w", encoding="utf-8") as file:
                 json.dump(language_dict, file, ensure_ascii=False)
 
 
 if __name__ == "__main__":
-    translator = Translator(FILE_PATH)
+    translator = Translator()
     translator.generate_dict()
     translator.save_to_jsons()
-
-    print(translator.translations)

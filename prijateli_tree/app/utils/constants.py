@@ -28,15 +28,13 @@ LANGUAGE_ALBANIAN = "al"
 LANGUAGE_ENGLISH = "en"
 LANGUAGE_MACEDONIAN = "mk"
 LANGUAGE_TURKISH = "tr"
+LANGUAGE_PATH = "prijateli_tree/app/languages"
+LANGUAGE_FILE = "language_6person 12242023.xlsx"
 
 # Point Constants
 WINNING_SCORE = 100
 DENAR_FACTOR = 0.25
 
 # Survey Constants
-PRE_SURVEY_LINK = (
-    "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
-)
-POST_SURVEY_LINK = (
-    "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"
-)
+PRE_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
+POST_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"

@@ -1,19 +1,65 @@
 {% extends "base.html" %}
+{% block helper_script %}
+  <script>
+function redirectToChoosePlayers() {
+  // Get the session ID from the input field
+  const sessionId = document.getElementById("session_id").value;
+
+  // Construct the URL with the session ID
+  const url = "/games/session/" + sessionId + "/";
+
+  // Redirect to the generated URL
+  window.location.href = url;
+}
+
+function redirectToSession() {
+  // Get the session ID from the input field
+  const playerId = document.getElementById("player_id").value;
+  const gameId =  document.getElementById("game_id").value;
+
+  // Construct the URL with the session ID
+  const url = "/games/" + gameId + "/player/" + playerId + "/ready";
+
+  // Redirect to the generated URL
+  window.location.href = url;
+}
+
+  </script>
+{% endblock helper_script %}
 {% block title %}
   PrijateliTree - Access Session
 {% endblock title %}
 {% block content %}
   <div class="container-sm flex-container">
     <h1>Welcome.</h1>
-    <h2>Select the name of the student who will sit at this desk.</h2>
-    <div class="col-sm-4">
-      <form method="get" action='{{ url_for("start_session", game_id=game_id) }}'>
-        <!--<label for="num-games" class="col-sm-4 col-form-label"></label>-->
-        <select id="player_id" class="form-select form-select-sm" name="player_id">
-          {% for p in players %}<option value="{{ p.id }}">{{ p.user.name_str }}</option>{% endfor %}
-        </select>
-        <button type="submit" class="btn btn-primary float-end">Start</button>
-      </form>
-    </div>
+    {% if session_id == -1 %}
+      <p>Enter the session id.</p>
+      <div class="col-sm-4">
+        <form>
+          <input type="text" id="session_id" name="session_id">
+          <br>
+          <br>
+          <button type="button"
+                  onclick="redirectToChoosePlayers()"
+                  class="btn btn-primary float-start">Next</button>
+        </form>
+      </div>
+    {% else %}
+      <p>Select the name of the student who will sit at this desk.</p>
+      <div class="col-sm-4">
+        <form>
+          <input type="text" id="game_id" value={{ game_id }} hidden>
+          <select id="player_id" class="form-select form-select-sm" name="player_id">
+            {% for p in players %}<option value="{{ p.id }}">{{ p.user.name_str }}</option>{% endfor %}
+          </select>
+          <br>
+          <br>
+          <!--<button type="submit" class="btn btn-primary float-start">Start</button>-->
+          <button type="button"
+                  onclick="redirectToSession()"
+                  class="btn btn-primary float-start">Start</button>
+        </form>
+      </div>
+    {% endif %}
   </div>
 {% endblock content %}

@@ -58,10 +58,18 @@ logger.debug("Language files imported.")
 ###############################
 
 
+@router.get("/session/", response_class=HTMLResponse)
+def choose_session_id(request: Request) -> Response:
+    return templates.TemplateResponse(
+        "new_session.html",
+        context={"request": request, "session_id": -1},
+    )
+
+
 @router.get("/session/{session_id}", response_class=HTMLResponse)
-def route_session_access(
+def choose_session_players(
     request: Request, session_id: int, db: Session = Depends(get_db)
-):
+) -> Response:
     games = db.query(Game).filter_by(game_session_id=session_id).all()
     raise_exception_if_not(games, "session not found or games not created")
 
@@ -80,13 +88,13 @@ def route_session_access(
     )
 
 
-@router.get("/{game_id}/ready", response_class=HTMLResponse)
+@router.get("/{game_id}/player/{player_id}/ready", response_class=HTMLResponse)
 def start_session(
     request: Request,
     game_id: int,
     player_id: int,
     db: Session = Depends(get_db),
-):
+) -> Response:
     _, player = get_game_and_player(game_id, player_id, db)
     template_text = languages[player.language.abbr]
 

@@ -265,10 +265,9 @@ def create_session(
     previous_game = None
     network_type = [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
     for i in range(2):
-
         if game:
             previous_game = game
-        
+
         game = Game(
             created_by=user.id,
             game_session_id=session.id,
@@ -278,7 +277,7 @@ def create_session(
             .id,
             rounds=NUMBER_OF_ROUNDS,
             practice=True,
-        )    
+        )
 
         db.add(game)
         db.commit()

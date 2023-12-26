@@ -7,9 +7,6 @@ KEY_ENV_PROD = "production"
 KEY_ENV_TESTING = "testing"
 KEY_LOGIN_SECRET = "LOGIN_SECRET_KEY"
 
-# user id for system
-SYSTEM_ID = 0
-
 # File Constants
 FILE_MODE_READ = "r"
 STANDARD_ENCODING = "utf-8"
@@ -20,10 +17,11 @@ BALL_RED = "R"
 NETWORK_TYPE_INTEGRATED = "integrated"
 NETWORK_TYPE_SEGREGATED = "segregated"
 NETWORK_TYPE_SELF_SELECTED = "self-selected"
+NUMBER_OF_ROUNDS = 3
 ROLE_ADMIN = "admin"
 ROLE_STUDENT = "student"
 ROLE_SUPER_ADMIN = "super-admin"
-NUMBER_OF_ROUNDS = 3
+SYSTEM_ID = 0
 
 # Language Constants
 LANGUAGE_ALBANIAN = "al"
@@ -35,7 +33,7 @@ LANGUAGE_TURKISH = "tr"
 WINNING_SCORE = 100
 DENAR_FACTOR = 0.25
 
-# Survey Links
+# Survey Constants
 PRE_SURVEY_LINK = (
     "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
 )

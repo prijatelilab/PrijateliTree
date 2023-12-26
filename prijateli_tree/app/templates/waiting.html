@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block helper_script %}
   <script>
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.history.go(1);
+    };
     <!--calls wait again after 2 seconds-->
     async function check_all_set() {
       const response = await fetch("/games/{{game_id}}/player/{{player_id}}/all_set");

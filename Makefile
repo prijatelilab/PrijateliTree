@@ -52,3 +52,7 @@ stamp_db: ## Runs the stamp command to set the base state of the db
 .PHONY: create_revision
 create_revision: ## Runs the command that creates the Alembic revision
 	docker-compose run web alembic --config=./prijateli_tree/migrations/alembic.ini revision --autogenerate
+
+.PHONY: process_translations
+process_translations: ## Runs the command that creates the translation jsons
+	python3 ./prijateli_tree/app/utils/process_translations.py

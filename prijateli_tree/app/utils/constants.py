@@ -28,6 +28,8 @@ LANGUAGE_ALBANIAN = "al"
 LANGUAGE_ENGLISH = "en"
 LANGUAGE_MACEDONIAN = "mk"
 LANGUAGE_TURKISH = "tr"
+LANGUAGE_PATH = "prijateli_tree/app/languages"
+LANGUAGE_FILE = "language_6person 12242023.xlsx"
 
 # Point Constants
 WINNING_SCORE = 100

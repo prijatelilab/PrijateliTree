@@ -6,9 +6,9 @@
   {% include "score_header.html" %}
   <div class="container-sm general-container">
     {% if first_round %}
-      {{ text.game_first_round.the_computer_chose }}
+      {{ text.game.the_computer_chose }}
       <h2>
-        Your Ball:
+        {{ text.game.your_ball }}
         {% if ball == 'R' %}
           <span class="text-danger">{{ text.util.red }}</span>
         {% elif ball == 'B' %}
@@ -18,7 +18,7 @@
         {% endif %}
       </h2>
     {% else %}
-      <h1>Your Previous Guess</h1>
+      <h1>{{ text.game.your_previous_guess }}</h1>
       <h2>
         {% if previous_answers.your_previous_answer == 'R' %}
           <span class="text-danger">{{ text.util.red }}</span>
@@ -28,7 +28,7 @@
           {{ previous_answers.your_previous_answer }}
         {% endif %}
       </h2>
-      <h1>{{ text.game_other_rounds.see_what_others_guessed }}</h1>
+      <h1>{{ text.game.see_what_others_guessed }}</h1>
       <ul style="list-style: none; padding: 0;">
         {% for index in previous_answers.neighbors_previous_answer %}
           {% set neighbor_answer = previous_answers.neighbors_previous_answer[loop.index-1] %}
@@ -45,7 +45,7 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <h1>{{ text.game_first_round.guess_color }}</h1>
+    <h1>{{ text.game.guess_color }}</h1>
     <!-- Button for 'Red' answer -->
     <form action="{{ url_for('route_add_answer', game_id=game_id, player_id=player_id) }}"
           method="post">

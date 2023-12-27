@@ -1,15 +1,35 @@
 {
   "sq": {
+    "admin_panel": {
+      "copy_to_clipboard": "Kopjo n\u00eb clipboard",
+      "copy_url": "Kopjoni URL-n\u00eb",
+      "create_session": "N\u00ebse jeni nj\u00eb Administrator q\u00eb p\u00ebrpiqeni t\u00eb krijoni nj\u00eb sesion ose t\u00eb shtoni p\u00ebrdorues, ju lutemi klikoni n\u00eb k\u00ebt\u00eb link:",
+      "email": "Email",
+      "facilitator_password": "Fjal\u00ebkalimi i fasilituesit",
+      "facilitator_username": "Emri i p\u00ebrdoruesit i fasilituesit",
+      "facilitators": "Vet\u00ebm p\u00ebr fasilituesit!",
+      "firstname": "Emri",
+      "for_admin_only": "N\u00ebse tentoni t\u00eb hyni n\u00eb nj\u00eb loj\u00eb t\u00eb caktuar, ju lutemi kontaktoni koordinatorin tuaj t\u00eb loj\u00ebs.",
+      "lastname": "Mbiemri",
+      "login": "Ky\u00e7uni",
+      "logout": "Shky\u00e7eni",
+      "new_session": "Sesion i ri",
+      "number_of_games": "Numri i loj\u00ebs",
+      "players": "Loj\u00ebtar\u00eb",
+      "school": "Shkolla",
+      "session_and_game_created": "Sesioni juaj (ID: {Y}) dhe loja e par\u00eb (ID: {X}) jan\u00eb krijuar! ",
+      "session_created": "Sesioni juaj (ID: {Y}) \u00ebsht\u00eb krijuar! ",
+      "student_language": "Gjuha e nx\u00ebn\u00ebsit",
+      "student_name": "Emri dhe mbiemri",
+      "success": "Sukses:"
+    },
     "different_game_choices": {
       "now_you_can_observe": "Tani mund t\u00eb zgjidhni lojtar\u00ebt q\u00eb do ti v\u00ebzhgoni n\u00eb raundet vijuese n\u00eb k\u00ebt\u00eb loj\u00eb.",
-      "player_one": "Lojtari 1:",
-      "player_three": "Lojtari 3:",
-      "player_two": "Lojtari 2:",
       "please_choose_players": "Zgjidh {X} lojtar\u00eb."
     },
     "different_game_intro": {
-      "different_version": "Now we will play a different version of the game.",
-      "instead_of": "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
+      "different_version": "Tani do t\u00eb luajm\u00eb nj\u00eb version tjet\u00ebr t\u00eb loj\u00ebs",
+      "instead_of": "N\u00eb vend q\u00eb t'ju caktojm\u00eb n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme bashk\u00ebmoshatar\u00ebt q\u00eb v\u00ebzhgoni, ne do t'ju lejojm\u00eb t\u00eb zgjidhni lojtar\u00ebt q\u00eb v\u00ebzhgoni."
     },
     "final_score": {
       "ask_your_teachers": "Pyetni m\u00ebsimdh\u00ebn\u00ebsin tuaj p\u00ebr marrjen e shp\u00ebrblimit tuaj!",
@@ -17,99 +37,55 @@
       "denars": "{X} denar\u00eb!",
       "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
     },
-    "game_first_round": {
+    "game": {
       "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
-      "round": "Raundi",
-      "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
-      "your_ball_is_blue": "Topi juaj \u00ebsht\u00eb I KALT\u00cbR.",
-      "your_ball_is_red": "Topi juaj \u00ebsht\u00eb I KUQ."
-    },
-    "game_other_rounds": {
-      "code_guessed_blue": "Kodi q\u00eblloi E KALT\u00cbR.",
-      "code_guessed_red": "Kodi q\u00eblloi E KUQE.",
-      "name_guessed_blue": "Emri q\u00eblloi E KALT\u00cbR.",
-      "name_guessed_red": "Emri q\u00eblloi E KUQE.",
       "see_what_others_guessed": "Shihni \u00e7far\u00eb supozuan disa lojtar\u00eb t\u00eb tjer\u00eb n\u00eb raundin e fundit:",
-      "your_guess_was_blue": "Supozimi juaj n\u00eb raundin e fundit ishte E KALT\u00cbR.",
-      "your_guess_was_red": "Supozimi juaj n\u00eb raundin e fundit ishte E KUQE."
+      "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
+      "your_ball": "Topi yt:",
+      "your_information": "Kompjutori t\u00eb paraqet:",
+      "your_previous_guess": "Supozimi juaj paraprak"
     },
     "game_results": {
-      "better_luck": "Fat m\u00eb t\u00eb mir\u00eb her\u00ebn tjet\u00ebr!",
-      "results": "Rezultatet",
-      "the_computer_chose_blue": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KALT\u00cbR.",
-      "the_computer_chose_red": "Kompjutori zgjodhi \u00e7ant\u00ebn T\u00cb KUQE.",
-      "you_won": "Fituat!"
+      "better_luck": "Fat m\u00eb t\u00eb mir\u00eb her\u00ebn tjet\u00ebr! ",
+      "the_computer_chose": "Kompjutori zgjodhi: ",
+      "you_won": "Fituat!",
+      "your_guess": "Supozimi juaj i fundit:"
     },
-    "game_video": {
-      "explanation": "Sqairm.",
-      "feel_free": "Ndjehuni t\u00eb lir\u00eb ta shikoni videon p\u00ebrs\u00ebri p\u00ebr t'i p\u00ebrkujtuar rregullat.",
-      "game": "Loj\u00eb per ushtrim",
+    "header": {
+      "official_game": "Loj\u00eb oficiale",
+      "practice": "Loj\u00eb per ushtrim",
+      "round": "Raundi",
       "score": "Rezultati"
-    },
-    "homepage": {
-      "facilitator_password": "Fjal\u00ebkalimi i trajnuesit",
-      "facilitator_username": "Emri i p\u00ebrdoruesit i trajnuesit",
-      "facilitators": "Vet\u00ebm p\u00ebr trajnues!",
-      "login": "Ky\u00e7u",
-      "school": "Shkolla",
-      "student_language": "Gjuha e nx\u00ebn\u00ebsit",
-      "student_name": "Emri dhe mbiemri"
     },
     "intro_practice": {
       "now_you_will_play": "Tani do t\u00eb luani 2 loj\u00ebra p\u00ebr ushtrim p\u00ebr t'i m\u00ebsuar rregullat.",
       "since_these_rules": "Pasiq\u00eb k\u00ebto jan\u00eb raunde ushtruese, nuk do t\u00eb shp\u00ebrblejm\u00eb ask\u00ebnd p\u00ebr performanc\u00ebn e tyre."
     },
-    "quiz_balls": {
-      "colors_in_bag": "\u00c7far\u00eb ngjyrash jan\u00eb topat n\u00eb \u00e7ant\u00ebn e kalt\u00ebr?",
-      "five_blue_two_red": "5 t\u00eb kaltra dhe 2 t\u00eb kuqe.",
-      "four_blue_two_red": "4 t\u00eb kaltra dhe 2 t\u00eb kuqe.",
-      "three_blue_four_red": "3 t\u00eb kaltra dhe 4 t\u00eb kuqe."
-    },
-    "quiz_colors": {
-      "black_and_white": "E zez\u00eb dhe e bardh\u00eb.",
-      "green_and_yellow": "E gjelb\u00ebr dhe e verdh\u00eb.",
-      "instructions": "P\u00ebr t\u00eb fituar, duhet t\u00eb zgjidhni \u00e7ant\u00ebn q\u00eb ka zgjedhur kompjutori. \u00c7far\u00eb ngjyrash jan\u00eb \u00e7antat q\u00eb zgjedh kompjutori?",
-      "question": "Pyetje",
-      "quick_quiz": "Kuiz i shpejt\u00eb!",
-      "red_and_blue": "E kuqe dhe e kalt\u00ebr."
-    },
-    "quiz_peers": {
-      "one_ball_all_peers": "Nj\u00eb top dhe t\u00eb gjitha supozimet e bashk\u00ebmoshatar\u00ebve.",
-      "one_ball_few_peers": "Nj\u00eb top dhe disa supozime t\u00eb bashk\u00ebmoshatar\u00ebve.",
-      "two_balls": "Dy topa.",
-      "what_will_you_observe": "\u00c7far\u00eb do t\u00eb v\u00ebzhgoni p\u00ebr t'ju ndihmuar t\u00eb m\u00ebsoni se cil\u00ebn \u00e7ant\u00eb ka zgjedhur kompjutori?"
-    },
     "ready_to_play": {
       "get_ready": "B\u00ebhuni gati p\u00ebr t\u00eb luajtur E kuqe ose E kalt\u00ebr!",
-      "im_ready": "Jam gati!"
+      "im_ready": "Jam gati!",
+      "select_student": "Zgjedhni emrin e nx\u00ebn\u00ebsit q\u00eb do t\u00eb ulet n\u00eb k\u00ebt\u00eb bank\u00eb.",
+      "welcome": "Mir\u00eb se vini!"
     },
     "real_game_intro": {
-      "added_points": "{X} pik\u00eb do t'i shtohen shp\u00ebrblimit tuaj p\u00ebrfundimtar.",
-      "game": "Loj\u00eb",
+      "added_points": "{X} pik\u00eb do t'i shtohen shp\u00ebrblimit tuaj p\u00ebrfundimtar.\n",
       "get_ready": "B\u00ebhuni gati p\u00ebr ta fituar loj\u00ebn dhe p\u00ebr t\u00eb fituar para!",
-      "if_you_win": "N\u00ebse fitoni n\u00eb k\u00ebt\u00eb loj\u00eb, {X} pik\u00eb do t'i shtohen rezultatit tuaj dhe shp\u00ebrblimit p\u00ebrfundimtar.",
+      "if_you_win": "N\u00ebse fitoni n\u00eb k\u00ebt\u00eb loj\u00eb, {X} pik\u00eb do t'i shtohen rezultatit tuaj dhe shp\u00ebrblimit p\u00ebrfundimtar. ",
       "now_we_practiced": "Tani q\u00eb ushtruam, do t\u00eb luajm\u00eb loj\u00ebrat e v\u00ebrteta."
-    },
-    "rules_screen": {
-      "how_to_play": "Si t\u00eb luani?",
-      "i_understand": "I kuptoj rregullat!",
-      "instructions": "Mund ta rishikoni videon sa her\u00eb t\u00eb d\u00ebshironi. Mosnjohja e rregullave ul shansat p\u00ebr t\u00eb fituar. Pyesni m\u00ebsimdh\u00ebn\u00ebsin tuaj n\u00ebse keni ndonj\u00eb pyetje n\u00eb lidhje me loj\u00ebn.",
-      "next": "Vazhdo"
-    },
-    "survey": {
-      "before_we_are_done": "Para se t\u00eb p\u00ebrfundojm\u00eb, duam t'ju parashtrojm\u00eb disa pyetje t\u00eb shkurtra se si keni luajtur sot.",
-      "survey_page": "Faqe p\u00ebr hulumtim"
     },
     "thanks_screen": {
       "have_a_great_day": "Kalofshi nj\u00eb dit\u00eb t\u00eb mir\u00eb!",
       "thanks": "Ju faleminderit q\u00eb luajt\u00ebt!"
     },
     "util": {
-      "blue": "E KALT\u00cbR.",
-      "red": "E KUQE."
+      "blue": "E KALT\u00cbR",
+      "next": "Vazhdo",
+      "or": "ose",
+      "player": "Lojtari",
+      "red": "E KUQE"
     },
     "waiting_screen": {
-      "waiting": "N\u00eb pritje t\u00eb t\u00eb tjer\u00ebve..."
+      "waiting": "I presim t\u00eb tjer\u00ebt..."
     }
   }
 }

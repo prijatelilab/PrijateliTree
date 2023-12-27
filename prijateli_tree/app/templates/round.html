@@ -6,7 +6,7 @@
   {% include "score_header.html" %}
   <div class="container-sm general-container">
     {% if first_round %}
-      {{ text.game_first_round.the_computer_chose }}
+      {{ text.game.the_computer_chose }}
       <h2>
         Your Ball:
         {% if ball == 'R' %}
@@ -28,7 +28,7 @@
           {{ previous_answers.your_previous_answer }}
         {% endif %}
       </h2>
-      <h1>{{ text.game_other_rounds.see_what_others_guessed }}</h1>
+      <h1>{{ text.game.see_what_others_guessed }}</h1>
       <ul style="list-style: none; padding: 0;">
         {% for index in previous_answers.neighbors_previous_answer %}
           {% set neighbor_answer = previous_answers.neighbors_previous_answer[loop.index-1] %}

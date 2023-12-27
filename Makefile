@@ -55,4 +55,4 @@ create_revision: ## Runs the command that creates the Alembic revision
 
 .PHONY: process_translations
 process_translations: ## Runs the command that creates the translation jsons
-	python3 ./prijateli_tree/app/languages/process_translations.py
+	python3 ./prijateli_tree/app/utils/process_translations.py

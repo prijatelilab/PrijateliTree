@@ -7,7 +7,7 @@ import json
 import pandas as pd
 
 # Local imports
-from prijateli_tree.app.utils.constants import LANGUAGE_FILE, LANGUAGE_PATH
+from constants import LANGUAGE_FILE, LANGUAGE_PATH
 
 
 class Translator:

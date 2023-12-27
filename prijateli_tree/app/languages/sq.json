@@ -1,91 +1,91 @@
 {
-    "sq": {
-        "util": {
-            "player": "Lojtari",
-            "blue": "E KALTËR",
-            "red": "E KUQE",
-            "or": "ose",
-            "next": "Vazhdo"
-        },
-        "header": {
-            "official_game": "Lojë oficiale",
-            "round": "Raundi",
-            "practice": "Lojë per ushtrim",
-            "score": "Rezultati"
-        },
-        "ready_to_play": {
-            "welcome": "Mirë se vini!",
-            "select_student": "Zgjedhni emrin e nxënësit që do të ulet në këtë bankë.",
-            "get_ready": "Bëhuni gati për të luajtur E kuqe ose E kaltër!",
-            "im_ready": "Jam gati!"
-        },
-        "intro_practice": {
-            "now_you_will_play": "Tani do të luani 2 lojëra për ushtrim për t'i mësuar rregullat.",
-            "since_these_rules": "Pasiqë këto janë raunde ushtruese, nuk do të shpërblejmë askënd për performancën e tyre."
-        },
-        "game": {
-            "the_computer_chose": "Kompjutori zgjodhi një çantë dhe ndau topat në mënyrë të rastësishme për secilin lojtar.",
-            "your_information": "Kompjutori të paraqet:",
-            "your_ball": "Topi yt:",
-            "guess_color": "Gjeni ngjyrën e çantës:",
-            "see_what_others_guessed": "Shihni çfarë supozuan disa lojtarë të tjerë në raundin e fundit:",
-            "your_previous_guess": "Supozimi juaj paraprak"
-        },
-        "waiting_screen": {
-            "waiting": "I presim të tjerët..."
-        },
-        "game_results": {
-            "better_luck": "Fat më të mirë herën tjetër! ",
-            "the_computer_chose": "Kompjutori zgjodhi: ",
-            "your_guess": "Supozimi juaj i fundit:",
-            "you_won": "Fituat!"
-        },
-        "real_game_intro": {
-            "now_we_practiced": "Tani që ushtruam, do të luajmë lojërat e vërteta.",
-            "get_ready": "Bëhuni gati për ta fituar lojën dhe për të fituar para!",
-            "if_you_win": "Nëse fitoni në këtë lojë, {X} pikë do t'i shtohen rezultatit tuaj dhe shpërblimit përfundimtar. ",
-            "added_points": "{X} pikë do t'i shtohen shpërblimit tuaj përfundimtar.\n"
-        },
-        "final_score": {
-            "ask_your_teachers": "Pyetni mësimdhënësin tuaj për marrjen e shpërblimit tuaj!",
-            "congratulations": "Urime!",
-            "denars": "{X} denarë!",
-            "you_guessed_correctly": "Keni qëlluar saktë në {X} lojëra dhe keni fituar {x} pikë, që do të thotë se keni fituar ekstra"
-        },
-        "thanks_screen": {
-            "have_a_great_day": "Kalofshi një ditë të mirë!",
-            "thanks": "Ju faleminderit që luajtët!"
-        },
-        "admin_panel": {
-            "for_admin_only": "Nëse tentoni të hyni në një lojë të caktuar, ju lutemi kontaktoni koordinatorin tuaj të lojës.",
-            "create_session": "Nëse jeni një Administrator që përpiqeni të krijoni një sesion ose të shtoni përdorues, ju lutemi klikoni në këtë link:",
-            "firstname": "Emri",
-            "lastname": "Mbiemri",
-            "email": "Email",
-            "new_session": "Sesion i ri",
-            "copy_to_clipboard": "Kopjo në clipboard",
-            "logout": "Shkyçeni",
-            "players": "Lojëtarë",
-            "number_of_games": "Numri i lojës",
-            "copy_url": "Kopjoni URL-në",
-            "facilitator_password": "Fjalëkalimi i fasilituesit",
-            "facilitator_username": "Emri i përdoruesit i fasilituesit",
-            "facilitators": "Vetëm për fasilituesit!",
-            "login": "Kyçuni",
-            "school": "Shkolla",
-            "student_language": "Gjuha e nxënësit",
-            "student_name": "Emri dhe mbiemri",
-            "session_and_game_created": "Sesioni juaj (ID: {Y}) dhe loja e parë (ID: {X}) janë krijuar! ",
-            "success": "Sukses:",
-            "session_created": "Sesioni juaj (ID: {Y}) është krijuar! "
-        },
-        "different_game_choices": {
-            "now_you_can_observe": "Tani mund të zgjidhni lojtarët që do ti vëzhgoni në raundet vijuese në këtë lojë.",
-            "please_choose_players": "Zgjidh {X} lojtarë."
-        },
-        "different_game_intro": {
-            "different_version": "Tani do të luajmë një version tjetër të lojës",
-            "instead_of": "Në vend që t'ju caktojmë në mënyrë të rastësishme bashkëmoshatarët që vëzhgoni, ne do t'ju lejojmë të zgjidhni lojtarët që vëzhgoni."
-        }
+  "sq": {
+    "admin_panel": {
+      "copy_to_clipboard": "Kopjo n\u00eb clipboard",
+      "copy_url": "Kopjoni URL-n\u00eb",
+      "create_session": "N\u00ebse jeni nj\u00eb Administrator q\u00eb p\u00ebrpiqeni t\u00eb krijoni nj\u00eb sesion ose t\u00eb shtoni p\u00ebrdorues, ju lutemi klikoni n\u00eb k\u00ebt\u00eb link:",
+      "email": "Email",
+      "facilitator_password": "Fjal\u00ebkalimi i fasilituesit",
+      "facilitator_username": "Emri i p\u00ebrdoruesit i fasilituesit",
+      "facilitators": "Vet\u00ebm p\u00ebr fasilituesit!",
+      "firstname": "Emri",
+      "for_admin_only": "N\u00ebse tentoni t\u00eb hyni n\u00eb nj\u00eb loj\u00eb t\u00eb caktuar, ju lutemi kontaktoni koordinatorin tuaj t\u00eb loj\u00ebs.",
+      "lastname": "Mbiemri",
+      "login": "Ky\u00e7uni",
+      "logout": "Shky\u00e7eni",
+      "new_session": "Sesion i ri",
+      "number_of_games": "Numri i loj\u00ebs",
+      "players": "Loj\u00ebtar\u00eb",
+      "school": "Shkolla",
+      "session_and_game_created": "Sesioni juaj (ID: {Y}) dhe loja e par\u00eb (ID: {X}) jan\u00eb krijuar! ",
+      "session_created": "Sesioni juaj (ID: {Y}) \u00ebsht\u00eb krijuar! ",
+      "student_language": "Gjuha e nx\u00ebn\u00ebsit",
+      "student_name": "Emri dhe mbiemri",
+      "success": "Sukses:"
+    },
+    "different_game_choices": {
+      "now_you_can_observe": "Tani mund t\u00eb zgjidhni lojtar\u00ebt q\u00eb do ti v\u00ebzhgoni n\u00eb raundet vijuese n\u00eb k\u00ebt\u00eb loj\u00eb.",
+      "please_choose_players": "Zgjidh {X} lojtar\u00eb."
+    },
+    "different_game_intro": {
+      "different_version": "Tani do t\u00eb luajm\u00eb nj\u00eb version tjet\u00ebr t\u00eb loj\u00ebs",
+      "instead_of": "N\u00eb vend q\u00eb t'ju caktojm\u00eb n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme bashk\u00ebmoshatar\u00ebt q\u00eb v\u00ebzhgoni, ne do t'ju lejojm\u00eb t\u00eb zgjidhni lojtar\u00ebt q\u00eb v\u00ebzhgoni."
+    },
+    "final_score": {
+      "ask_your_teachers": "Pyetni m\u00ebsimdh\u00ebn\u00ebsin tuaj p\u00ebr marrjen e shp\u00ebrblimit tuaj!",
+      "congratulations": "Urime!",
+      "denars": "{X} denar\u00eb!",
+      "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
+    },
+    "game": {
+      "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",
+      "see_what_others_guessed": "Shihni \u00e7far\u00eb supozuan disa lojtar\u00eb t\u00eb tjer\u00eb n\u00eb raundin e fundit:",
+      "the_computer_chose": "Kompjutori zgjodhi nj\u00eb \u00e7ant\u00eb dhe ndau topat n\u00eb m\u00ebnyr\u00eb t\u00eb rast\u00ebsishme p\u00ebr secilin lojtar.",
+      "your_ball": "Topi yt:",
+      "your_information": "Kompjutori t\u00eb paraqet:",
+      "your_previous_guess": "Supozimi juaj paraprak"
+    },
+    "game_results": {
+      "better_luck": "Fat m\u00eb t\u00eb mir\u00eb her\u00ebn tjet\u00ebr! ",
+      "the_computer_chose": "Kompjutori zgjodhi: ",
+      "you_won": "Fituat!",
+      "your_guess": "Supozimi juaj i fundit:"
+    },
+    "header": {
+      "official_game": "Loj\u00eb oficiale",
+      "practice": "Loj\u00eb per ushtrim",
+      "round": "Raundi",
+      "score": "Rezultati"
+    },
+    "intro_practice": {
+      "now_you_will_play": "Tani do t\u00eb luani 2 loj\u00ebra p\u00ebr ushtrim p\u00ebr t'i m\u00ebsuar rregullat.",
+      "since_these_rules": "Pasiq\u00eb k\u00ebto jan\u00eb raunde ushtruese, nuk do t\u00eb shp\u00ebrblejm\u00eb ask\u00ebnd p\u00ebr performanc\u00ebn e tyre."
+    },
+    "ready_to_play": {
+      "get_ready": "B\u00ebhuni gati p\u00ebr t\u00eb luajtur E kuqe ose E kalt\u00ebr!",
+      "im_ready": "Jam gati!",
+      "select_student": "Zgjedhni emrin e nx\u00ebn\u00ebsit q\u00eb do t\u00eb ulet n\u00eb k\u00ebt\u00eb bank\u00eb.",
+      "welcome": "Mir\u00eb se vini!"
+    },
+    "real_game_intro": {
+      "added_points": "{X} pik\u00eb do t'i shtohen shp\u00ebrblimit tuaj p\u00ebrfundimtar.\n",
+      "get_ready": "B\u00ebhuni gati p\u00ebr ta fituar loj\u00ebn dhe p\u00ebr t\u00eb fituar para!",
+      "if_you_win": "N\u00ebse fitoni n\u00eb k\u00ebt\u00eb loj\u00eb, {X} pik\u00eb do t'i shtohen rezultatit tuaj dhe shp\u00ebrblimit p\u00ebrfundimtar. ",
+      "now_we_practiced": "Tani q\u00eb ushtruam, do t\u00eb luajm\u00eb loj\u00ebrat e v\u00ebrteta."
+    },
+    "thanks_screen": {
+      "have_a_great_day": "Kalofshi nj\u00eb dit\u00eb t\u00eb mir\u00eb!",
+      "thanks": "Ju faleminderit q\u00eb luajt\u00ebt!"
+    },
+    "util": {
+      "blue": "E KALT\u00cbR",
+      "next": "Vazhdo",
+      "or": "ose",
+      "player": "Lojtari",
+      "red": "E KUQE"
+    },
+    "waiting_screen": {
+      "waiting": "I presim t\u00eb tjer\u00ebt..."
     }
+  }
 }

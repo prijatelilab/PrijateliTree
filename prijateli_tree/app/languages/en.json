@@ -1,91 +1,91 @@
 {
-    "en": {
-        "util": {
-            "player": "Player",
-            "blue": "BLUE",
-            "red": "RED",
-            "or": "or",
-            "next": "Next"
-        },
-        "header": {
-            "official_game": "Official Game",
-            "round": "Round",
-            "practice": "Practice Game",
-            "score": "Score"
-        },
-        "ready_to_play": {
-            "welcome": "Welcome!",
-            "select_student": "Select the name of the student who will sit at this desk.",
-            "get_ready": "Get ready to play Red or Blue!",
-            "im_ready": "I'm ready!"
-        },
-        "intro_practice": {
-            "now_you_will_play": "Now you will play 2 practice games to get used to the rules.",
-            "since_these_rules": "Since these are practice rounds, we will not reward anyone for their performance."
-        },
-        "game": {
-            "the_computer_chose": "The computer chose a bag and split the balls randomly among the players.",
-            "your_information": "The computer shows you:",
-            "your_ball": "Your ball:",
-            "guess_color": "Guess the color of the bag:",
-            "see_what_others_guessed": "See what some other players guessed in the last round:",
-            "your_previous_guess": "Your previous guess:"
-        },
-        "waiting_screen": {
-            "waiting": "Waiting for others..."
-        },
-        "game_results": {
-            "better_luck": "Better luck next time!",
-            "the_computer_chose": "The computer chose:",
-            "your_guess": "Your last guess:",
-            "you_won": "You won!"
-        },
-        "real_game_intro": {
-            "now_we_practiced": "Now that we practiced, we will play the real games.",
-            "get_ready": "Get ready to win and earn money!",
-            "if_you_win": "If you win in this game, {X} points will be added to your score and final reward.",
-            "added_points": "{X} points will be added to your final reward."
-        },
-        "final_score": {
-            "ask_your_teachers": "Ask your teachers about getting your reward!",
-            "congratulations": "Congratulations!",
-            "denars": "{X} denars!",
-            "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
-        },
-        "thanks_screen": {
-            "have_a_great_day": "Have a great day!",
-            "thanks": "Thanks for playing!"
-        },
-        "admin_panel": {
-            "for_admin_only": "If you are attempting to access a particular game, please reach out to your game coordinator.",
-            "create_session": "If you are an Administrator attempting to create a session or add users, please click on this link: ",
-            "firstname": "First Name",
-            "lastname": "Last Name",
-            "email": "Email",
-            "new_session": "New Session",
-            "copy_to_clipboard": "Copy to clipboard",
-            "logout": "Logout",
-            "players": "Players",
-            "number_of_games": "Number of Game",
-            "copy_url": "Copy URL",
-            "facilitator_password": "Facilitator Password",
-            "facilitator_username": "Facilitator Username",
-            "facilitators": "Only for facilitators!",
-            "login": "Log In",
-            "school": "School",
-            "student_language": "Language of Student",
-            "student_name": "First and Last Name",
-            "session_and_game_created": "Your session (ID: {Y}) and first game (ID: {X}) have been created! ",
-            "success": "Success: ",
-            "session_created": "Your session (ID: {Y}) has been created! "
-        },
-        "different_game_choices": {
-            "now_you_can_observe": "Now you can choose the players you will observe in the following rounds in this game.",
-            "please_choose_players": "Please choose {X} players to observe"
-        },
-        "different_game_intro": {
-            "different_version": "Now, we will play a different version of the game.",
-            "instead_of": "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
-        }
+  "en": {
+    "admin_panel": {
+      "copy_to_clipboard": "Copy to clipboard",
+      "copy_url": "Copy URL",
+      "create_session": "If you are an Administrator attempting to create a session or add users, please click on this link: ",
+      "email": "Email",
+      "facilitator_password": "Facilitator Password",
+      "facilitator_username": "Facilitator Username",
+      "facilitators": "Only for facilitators!",
+      "firstname": "First Name",
+      "for_admin_only": "If you are attempting to access a particular game, please reach out to your game coordinator.",
+      "lastname": "Last Name",
+      "login": "Log In",
+      "logout": "Logout",
+      "new_session": "New Session",
+      "number_of_games": "Number of Game",
+      "players": "Players",
+      "school": "School",
+      "session_and_game_created": "Your session (ID: {Y}) and first game (ID: {X}) have been created! ",
+      "session_created": "Your session (ID: {Y}) has been created! ",
+      "student_language": "Language of Student",
+      "student_name": "First and Last Name",
+      "success": "Success: "
+    },
+    "different_game_choices": {
+      "now_you_can_observe": "Now you can choose the players you will observe in the following rounds in this game.",
+      "please_choose_players": "Please choose {X} players to observe"
+    },
+    "different_game_intro": {
+      "different_version": "Now, we will play a different version of the game.",
+      "instead_of": "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
+    },
+    "final_score": {
+      "ask_your_teachers": "Ask your teachers about getting your reward!",
+      "congratulations": "Congratulations!",
+      "denars": "{X} denars!",
+      "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
+    },
+    "game": {
+      "guess_color": "Guess the color of the bag:",
+      "see_what_others_guessed": "See what some other players guessed in the last round:",
+      "the_computer_chose": "The computer chose a bag and split the balls randomly among the players.",
+      "your_ball": "Your ball:",
+      "your_information": "The computer shows you:",
+      "your_previous_guess": "Your previous guess:"
+    },
+    "game_results": {
+      "better_luck": "Better luck next time!",
+      "the_computer_chose": "The computer chose:",
+      "you_won": "You won!",
+      "your_guess": "Your last guess:"
+    },
+    "header": {
+      "official_game": "Official Game",
+      "practice": "Practice Game",
+      "round": "Round",
+      "score": "Score"
+    },
+    "intro_practice": {
+      "now_you_will_play": "Now you will play 2 practice games to get used to the rules.",
+      "since_these_rules": "Since these are practice rounds, we will not reward anyone for their performance."
+    },
+    "ready_to_play": {
+      "get_ready": "Get ready to play Red or Blue!",
+      "im_ready": "I'm ready!",
+      "select_student": "Select the name of the student who will sit at this desk.",
+      "welcome": "Welcome!"
+    },
+    "real_game_intro": {
+      "added_points": "{X} points will be added to your final reward.",
+      "get_ready": "Get ready to win and earn money!",
+      "if_you_win": "If you win in this game, {X} points will be added to your score and final reward.",
+      "now_we_practiced": "Now that we practiced, we will play the real games."
+    },
+    "thanks_screen": {
+      "have_a_great_day": "Have a great day!",
+      "thanks": "Thanks for playing!"
+    },
+    "util": {
+      "blue": "BLUE",
+      "next": "Next",
+      "or": "or",
+      "player": "Player",
+      "red": "RED"
+    },
+    "waiting_screen": {
+      "waiting": "Waiting for others..."
     }
+  }
 }

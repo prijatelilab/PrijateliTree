@@ -42,7 +42,9 @@ class Translator:
             # Iterate over the game sections
             for game_section in self.game_sections:
                 # Get the rows for the current game section
-                game_section_df = self.df.loc[self.df["game_section"] == game_section]
+                game_section_df = self.df.loc[
+                    self.df["game_section"] == game_section
+                ]
                 # Add empty dictionary for the current game section
                 self.translations[language][game_section] = {}
 
@@ -53,7 +55,9 @@ class Translator:
                     translation = row[language]
 
                     # Add translation to the dictionary
-                    self.translations[language][game_section][subcolumn] = translation
+                    self.translations[language][game_section][
+                        subcolumn
+                    ] = translation
 
     def save_to_jsons(self):
         """Saves the translations to json files"""

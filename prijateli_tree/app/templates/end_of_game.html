@@ -16,15 +16,15 @@
     </div>
     <div>
       {% if correct_color == "B" %}
-        {{ text.game_results.the_computer_chose_blue }}
+        {{ text.game_results.the_computer_chose }} {{ text.util.blue }}.
       {% else %}
-        {{ text.game_results.the_computer_chose_red }}
+        {{ text.game_results.the_computer_chose }} {{ text.util.red }}.
       {% endif %}
     </div>
     {% if player_answer == "B" %}
-      You chose Blue.
+      {{ text.game_results.your_guess }} {{ text.util.blue }}.
     {% else %}
-      You chose Red.
+    {{ text.game_results.your_guess }} {{ text.util.red }}.
     {% endif %}
     <div class="pt-2">
       {% if practice_game %}
@@ -36,7 +36,7 @@
     <div class="p-5">
       <form method="get"
             action="{{ url_for('go_to_next_game', player_id=player_id, game_id=game_id) }}">
-        <button class="btn btn-primary" type="submit" value="submit">{{ text.rules_screen.next }}</button>
+        <button class="btn btn-primary" type="submit" value="submit">{{ text.util.next }}</button>
       </form>
     </div>
   </div>

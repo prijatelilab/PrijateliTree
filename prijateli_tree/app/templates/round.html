@@ -45,7 +45,7 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <h1>{{ text.game_first_round.guess_color }}</h1>
+    <h1>{{ text.game.guess_color }}</h1>
     <!-- Button for 'Red' answer -->
     <form action="{{ url_for('route_add_answer', game_id=game_id, player_id=player_id) }}"
           method="post">

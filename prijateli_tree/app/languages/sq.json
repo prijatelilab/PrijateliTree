@@ -26,7 +26,7 @@
         "game": {
             "the_computer_chose": "Kompjutori zgjodhi një çantë dhe ndau topat në mënyrë të rastësishme për secilin lojtar.",
             "your_information": "Kompjutori të paraqet:",
-            "your_ball": "Topi yt",
+            "your_ball": "Topi yt:",
             "guess_color": "Gjeni ngjyrën e çantës:",
             "see_what_others_guessed": "Shihni çfarë supozuan disa lojtarë të tjerë në raundin e fundit:",
             "your_previous_guess": "Supozimi juaj paraprak"

@@ -1,6 +1,7 @@
 """This script processes the translations file  and creates a json file for each language."""
 
 # Global imports
+import os
 import json
 
 import pandas as pd

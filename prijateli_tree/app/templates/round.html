@@ -8,7 +8,7 @@
     {% if first_round %}
       {{ text.game.the_computer_chose }}
       <h2>
-        Your Ball:
+        {{ text.game.your_ball }}:
         {% if ball == 'R' %}
           <span class="text-danger">{{ text.util.red }}</span>
         {% elif ball == 'B' %}
@@ -18,7 +18,7 @@
         {% endif %}
       </h2>
     {% else %}
-      <h1>Your Previous Guess</h1>
+      <h1> {{text.game.your_previous_guess}} </h1>
       <h2>
         {% if previous_answers.your_previous_answer == 'R' %}
           <span class="text-danger">{{ text.util.red }}</span>

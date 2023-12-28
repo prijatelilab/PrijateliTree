@@ -29,8 +29,8 @@ from prijateli_tree.app.database import (
     GameSession,
     GameSessionPlayer,
     GameType,
-    SessionLocal,
     User,
+    get_db,
 )
 from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
@@ -51,14 +51,6 @@ templates.env.globals["URL"] = URL
 logger = logging.getLogger()
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 router = APIRouter()
 
 login_manager = LoginManager(
@@ -68,7 +60,7 @@ login_manager = LoginManager(
 )
 
 
-@login_manager.user_loader(db_session=SessionLocal())
+@login_manager.user_loader(db_session=get_db())
 def query_user(user_uuid: int, db_session: Session) -> User | None:
     return db_session.query(User).filter_by(uuid=user_uuid).one_or_none()
 

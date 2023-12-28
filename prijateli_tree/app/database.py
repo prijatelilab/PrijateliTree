@@ -47,10 +47,6 @@ class Database:
         return cls.instance.client
 
 
-def get_db() -> Session:
-    return Database()
-
-
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)

@@ -10,11 +10,11 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
+    Database,
     Game,
     GameAnswer,
     GamePlayer,
     GameSessionPlayer,
-    get_db,
 )
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
@@ -68,7 +68,7 @@ def choose_session_id(request: Request) -> Response:
 
 @router.get("/session/{session_id}", response_class=HTMLResponse)
 def choose_session_players(
-    request: Request, session_id: int, db: Session = Depends(get_db)
+    request: Request, session_id: int, db: Session = Depends(Database)
 ) -> Response:
     games = db.query(Game).filter_by(game_session_id=session_id).all()
     raise_exception_if_not(games, "session not found or games not created")
@@ -93,7 +93,7 @@ def start_session(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     _, player = get_game_and_player(game_id, player_id, db)
     template_text = languages[player.language.abbr]
@@ -116,7 +116,7 @@ def start_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Function that returns the start of game page and
@@ -142,7 +142,7 @@ def view_round(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Function that returns the current round
@@ -186,7 +186,7 @@ def route_add_answer(
     game_id: int,
     player_id: int,
     player_answer: str = Form(...),
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> RedirectResponse:
     """
     Function that updates the player's guess in the database
@@ -229,7 +229,7 @@ def route_add_answer(
 def all_set(
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> JSONResponse:
     """
     Determines if all players have submitted a guess in the current round
@@ -260,7 +260,7 @@ def waiting(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Wait screen shows until all players are ready to move to the next section
@@ -290,7 +290,7 @@ def waiting(
 def update_score(
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> JSONResponse:
     """
     Function that updates the player's score in the database
@@ -314,7 +314,7 @@ def get_qualtrics(
     request: Request,
     player_id: int,
     game_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     _, player = get_game_and_player(game_id, player_id, db)
 
@@ -348,7 +348,7 @@ def get_qualtrics(
 def route_get_score(
     request: Request,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> JSONResponse:
     session_player_id = (
         db.query(GamePlayer).filter_by(id=player_id).one().session_player_id
@@ -374,7 +374,7 @@ def end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Function that returns the end of game page and
@@ -415,7 +415,7 @@ def go_to_next_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ):
     """
     Moves player to first round of next game or ends the session
@@ -479,7 +479,7 @@ def real_game_transition(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Function that returns the start of game page and
@@ -510,7 +510,7 @@ def end_of_session(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Function that returns the end of session page and
@@ -548,7 +548,7 @@ def thank_you(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> Response:
     """
     Sends player to thank you page
@@ -568,7 +568,7 @@ def thank_you(
 
 @router.get("/{game_id}", response_class=JSONResponse)
 def route_game_access(
-    game_id: int, db: Session = Depends(get_db)
+    game_id: int, db: Session = Depends(Database)
 ) -> JSONResponse:
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     raise_exception_if_none(game, detail="game not found")
@@ -583,7 +583,7 @@ def route_game_access(
 
 @router.get("/{game_id}/player/{player_id}", response_class=JSONResponse)
 def route_game_player_access(
-    game_id: int, player_id: int, db: Session = Depends(get_db)
+    game_id: int, player_id: int, db: Session = Depends(Database)
 ) -> JSONResponse:
     # tests to ensure game and player exists
     _, _ = get_game_and_player(game_id, player_id, db)
@@ -601,7 +601,7 @@ def confirm_player(
     request: Request,
     player_id: int,
     game_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(Database),
 ) -> RedirectResponse:
     """
     Confirms if the player is ready for the game

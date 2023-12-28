@@ -25,6 +25,7 @@ The games are a means to provide insights into social learning, the economics of
 - `make clean`: Removes all Docker containers.
 - `make clean_all`: Removes the database link between the Docker containers and the self-hosted version of PostgreSQL.
 - `make test`: Runs all the tests in the `prijateli_tree/tests` folder using a Dockerized version of SQLite.
+- `make process_translations`: Runs `process_translations.py` -- ensure the latest excel file is in `/app/languages/` and adjust the filename in `constants` if necessary.
 
 ## General Debugging Notes
 - If you are failing the `Format-and-Fail` GitHub Action, you must run `make lint` and make any changes it requests.

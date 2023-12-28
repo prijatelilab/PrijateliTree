@@ -33,7 +33,7 @@ Base = declarative_base()
 class Database:
     instance = None
 
-    def __new__(cls):
+    def __new__(cls) -> Session:
         if cls.instance is None:
             cls.instance = super().__new__(cls)
             # Create and instantiate session.

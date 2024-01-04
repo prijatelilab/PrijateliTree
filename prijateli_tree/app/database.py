@@ -47,6 +47,14 @@ class Database:
         return cls.instance.client
 
 
+def get_db():
+    db = Database()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
@@ -258,7 +266,7 @@ class GamePlayer(Base):
     )
 
     @property
-    def language(self, db: Session = Database):
+    def language(self, db: Session = next(get_db())):
         user = db.query(User).filter_by(id=self.user_id).one()
         return db.query(Language).filter_by(id=user.language_id).one()
 
@@ -393,6 +401,6 @@ class GameSessionPlayer(Base):
     session = relationship("GameSession", back_populates="players")
 
     @property
-    def language(self, db: Session = Database):
+    def language(self, db: Session = next(get_db())):
         user = db.query(User).filter_by(id=self.user_id).one()
         return db.query(Language).filter_by(id=user.language_id).one()

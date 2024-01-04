@@ -7,7 +7,6 @@ from prijateli_tree.app.utils.constants import (
     KEY_ENV_DEV,
     KEY_ENV_PROD,
     KEY_ENV_TESTING,
-    LANGUAGE_ENGLISH,
 )
 
 
@@ -16,7 +15,6 @@ class BaseConfig:
     def __init__(self):
         # App Settings
         self.DEBUG = False
-        self.LANGUAGE = LANGUAGE_ENGLISH
         self.LOGGING_FORMAT = "%(levelname)s:\t%(message)s"
         self.LOG_LEVEL = logging.DEBUG
         self.TESTING = False

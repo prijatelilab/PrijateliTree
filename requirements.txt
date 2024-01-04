@@ -12,7 +12,6 @@ charset-normalizer==3.3.2 ; python_version >= "3.11" and python_version < "4.0"
 click==8.1.7 ; python_version >= "3.11" and python_version < "4.0"
 colorama==0.4.6 ; python_version >= "3.11" and python_version < "4.0" and (sys_platform == "win32" or platform_system == "Windows")
 et-xmlfile==1.1.0 ; python_version >= "3.11" and python_version < "4.0"
-fastapi-localization==0.0a2.dev3 ; python_version >= "3.11" and python_version < "4.0"
 fastapi-login==1.9.2 ; python_version >= "3.11" and python_version < "4.0"
 fastapi-sqlalchemy==0.2.1 ; python_version >= "3.11" and python_version < "4.0"
 fastapi==0.103.2 ; python_version >= "3.11" and python_version < "4.0"

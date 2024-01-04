@@ -394,20 +394,6 @@ typing-extensions = ">=4.5.0"
 all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=2.11.2)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.5)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
 
 [[package]]
-name = "fastapi-localization"
-version = "0.0a2.dev3"
-description = "Language localization fastapi"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "fastapi-localization-0.0a2.dev3.tar.gz", hash = "sha256:ade508d602083d948a90a5fdf259c24f7b55609437c2180cc26da23df41e05c3"},
-    {file = "fastapi_localization-0.0a2.dev3-py3-none-any.whl", hash = "sha256:512160db955a2cdc077c11e682f09f113c2a4cca3f8d570627a5d8ed1f341417"},
-]
-
-[package.dependencies]
-fastapi = "*"
-
-[[package]]
 name = "fastapi-login"
 version = "1.9.2"
 description = "Flask-Login like package for FastAPI"
@@ -1734,4 +1720,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a928fb48553888393debb1e0f7c55d935d8acc71585aa04159c6c8cbe3fa4ab5"
+content-hash = "49fb664f26836afbeeab4d86572c47ebdf359d1fc4417c08a24b157d2f1ddce4"

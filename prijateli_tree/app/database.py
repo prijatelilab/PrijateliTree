@@ -1,4 +1,6 @@
+import logging
 import os
+from datetime import datetime
 
 from sqlalchemy import (
     Boolean,
@@ -46,8 +48,10 @@ class Database:
             )()
         return cls.instance.client
 
+    @classmethod
     def close_connection(cls):
         if cls.instance is not None:
+            logging.info(f"Database connection closed at {datetime.now()}")
             cls.instance.client.close()
 
 

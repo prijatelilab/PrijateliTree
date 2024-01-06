@@ -46,6 +46,10 @@ class Database:
             )()
         return cls.instance.client
 
+    def close_connection(cls):
+        if cls.instance is not None:
+            cls.instance.client.close()
+
 
 class User(Base):
     __tablename__ = "users"

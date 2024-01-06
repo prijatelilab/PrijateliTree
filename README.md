@@ -8,7 +8,7 @@ and other human behaviors.
 - Poetry package manager. If you need information on how to download poetry, check [here](https://python-poetry.org/docs/#installation).
 - PostgreSQL v14.
   - For accessing the database your configuration should look roughly like this:\
-  <img src="misc/DBConfig.png" width="400px">
+  <img src="misc/DBConfig.png" alt="Database Access Configuration" width="400px">
 
 ## Steps for Running the Application
 1. Enter the `poetry shell` command from the base folder repository.

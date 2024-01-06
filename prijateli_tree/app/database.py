@@ -46,6 +46,7 @@ class Database:
                     config.SQLALCHEMY_DATABASE_URI,
                 ),
             )()
+            logging.info(f"Database connection created at {datetime.now()}")
         return cls.instance.client
 
     @classmethod

@@ -142,9 +142,7 @@ class Denars(Base):
     )
     created_by_session_id = Column(
         Integer,
-        ForeignKey(
-            "game_sessions.id", name="denars_created_by_session_id_fkey"
-        ),
+        ForeignKey("game_sessions.id", name="denars_created_by_session_id_fkey"),
         nullable=True,
     )
     created_by_user_id = Column(
@@ -220,6 +218,7 @@ class Game(Base):
     game_type = relationship(
         "GameType", foreign_keys="Game.game_type_id", back_populates="games"
     )
+    winning_score = Column(Integer, nullable=False)
     players = relationship("GamePlayer", back_populates="game")
     session = relationship("GameSession", back_populates="games")
 
@@ -293,9 +292,7 @@ class GameAnswer(Base):
         back_populates="answers",
     )
     __table_args__ = (
-        UniqueConstraint(
-            "game_player_id", "round", name="game_player_id_round_key"
-        ),
+        UniqueConstraint("game_player_id", "round", name="game_player_id_round_key"),
     )
 
 
@@ -360,9 +357,7 @@ class GameSession(Base):
     )
     # 16 was used as the default, but it can really be any number.
     num_games = Column(Integer, nullable=False, server_default=text("16"))
-    finished = Column(
-        Boolean, nullable=False, server_default=expression.false()
-    )
+    finished = Column(Boolean, nullable=False, server_default=expression.false())
 
     games = relationship(
         "Game",

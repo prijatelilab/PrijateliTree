@@ -2,16 +2,12 @@
 
 from collections import Counter
 from http import HTTPStatus
+from typing import Any
 
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import (
-    Database,
-    Game,
-    GamePlayer,
-    GameSessionPlayer,
-)
+from prijateli_tree.app.database import Game, GamePlayer, GameSessionPlayer
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
     BALL_RED,
@@ -62,12 +58,12 @@ class GameUtil:
         return False
 
 
-def raise_exception_if_none(x, detail) -> None:
+def raise_exception_if_none(x: Any, detail: str) -> None:
     if x is None:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
 
-def raise_exception_if_not(x, detail) -> None:
+def raise_exception_if_not(x: Any, detail: str) -> None:
     if not x:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=detail)
 
@@ -87,7 +83,7 @@ def get_bag_color(bag) -> str:
     return correct_answer
 
 
-def get_current_round(game_id: int, db: Session = Depends(Database)) -> int:
+def get_current_round(game_id: int, db: Session) -> int:
     """
     Gets the game's current round given the game id
     """
@@ -103,7 +99,7 @@ def get_current_round(game_id: int, db: Session = Depends(Database)) -> int:
 
 
 def get_game_and_player(
-    game_id: int, player_id: int, db: Session = Depends(Database)
+    game_id: int, player_id: int, db: Session
 ) -> (Game, GamePlayer):
     """
     Helper function to ensure game and player exist
@@ -119,7 +115,7 @@ def get_game_and_player(
     return game, filtered_player[0]
 
 
-def get_lang_from_player_id(player_id: int, db: Depends(Database)) -> str:
+def get_lang_from_player_id(player_id: int, db: Session) -> str:
     """
     Get language from player_id
     """
@@ -133,7 +129,7 @@ def get_lang_from_player_id(player_id: int, db: Depends(Database)) -> str:
 def did_player_win(
     game: Game,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session,
 ) -> dict:
     """
     Helper function that determines if the player won,
@@ -155,7 +151,7 @@ def did_player_win(
 
 
 def get_session_player_from_player(
-    player: GamePlayer, db: Session = Depends(Database)
+    player: GamePlayer, db: Session
 ) -> GameSessionPlayer | None:
     session_player = (
         db.query(GameSessionPlayer)
@@ -173,7 +169,7 @@ def get_session_player_from_player(
 def get_previous_answers(
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session,
 ) -> dict:
     """
     Function that returns the player's previous answer
@@ -223,9 +219,7 @@ def get_previous_answers(
     }
 
 
-def get_game_and_type(
-    game_id: int, db: Session = Depends(Database)
-) -> (Game, str):
+def get_game_and_type(game_id: int, db: Session) -> (Game, str):
     """
     Helper function to ensure game and game type exist
     """
@@ -236,7 +230,7 @@ def get_game_and_type(
     return game, game.game_type
 
 
-def get_score_and_name(player: GamePlayer, db: Session = Depends(Database)):
+def get_score_and_name(player: GamePlayer, db: Session):
     """
     Gets the player's score and name from the session player object
     by using the game player object
@@ -248,7 +242,7 @@ def get_score_and_name(player: GamePlayer, db: Session = Depends(Database)):
     return {"player_name": player_name, "player_score": player_score}
 
 
-def get_header_data(player: GamePlayer, db: Session = Depends(Database)):
+def get_header_data(player: GamePlayer, db: Session):
     """
     Gets the player's score, name and game progress
     """
@@ -258,7 +252,7 @@ def get_header_data(player: GamePlayer, db: Session = Depends(Database)):
     return {**score_dict, **progress_dict}
 
 
-def get_games_progress(player: GamePlayer, db: Session = Depends(Database)):
+def get_games_progress(player: GamePlayer, db: Session):
     """
     Gets the player's progress in the overall session
     """

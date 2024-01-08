@@ -22,6 +22,8 @@ ROLE_ADMIN = "admin"
 ROLE_STUDENT = "student"
 ROLE_SUPER_ADMIN = "super-admin"
 SYSTEM_ID = 0
+ROUNDS_ARRAY = [3, 4, 5]
+
 
 # Language Constants
 LANGUAGE_ALBANIAN = "al"
@@ -33,12 +35,9 @@ LANGUAGE_FILE = "language_6person 12242023.xlsx"
 
 # Point Constants
 WINNING_SCORE = 100
+WINNING_SCORES = [100, 200, 300, 400, 500]
 DENAR_FACTOR = 0.25
 
 # Survey Constants
-PRE_SURVEY_LINK = (
-    "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
-)
-POST_SURVEY_LINK = (
-    "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"
-)
+PRE_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
+POST_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"

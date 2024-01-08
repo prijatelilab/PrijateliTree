@@ -217,6 +217,7 @@ def create_session(
             lang_dict[p.language.abbr] = [p]
 
     for v in lang_dict.values():
+        print(len(v))
         if len(v) != 3:
             redirect_url = URL("/admin/session").include_query_params(
                 error="A session must contain exactly 3 players of different "
@@ -259,6 +260,8 @@ def create_session(
     game = None
     previous_game = None
     network_type = [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+    random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
+
     for i in range(2):
         if game:
             previous_game = game
@@ -272,6 +275,7 @@ def create_session(
             .id,
             rounds=NUMBER_OF_ROUNDS,
             practice=True,
+            winning_score=random_score,
         )
 
         db.add(game)

@@ -35,9 +35,14 @@ LANGUAGE_FILE = "language_6person 12242023.xlsx"
 
 # Point Constants
 WINNING_SCORE = 100
-WINNING_SCORES = [100, 200, 300, 400, 500]
+WINNING_SCORES = [100, 500]
+WINNING_WEIGHTS = [0.8, 0.2]
 DENAR_FACTOR = 0.25
 
 # Survey Constants
-PRE_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
-POST_SURVEY_LINK = "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"
+PRE_SURVEY_LINK = (
+    "https://uchicago.co1.qualtrics.com/jfe/form/SV_eaqREcRYZgwsuHk"
+)
+POST_SURVEY_LINK = (
+    "https://uchicago.co1.qualtrics.com/jfe/form/SV_bwNRzTxU1cU5m7Q"
+)

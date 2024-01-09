@@ -22,7 +22,6 @@ from prijateli_tree.app.utils.constants import (
     POST_SURVEY_LINK,
     PRE_SURVEY_LINK,
     STANDARD_ENCODING,
-    WINNING_SCORE,
 )
 from prijateli_tree.app.utils.games import (
     did_player_win,
@@ -129,7 +128,7 @@ def start_of_game(
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "points": WINNING_SCORE,
+        "points": game.winning_score,
         "text": template_text,
         "practice_game": game.practice,
     }
@@ -302,7 +301,9 @@ def update_score(
             session_player = get_session_player_from_player(player, db)
             game_status = did_player_win(game, player_id, db)
             session_player.correct_answers += game_status["is_correct"]
-            session_player.points += game_status["is_correct"] * WINNING_SCORE
+            session_player.points += (
+                game_status["is_correct"] * game.winning_score
+            )
         db.commit()
         db.refresh(player)
 
@@ -388,7 +389,7 @@ def end_of_game(
 
     points = 0
     if game_status["is_correct"]:
-        points = WINNING_SCORE
+        points = game.winning_score
 
     template_text = languages[player.language.abbr]
 
@@ -485,7 +486,7 @@ def real_game_transition(
     Function that returns the start of game page and
     template.
     """
-    _, player = get_game_and_player(game_id, player_id, db)
+    game, player = get_game_and_player(game_id, player_id, db)
     header = get_header_data(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
@@ -493,7 +494,7 @@ def real_game_transition(
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "points": WINNING_SCORE,
+        "points": game.winning_score,
         "text": template_text,
         "completed_game": True,
         **header,

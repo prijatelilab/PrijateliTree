@@ -40,6 +40,9 @@ from prijateli_tree.app.utils.constants import (
     ROLE_ADMIN,
     ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
+    ROUNDS_ARRAY,
+    WINNING_SCORES,
+    WINNING_WEIGHTS,
 )
 from prijateli_tree.app.utils.games import raise_exception_if_not
 
@@ -256,6 +259,8 @@ def create_session(
     game = None
     previous_game = None
     network_type = [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+    random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
+
     for i in range(2):
         if game:
             previous_game = game
@@ -269,6 +274,7 @@ def create_session(
             .id,
             rounds=NUMBER_OF_ROUNDS,
             practice=True,
+            winning_score=random_score,
         )
 
         db.add(game)
@@ -332,13 +338,19 @@ def create_session_games(
             .all()
         )
         game_type = random.choice(game_types)
-        n_rounds = random.choice([3, 4, 5])
+        n_rounds = random.choice(ROUNDS_ARRAY)
+
+        # Add score
+        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[
+            0
+        ]
 
         game = Game(
             created_by=session.created_by,
             game_session_id=session.id,
             game_type_id=game_type.id,
             rounds=n_rounds,
+            winning_score=random_score,
         )
 
         db.add(game)

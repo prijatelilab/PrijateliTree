@@ -220,6 +220,7 @@ class Game(Base):
     game_type = relationship(
         "GameType", foreign_keys="Game.game_type_id", back_populates="games"
     )
+    winning_score = Column(Integer, nullable=False)
     players = relationship("GamePlayer", back_populates="game")
     session = relationship("GameSession", back_populates="games")
 

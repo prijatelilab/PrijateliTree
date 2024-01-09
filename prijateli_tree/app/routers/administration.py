@@ -217,7 +217,6 @@ def create_session(
             lang_dict[p.language.abbr] = [p]
 
     for v in lang_dict.values():
-
         if len(v) != 3:
             redirect_url = URL("/admin/session").include_query_params(
                 error="A session must contain exactly 3 players of different "

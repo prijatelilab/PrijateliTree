@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from prijateli_tree.app.config import config
+from prijateli_tree.app.database import Database
 from prijateli_tree.app.routers import administration, games
 from prijateli_tree.app.utils.constants import KEY_ENV
 
@@ -43,3 +44,9 @@ logger.debug("Routers loaded and static files mounted.")
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request) -> Response:
     return templates.TemplateResponse("home_page.html", {"request": request})
+
+
+@app.on_event("shutdown")
+def close_external_connections():
+    # Close database connection on application shutdown
+    Database.close_connection()

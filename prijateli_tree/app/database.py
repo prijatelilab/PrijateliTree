@@ -1,4 +1,6 @@
+import logging
 import os
+from datetime import datetime
 
 from sqlalchemy import (
     Boolean,
@@ -44,7 +46,14 @@ class Database:
                     config.SQLALCHEMY_DATABASE_URI,
                 ),
             )()
+            logging.info(f"Database connection created at {datetime.now()}")
         return cls.instance.client
+
+    @classmethod
+    def close_connection(cls):
+        if cls.instance is not None:
+            logging.info(f"Database connection closed at {datetime.now()}")
+            cls.instance.client.close()
 
 
 class User(Base):
@@ -211,6 +220,7 @@ class Game(Base):
     game_type = relationship(
         "GameType", foreign_keys="Game.game_type_id", back_populates="games"
     )
+    winning_score = Column(Integer, nullable=False)
     players = relationship("GamePlayer", back_populates="game")
     session = relationship("GameSession", back_populates="games")
 

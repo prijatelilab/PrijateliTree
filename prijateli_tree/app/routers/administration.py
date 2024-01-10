@@ -36,11 +36,11 @@ from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
+    NUMBER_OF_GAMES,
     NUMBER_OF_ROUNDS,
     ROLE_ADMIN,
     ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
-    NUMBER_OF_GAMES,
 )
 from prijateli_tree.app.utils.games import raise_exception_if_not
 
@@ -193,7 +193,7 @@ def create_session(
 ) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
-    
+
     if num_games is None:
         num_games = NUMBER_OF_GAMES
         logging.info(f"Setting number of games to {num_games}")

@@ -184,13 +184,13 @@ def dashboard_create_session(
 
 @router.post("/session", response_class=HTMLResponse)
 def create_session(
-    num_games: Annotated[int, Form()],
     player_one: Annotated[int, Form()],
     player_two: Annotated[int, Form()],
     player_three: Annotated[int, Form()],
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    num_games: Annotated[int, Form()] | None = None,
     user=Depends(login_manager.optional),
     db: Session = Depends(Database),
 ) -> RedirectResponse:

@@ -367,6 +367,56 @@ def create_session_games(
         add_players_to_game(pos_players, game, db)
 
 
+def create_self_selected_game(
+    session,
+    game,
+    db: Session = Depends(Database),
+) -> None:
+    """
+    Creates a self-selected game
+    """
+    for i in range(session.num_games):
+        previous_game = game
+        game_types = (
+            db.query(GameType)
+            .filter(GameType.network.in_([NETWORK_TYPE_SELF_SELECTED]))
+            .all()
+        )
+        game_type = random.choice(game_types)
+        n_rounds = random.choice(ROUNDS_ARRAY)
+
+        # Add score
+        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
+
+        game = Game(
+            created_by=session.created_by,
+            game_session_id=session.id,
+            game_type_id=game_type.id,
+            rounds=n_rounds,
+            winning_score=random_score,
+        )
+
+        db.add(game)
+        db.commit()
+        db.refresh(game)
+
+        previous_game.next_game_id = game.id
+        db.commit()
+
+        # Sommething missing here about the network
+
+        # randomize location in network conditional on language
+        # one group is always in 1-2-3 and the other 4-5-6
+        group_1 = [p for p in previous_game.players if p.position in (1, 2, 3)]
+        random.shuffle(group_1)
+
+        group_2 = [p for p in previous_game.players if p.position in (4, 5, 6)]
+        random.shuffle(group_2)
+
+        pos_players = group_1 + group_2
+        add_players_to_game(pos_players, game, db)
+
+
 def add_players_to_game(pos_players: list[GamePlayer], game, db) -> None:
     """ """
     rand_bag = random.sample(game.game_type.bag, len(game.game_type.bag))

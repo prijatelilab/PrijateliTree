@@ -4,6 +4,50 @@
 {% endblock title %}
 {% block helper_script %}
   <script>
+  $(document).ready(function() {
+     $('#students').DataTable({
+       "select": 'multi',
+    });
+
+    $('#students tbody').on( 'click', 'tr', function () {
+        $(this).toggleClass('selected');
+    } );
+
+    $('#button').click( function () {
+      const selectedRows = $('#students').DataTable().rows('.selected').data().toArray();
+      const formData = new FormData();
+      const numbers = ["one", "two", "three", "four", "five", "six"]
+      const languageCounter = {}
+
+      for (i in selectedRows) {
+        formData.append("player_" + numbers[i], parseInt(selectedRows[i][0]))
+        lang = selectedRows[i][1]
+        languageCounter[lang] = languageCounter[lang] ? languageCounter[lang]  + 1 : 1;
+      }
+      const languageCounts = Object.values(languageCounter)
+      if (selectedRows.length != 6) {
+        alert("Must select 6 students")
+        return
+      } else if (languageCounts[0] != 3 || languageCounts[1] != 3) {
+        alert("A session must contain exactly 3 players from distinct mother tongues")
+        return
+      }
+
+      console.log(formData)
+
+      fetch('{{ url_for("create_session") }}', {
+          method: 'POST',
+          body: formData
+        })
+      .then(resp => {
+        window.location.href = resp.url
+      }) // or, resp.text(), etc
+      .catch(error => {
+          console.error(error);
+      });
+    });
+  });
+
   function cleanParams() {
       // Used to clear the URL of parameters after the banner alert is closed.
       window.history.replaceState(null, '', window.location.pathname);
@@ -21,7 +65,43 @@
               onclick="cleanParams()"></button>
     </div>
   {% endif %}
+  <!-- DataTable columns and headers go here -->
   <div class="container-sm">
+    <div class="row">
+      <table id="students" class="display  bg-light-subtle ">
+        <caption>List of Students</caption>
+        <thead>
+          <tr>
+            <th scope="col" hidden>ID</th>
+            <th scope="col" hidden>Language</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Grade</th>
+            <th scope="col">High School</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          {% if students|length == 0 %}
+            <tr class="empty-table">
+              <td colspan="7">There are no students currently in the system.</td>
+            </tr>
+          {% endif %}
+          {% for s in students|sort(attribute='high_school.name, last_name') %}
+            <tr>
+              <!-- hidden columns referenced in js-->
+              <td hidden>{{ s.id }}</td>
+              <td hidden>{{ s.language.abbr }}</td>
+              <td>{{ s.name_str }}</td>
+              <td>{{ s.email }}</td>
+              <td>{{ s.grade_level }}</td>
+              <td>{{ s.high_school.name }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button id="button" class="btn btn-primary float-start">Save Selection</button>
+    <!--START OF FORM-->
     <div class="row">
       <div class="form-container bg-light-subtle col-xs-12 offset-md-1 col-md-10 offset-lg-1 col col-lg-10 offset-xl-3 col col-xl-6">
         <form method="post" action='{{ url_for("create_session") }}'>

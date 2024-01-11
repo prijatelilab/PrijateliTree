@@ -36,6 +36,7 @@ from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
+    NUMBER_OF_GAMES,
     NUMBER_OF_ROUNDS,
     ROLE_ADMIN,
     ROLE_STUDENT,
@@ -183,19 +184,22 @@ def dashboard_create_session(
 
 @router.post("/session", response_class=HTMLResponse)
 def create_session(
-    num_games: Annotated[int, Form()],
     player_one: Annotated[int, Form()],
     player_two: Annotated[int, Form()],
     player_three: Annotated[int, Form()],
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    num_games: Annotated[int, Form()] | None = None,
     user=Depends(login_manager.optional),
     db: Session = Depends(Database),
 ) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
+    if num_games is None:
+        num_games = NUMBER_OF_GAMES
+        logging.info(f"Setting number of games to {num_games}")
     player_ids = [
         player_one,
         player_two,
@@ -235,7 +239,7 @@ def create_session(
             redirect_url,
             status_code=HTTPStatus.FOUND,
         )
-
+    logging.info("Setting up session")
     session = GameSession(
         created_by=user.id,
         num_games=num_games,

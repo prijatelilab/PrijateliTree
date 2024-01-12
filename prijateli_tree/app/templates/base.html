@@ -17,6 +17,8 @@
     </title>
     <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}"
           rel="stylesheet">
+    <link href="{{ url_for('static', path='css/datatables.min.css') }}"
+          rel="stylesheet">
     <link href="{{ url_for('static', path='/css/custom.css') }}"
           rel="stylesheet">
     <script type="text/javascript"
@@ -27,6 +29,8 @@
             src="{{ url_for('static', path='/js/jquery.dataTables.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', path='/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{url_for('static', path='js/dataTables.select.min.js')}}"></script>
     {% block helper_script %}
     {% endblock helper_script %}
   </head>

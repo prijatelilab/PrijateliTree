@@ -36,7 +36,7 @@ from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
-    NETWORK_TYPE_SELF_SELECTED,
+    NUMBER_OF_GAMES,
     NUMBER_OF_ROUNDS,
     ROLE_ADMIN,
     ROLE_STUDENT,
@@ -184,19 +184,22 @@ def dashboard_create_session(
 
 @router.post("/session", response_class=HTMLResponse)
 def create_session(
-    num_games: Annotated[int, Form()],
     player_one: Annotated[int, Form()],
     player_two: Annotated[int, Form()],
     player_three: Annotated[int, Form()],
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    num_games: Annotated[int, Form()] | None = None,
     user=Depends(login_manager.optional),
     db: Session = Depends(Database),
 ) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
+    if num_games is None:
+        num_games = NUMBER_OF_GAMES
+        logging.info(f"Setting number of games to {num_games}")
     player_ids = [
         player_one,
         player_two,
@@ -236,7 +239,7 @@ def create_session(
             redirect_url,
             status_code=HTTPStatus.FOUND,
         )
-
+    logging.info("Setting up session")
     session = GameSession(
         created_by=user.id,
         num_games=num_games,
@@ -291,9 +294,7 @@ def create_session(
         position = 1
         for p_list in lang_dict.values():
             for p in p_list:
-                session_player = [
-                    sp for sp in session.players if sp.user_id == p.id
-                ][0]
+                session_player = [sp for sp in session.players if sp.user_id == p.id][0]
                 db.add(
                     GamePlayer(
                         created_by=user.id,
@@ -332,9 +333,7 @@ def create_session_games(
         game_types = (
             db.query(GameType)
             .filter(
-                GameType.network.in_(
-                    [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
-                )
+                GameType.network.in_([NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED])
             )
             .all()
         )
@@ -342,9 +341,7 @@ def create_session_games(
         n_rounds = random.choice(ROUNDS_ARRAY)
 
         # Add score
-        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[
-            0
-        ]
+        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
 
         game = Game(
             created_by=session.created_by,
@@ -392,9 +389,7 @@ def create_self_selected_games(
         n_rounds = random.choice(ROUNDS_ARRAY)
 
         # Add score
-        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[
-            0
-        ]
+        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
 
         game = Game(
             created_by=session.created_by,
@@ -497,9 +492,7 @@ def add_students(
 
     except Exception as e:
         # Rollback the transaction if an error occurs
-        raise HTTPException(
-            status_code=500, detail=f"Internal Server Error: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
     finally:
         file.file.close()

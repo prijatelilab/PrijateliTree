@@ -383,7 +383,10 @@ def create_self_selected_games(
         previous_game = game
         game_types = (
             db.query(GameType)
-            .filter(GameType.network.in_([NETWORK_TYPE_SELF_SELECTED]))
+            .filter(
+                GameType.network.in_([NETWORK_TYPE_SELF_SELECTED]),
+                GameType.names_hidden.is_(False),
+            )
             .all()
         )
         game_type = random.choice(game_types)

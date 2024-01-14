@@ -36,6 +36,7 @@ from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
+    NETWORK_TYPE_SELF_SELECTED,
     NUMBER_OF_GAMES,
     NUMBER_OF_ROUNDS,
     ROLE_ADMIN,

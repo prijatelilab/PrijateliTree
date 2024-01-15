@@ -295,7 +295,9 @@ def create_session(
         position = 1
         for p_list in lang_dict.values():
             for p in p_list:
-                session_player = [sp for sp in session.players if sp.user_id == p.id][0]
+                session_player = [
+                    sp for sp in session.players if sp.user_id == p.id
+                ][0]
                 db.add(
                     GamePlayer(
                         created_by=user.id,
@@ -334,7 +336,9 @@ def create_session_games(
         game_types = (
             db.query(GameType)
             .filter(
-                GameType.network.in_([NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED])
+                GameType.network.in_(
+                    [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+                )
             )
             .all()
         )
@@ -342,7 +346,9 @@ def create_session_games(
         n_rounds = random.choice(ROUNDS_ARRAY)
 
         # Add score
-        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
+        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[
+            0
+        ]
 
         game = Game(
             created_by=session.created_by,
@@ -393,7 +399,9 @@ def create_self_selected_games(
         n_rounds = random.choice(ROUNDS_ARRAY)
 
         # Add score
-        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
+        random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[
+            0
+        ]
 
         game = Game(
             created_by=session.created_by,
@@ -496,7 +504,9 @@ def add_students(
 
     except Exception as e:
         # Rollback the transaction if an error occurs
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Internal Server Error: {str(e)}"
+        )
 
     finally:
         file.file.close()

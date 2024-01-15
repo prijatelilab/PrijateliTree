@@ -421,4 +421,13 @@ class PlayerNetwork(Base):
         ForeignKey("game_players.id", name="game_players_player_id_fkey"),
         nullable=False,
     )
-    neigbor_id = Column(Integer, nullable=False)
+    neighbor_id = Column(
+        Integer,
+        ForeignKey("game_players.id", name="game_players_neighbor_id_fkey"),
+        nullable=False,
+    )
+
+    player = relationship("GamePlayer", foreign_keys="PlayerNetwork.player_id")
+    neighbor = relationship(
+        "GamePlayer", foreign_keys="PlayerNetwork.neighbor_id"
+    )

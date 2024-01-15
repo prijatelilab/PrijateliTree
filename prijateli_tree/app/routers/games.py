@@ -179,6 +179,18 @@ def view_round(
     )
 
 
+@router.get("/{game_id}/player/{player_id}/choose_neigbors")
+def choose_neighbors(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(Database),
+) -> Response:
+    """
+    Function that will allow each player to choose their neighbors
+    """
+    pass
+
+
 @router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(
     request: Request,
@@ -424,7 +436,6 @@ def go_to_next_game(
     game, player = get_game_and_player(game_id, player_id, db)
 
     if game.next_game_id is None:
-        # TODO: end of session screen
         redirect_url = request.url_for(
             "get_qualtrics", game_id=game_id, player_id=player_id
         )

@@ -256,20 +256,20 @@ def add_neighbors(
 
     # Add the neighbors to the player_network table
     if player_three:
-        neighbors = [player_one.id, player_two.id, player_three.id]
+        neighbors = [player_one, player_two, player_three]
 
     else:
-        neighbors = [player_one.id, player_two.id]
+        neighbors = [player_one, player_two]
 
-    # for neighbor in neighbors:
-    #     new_neighbor = PlayerNetwork(
-    #         game_id=game.id,
-    #         player_id=player.game_player_id,
-    #         neighbor_id=neighbor.game_player_id,
-    #     )
-    #     db.add(new_neighbor)
-    #     db.commit()
-    #     db.refresh(new_neighbor)
+    for neighbor in neighbors:
+        new_neighbor = PlayerNetwork(
+            game_id=game.id,
+            player_id=player.id,
+            neighbor_id=neighbor.id,
+        )
+        db.add(new_neighbor)
+        db.commit()
+        db.refresh(new_neighbor)
 
     return JSONResponse(
         content={

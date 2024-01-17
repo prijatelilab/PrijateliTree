@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-    PrijateliTree - Choose Neighbors
+  PrijateliTree - Choose Neighbors
 {% endblock title %}
 {% block content %}
-<p>{{ text.different_game_choices.choose_players | replace('{X}', num_choices) }}.</p>
-<div class="col-sm-4">
-  <form>
-    <div class="mb-3 row">
+  <p>{{ text.different_game_choices.choose_players | replace('{X}', num_neighbors) }}.</p>
+  <div class="col-sm-4">
+    <form>
+      <div class="mb-3 row">
         <label for="pos-one" class="col-sm-4 form-label">Player One</label>
         <div class="col-sm-8">
           <select id="pos-one" class="form-select form-select-sm" name="player_one">
@@ -22,14 +22,16 @@
           </select>
         </div>
       </div>
-      <div class="mb-3 row">
-        <label for="pos-three" class="col-sm-4 form-label">Player Three</label>
-        <div class="col-sm-8">
-          <select id="pos-three" class="form-select form-select-sm" name="player_three">
-            {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
-          </select>
+      {% if num_neighbors > 2 %}
+        <div class="mb-3 row">
+          <label for="pos-three" class="col-sm-4 form-label">Player Three</label>
+          <div class="col-sm-8">
+            <select id="pos-three" class="form-select form-select-sm" name="player_three">
+              {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
+            </select>
+          </div>
         </div>
-      </div>
-  </form>
-</div>
+      {% endif %}
+    </form>
+  </div>
 {% endblock content %}

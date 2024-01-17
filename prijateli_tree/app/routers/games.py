@@ -19,11 +19,13 @@ from prijateli_tree.app.database import (
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     FILE_MODE_READ,
+    NETWORK_TYPE_INTEGRATED,
     POST_SURVEY_LINK,
     PRE_SURVEY_LINK,
     STANDARD_ENCODING,
 )
 from prijateli_tree.app.utils.games import (
+    GameUtil,
     did_player_win,
     get_bag_color,
     get_current_round,
@@ -108,7 +110,9 @@ def start_session(
     return templates.TemplateResponse("ready.html", result)
 
 
-@router.get("/{game_id}/player/{player_id}/start_of_game", response_class=HTMLResponse)
+@router.get(
+    "/{game_id}/player/{player_id}/start_of_game", response_class=HTMLResponse
+)
 def start_of_game(
     request: Request,
     game_id: int,
@@ -168,7 +172,9 @@ def view_round(
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
     else:
-        template_data["previous_answers"] = get_previous_answers(game_id, player_id, db)
+        template_data["previous_answers"] = get_previous_answers(
+            game_id, player_id, db
+        )
 
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
@@ -192,6 +198,9 @@ def choose_neighbors(
     current_round = get_current_round(game_id, db)
 
     # Get number of neighbors the player has
+    # We just use  the integrated network to get the number of neighbors
+    game_util = GameUtil(NETWORK_TYPE_INTEGRATED)
+    num_neighbors = len(game_util.neighbors[player.position])
 
     template_data = {
         "practice_game": game.practice,
@@ -199,6 +208,7 @@ def choose_neighbors(
         "text": template_text,
         "player_id": player_id,
         "game_id": game_id,
+        "num_neighbors": num_neighbors,
         "completed_game": player.completed_game,
         "round_progress": f"{current_round}/{game.rounds}",
         **header,
@@ -245,12 +255,16 @@ def route_add_answer(
         db.commit()
         db.refresh(new_answer)
 
-    redirect_url = request.url_for("waiting", game_id=game_id, player_id=player_id)
+    redirect_url = request.url_for(
+        "waiting", game_id=game_id, player_id=player_id
+    )
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
 
-@router.get("/{game_id}/player/{player_id}/all_set", response_class=JSONResponse)
+@router.get(
+    "/{game_id}/player/{player_id}/all_set", response_class=JSONResponse
+)
 def all_set(
     game_id: int,
     player_id: int,
@@ -278,7 +292,9 @@ def all_set(
     return JSONResponse(content={"ready": ready, "game_over": game_over})
 
 
-@router.get("/{game_id}/player/{player_id}/waiting", response_class=HTMLResponse)
+@router.get(
+    "/{game_id}/player/{player_id}/waiting", response_class=HTMLResponse
+)
 def waiting(
     request: Request,
     game_id: int,
@@ -307,7 +323,9 @@ def waiting(
     return templates.TemplateResponse("waiting.html", result)
 
 
-@router.put("/{game_id}/player/{player_id}/update_score", response_class=JSONResponse)
+@router.put(
+    "/{game_id}/player/{player_id}/update_score", response_class=JSONResponse
+)
 def update_score(
     game_id: int,
     player_id: int,
@@ -323,7 +341,9 @@ def update_score(
             session_player = get_session_player_from_player(player, db)
             game_status = did_player_win(game, player_id, db)
             session_player.correct_answers += game_status["is_correct"]
-            session_player.points += game_status["is_correct"] * game.winning_score
+            session_player.points += (
+                game_status["is_correct"] * game.winning_score
+            )
         db.commit()
         db.refresh(player)
 
@@ -376,7 +396,9 @@ def route_get_score(
     )
 
     session_player = (
-        db.query(GameSessionPlayer).filter_by(id=session_player_id).one_or_none()
+        db.query(GameSessionPlayer)
+        .filter_by(id=session_player_id)
+        .one_or_none()
     )
     if session_player is None:
         raise HTTPException(
@@ -386,7 +408,9 @@ def route_get_score(
     return JSONResponse(content={"points": session_player.points})
 
 
-@router.get("/{game_id}/player/{player_id}/end_of_game", response_class=HTMLResponse)
+@router.get(
+    "/{game_id}/player/{player_id}/end_of_game", response_class=HTMLResponse
+)
 def end_of_game(
     request: Request,
     game_id: int,
@@ -443,7 +467,9 @@ def go_to_next_game(
         redirect_url = request.url_for(
             "get_qualtrics", game_id=game_id, player_id=player_id
         )
-        return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
+        return RedirectResponse(
+            url=redirect_url, status_code=HTTPStatus.SEE_OTHER
+        )
 
     next_player_id = (
         db.query(GamePlayer)
@@ -581,7 +607,9 @@ def thank_you(
 
 
 @router.get("/{game_id}", response_class=JSONResponse)
-def route_game_access(game_id: int, db: Session = Depends(Database)) -> JSONResponse:
+def route_game_access(
+    game_id: int, db: Session = Depends(Database)
+) -> JSONResponse:
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     raise_exception_if_none(game, detail="game not found")
     return JSONResponse(

@@ -19,6 +19,7 @@ from prijateli_tree.app.database import (
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     FILE_MODE_READ,
+    NETWORK_TYPE_INTEGRATED,
     POST_SURVEY_LINK,
     PRE_SURVEY_LINK,
     STANDARD_ENCODING,
@@ -123,17 +124,50 @@ def start_of_game(
     """
     template_text = languages[get_lang_from_player_id(player_id, db)]
     game, _ = get_game_and_player(game_id, player_id, db)
-
     result = {
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "points": game.winning_score,
         "text": template_text,
-        "practice_game": game.practice,
+        "game": {
+            key: game.__dict__[key] for key in ["practice", "winning_score"]
+        },
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
+
+
+@router.get(
+    "/{game_id}/player/{player_id}/network", response_class=JSONResponse
+)
+def get_data_for_network(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(Database),
+) -> Response:
+    game, _ = get_game_and_player(game_id, player_id, db)
+
+    is_integrated = game.game_type.network == NETWORK_TYPE_INTEGRATED
+
+    if not game.game_type.names_hidden:
+        players = [
+            {
+                "position": p.position,
+                "this_player": p.id == player_id,
+                "name": f"{p.user.first_name} {p.user.last_name}",
+            }
+            for p in game.players
+        ]
+    else:
+        players = [
+            {
+                "position": p.position,
+                "this_player": p.id == player_id,
+                "name": f"{p.position}",
+            }
+            for p in game.players
+        ]
+    return {"data": players, "is_integrated": is_integrated}
 
 
 @router.get("/{game_id}/player/{player_id}/round")

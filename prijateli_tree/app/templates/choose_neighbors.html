@@ -3,4 +3,19 @@
     PrijateliTree - Choose Neighbors
 {% endblock title %}
 {% block content %}
+<p>Select the players.</p>
+<div class="col-sm-4">
+  <form>
+    <input type="text" id="game_id" value={{ game_id }} hidden>
+    <select id="player_id" class="form-select form-select-sm" name="player_id">
+      {% for p in players %}<option value="{{ p.id }}">{{ p.user.name_str }}</option>{% endfor %}
+    </select>
+    <br>
+    <br>
+    <!--<button type="submit" class="btn btn-primary float-start">Start</button>-->
+    <button type="button"
+            onclick="redirectToSession()"
+            class="btn btn-primary float-start">Start</button>
+  </form>
+</div>
 {% endblock content %}

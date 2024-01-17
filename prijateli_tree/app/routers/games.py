@@ -197,12 +197,17 @@ def choose_neighbors(
     game_util = GameUtil(NETWORK_TYPE_INTEGRATED)
     num_neighbors = len(game_util.neighbors[player.position])
 
+    # Get all players in the game
+    all_players = game.players
+    complete_names = [f"{p.user.first_name} {p.user.last_name}" for p in all_players]
+
     template_data = {
         "first_round": current_round == 1,
         "text": template_text,
         "player_id": player_id,
         "game_id": game_id,
         "num_neighbors": num_neighbors,
+        "students": complete_names,
         "round_progress": f"{current_round}/{game.rounds}",
     }
 

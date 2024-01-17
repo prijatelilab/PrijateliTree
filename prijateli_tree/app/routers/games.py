@@ -560,12 +560,21 @@ def go_to_next_game(
         next_game = db.query(Game).filter_by(id=game.next_game_id).one()
         # If next game is NOT practice
         if not next_game.practice:
-            # Show end of practice screen
-            redirect_url = request.url_for(
-                "real_game_transition",
-                game_id=next_game.id,
-                player_id=next_player_id,
-            )
+            # Get gametype
+            next_game_gametype = next_game.game_type.network
+            if next_game_gametype == NETWORK_TYPE_SELF_SELECTED:
+                redirect_url = request.url_for(
+                    "self_selected_intro",
+                    game_id=next_game.id,
+                    player_id=next_player_id,
+                )
+            else:
+                # Show end of practice screen
+                redirect_url = request.url_for(
+                    "real_game_transition",
+                    game_id=next_game.id,
+                    player_id=next_player_id,
+                )
 
             return RedirectResponse(
                 redirect_url,
@@ -583,6 +592,36 @@ def go_to_next_game(
         redirect_url,
         status_code=HTTPStatus.FOUND,
     )
+
+
+@router.get(
+    "/{game_id}/player/{player_id}/self_selected_intro",
+    response_class=HTMLResponse,
+)
+def self_selected_intro(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(Database),
+) -> Response:
+    """
+    Function that returns the start of game page and
+    template.
+    """
+    _, player = get_game_and_player(game_id, player_id, db)
+    header = get_header_data(player, db)
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+
+    result = {
+        "request": request,
+        "player_id": player_id,
+        "game_id": game_id,
+        "text": template_text,
+        "completed_game": False,
+        **header,
+    }
+
+    return templates.TemplateResponse("self_selected_intro.html", result)
 
 
 @router.get(

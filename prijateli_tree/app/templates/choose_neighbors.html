@@ -10,7 +10,8 @@
     <div class="row justify-content-center">
       <!-- Added row and justify-content-center classes -->
       <div class="col-sm-4">
-        <form  method="post" action='{{ url_for("add_neighbors", game_id=game_id, player_id=player_id)}}'>
+        <form method="post"
+              action='{{ url_for("add_neighbors", game_id=game_id, player_id=player_id) }}'>
           <div class="mb-3 row">
             <label for="pos-one" class="col-sm-4 form-label">{{ text.util.player }} 1</label>
             <div class="col-sm-8">

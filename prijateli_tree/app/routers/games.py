@@ -591,7 +591,7 @@ def self_selected_intro(
         "player_id": player_id,
         "game_id": game_id,
         "text": template_text,
-        "completed_game": False,
+        "completed_game": True,
         **header,
     }
 

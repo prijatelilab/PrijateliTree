@@ -222,6 +222,21 @@ def choose_neighbors(
         "choose_neighbors.html", {"request": request, **template_data}
     )
 
+@router.post("/{game_id}/player/{player_id}/add_neighbors")
+def add_neighbors(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    neighbors: list = Form(...),
+    db: Session = Depends(Database),
+) -> RedirectResponse:
+    """
+    Function that will add the neighbors to the database
+    """
+    pass
+
+
+
 
 @router.post("/{game_id}/player/{player_id}/answer")
 def route_add_answer(

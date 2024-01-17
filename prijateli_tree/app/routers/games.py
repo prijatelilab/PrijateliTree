@@ -236,37 +236,45 @@ def add_neighbors(
     game, player = get_game_and_player(game_id, player_id, db)
 
     # Get the players
-    player_one = db.query(GamePlayer).filter_by(id=player_one).one_or_none()
-    player_two = db.query(GamePlayer).filter_by(id=player_two).one_or_none()
+    player_one = (
+        db.query(GamePlayer)
+        .filter_by(user_id=player_one, game_id=game_id)
+        .one_or_none()
+    )
+    player_two = (
+        db.query(GamePlayer)
+        .filter_by(user_id=player_two, game_id=game_id)
+        .one_or_none()
+    )
     player_three = (
-        db.query(GamePlayer).filter_by(id=player_three).one_or_none()
+        db.query(GamePlayer)
+        .filter_by(user_id=player_three, game_id=game_id)
+        .one_or_none()
         if player_three
         else None
     )
 
     # Add the neighbors to the player_network table
     if player_three:
-        neighbors = [player_one, player_two, player_three]
+        neighbors = [player_one.id, player_two.id, player_three.id]
 
     else:
-        neighbors = [player_one, player_two]
+        neighbors = [player_one.id, player_two.id]
 
-    for neighbor in neighbors:
-        new_neighbor = PlayerNetwork(
-            game_id=game.id,
-            player_id=player.game_player_id,
-            neighbor_id=neighbor.game_player_id,
-        )
-        db.add(new_neighbor)
-        db.commit()
-        db.refresh(new_neighbor)
+    # for neighbor in neighbors:
+    #     new_neighbor = PlayerNetwork(
+    #         game_id=game.id,
+    #         player_id=player.game_player_id,
+    #         neighbor_id=neighbor.game_player_id,
+    #     )
+    #     db.add(new_neighbor)
+    #     db.commit()
+    #     db.refresh(new_neighbor)
 
     return JSONResponse(
         content={
             "status": "success",
-            "player_one": player_one,
-            "player_two": player_two,
-            "player_three": player_three,
+            "neighbors": neighbors,
         }
     )
 

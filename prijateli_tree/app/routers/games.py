@@ -189,7 +189,7 @@ def choose_neighbors(
     """
     game, player = get_game_and_player(game_id, player_id, db)
 
-    template_text = languages[player.language.abbr]
+    template_text = languages[get_lang_from_player_id(player_id, db)]
     current_round = get_current_round(game_id, db)
 
     # Get number of neighbors the player has

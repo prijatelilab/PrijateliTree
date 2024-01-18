@@ -7,7 +7,12 @@ from typing import Any
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from prijateli_tree.app.database import Game, GamePlayer, GameSessionPlayer
+from prijateli_tree.app.database import (
+    Game,
+    GamePlayer,
+    GameSessionPlayer,
+    PlayerNetwork,
+)
 from prijateli_tree.app.utils.constants import (
     BALL_BLUE,
     BALL_RED,
@@ -154,14 +159,10 @@ def get_session_player_from_player(
     player: GamePlayer, db: Session
 ) -> GameSessionPlayer | None:
     session_player = (
-        db.query(GameSessionPlayer)
-        .filter_by(id=player.session_player_id)
-        .one_or_none()
+        db.query(GameSessionPlayer).filter_by(id=player.session_player_id).one_or_none()
     )
 
-    raise_exception_if_none(
-        session_player, detail="GameSessionPlayer not found"
-    )
+    raise_exception_if_none(session_player, detail="GameSessionPlayer not found")
 
     return session_player
 
@@ -188,6 +189,16 @@ def get_previous_answers(
 
     # Use game utils to get the player's neighbors
     game_util = GameUtil(game.game_type.network)
+
+    # If network is self-selected, pull info from PlayerNetwork
+    if game.game_type.network == NETWORK_TYPE_SELF_SELECTED:
+        player_network = (
+            db.query(PlayerNetwork)
+            .filter_by(game_id=game_id, player_id=player_id)
+            .one_or_none()
+        )
+        neighbors_positions = player_network.neighbors
+
     neighbors_positions = game_util.neighbors[player.position]
 
     neighbors_answers = []
@@ -199,15 +210,15 @@ def get_previous_answers(
             .filter_by(game_id=game_id, position=neighbor_position)
             .one_or_none()
         )
-        this_answer = [
-            a for a in this_neighbor.answers if a.round == last_round
-        ][0]
+        this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
 
         # Check if names are hidden
         if game.game_type.names_hidden:
             complete_name = f"Player {this_neighbor.position}: "
         else:
-            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+            complete_name = (
+                f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+            )
 
         neighbors_names.append(complete_name)
         neighbors_answers.append(this_answer.player_answer)

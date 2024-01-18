@@ -1,6 +1,7 @@
 import glob
 import json
 import logging
+import random
 from http import HTTPStatus
 from pathlib import Path
 
@@ -167,7 +168,10 @@ def get_data_for_network(
             }
             for p in game.players
         ]
-    return {"data": players, "is_integrated": is_integrated}
+    # ensures consistent diagram on refresh
+    random.seed(game_id * player_id)
+    reverse = random.random() > 0.5
+    return {"data": players, "is_integrated": is_integrated, "reverse": reverse}
 
 
 @router.get("/{game_id}/player/{player_id}/round")

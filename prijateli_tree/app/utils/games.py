@@ -192,36 +192,40 @@ def get_previous_answers(
 
     # If network is self-selected, pull info from PlayerNetwork
     if game.game_type.network == NETWORK_TYPE_SELF_SELECTED:
-        player_network = (
+        player_neighbors = (
             db.query(PlayerNetwork)
             .filter_by(game_id=game_id, player_id=player_id)
-            .one_or_none()
+            .all()
         )
-        neighbors_positions = player_network.neighbors
 
-    neighbors_positions = game_util.neighbors[player.position]
+        for neighbor in player_neighbors:
+            # PENDING
+            pass
 
-    neighbors_answers = []
-    neighbors_names = []
-    # Get the neighbors' previous answers
-    for neighbor_position in neighbors_positions:
-        this_neighbor = (
-            db.query(GamePlayer)
-            .filter_by(game_id=game_id, position=neighbor_position)
-            .one_or_none()
-        )
-        this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
+    else:
+        neighbors_positions = game_util.neighbors[player.position]
 
-        # Check if names are hidden
-        if game.game_type.names_hidden:
-            complete_name = f"Player {this_neighbor.position}: "
-        else:
-            complete_name = (
-                f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+        neighbors_answers = []
+        neighbors_names = []
+        # Get the neighbors' previous answers
+        for neighbor_position in neighbors_positions:
+            this_neighbor = (
+                db.query(GamePlayer)
+                .filter_by(game_id=game_id, position=neighbor_position)
+                .one_or_none()
             )
+            this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
 
-        neighbors_names.append(complete_name)
-        neighbors_answers.append(this_answer.player_answer)
+            # Check if names are hidden
+            if game.game_type.names_hidden:
+                complete_name = f"Player {this_neighbor.position}: "
+            else:
+                complete_name = (
+                    f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+                )
+
+            neighbors_names.append(complete_name)
+            neighbors_answers.append(this_answer.player_answer)
 
     return {
         "your_previous_answer": player_answer.player_answer,

@@ -219,6 +219,9 @@ def choose_neighbors(
     # Get the users of the players
     user_ids = [player.user_id for player in players]
 
+    # Remove the current player from the list
+    user_ids.remove(player.user_id)
+
     # Query users
     users = db.query(User).filter(User.id.in_(user_ids)).all()
 

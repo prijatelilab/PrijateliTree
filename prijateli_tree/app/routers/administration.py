@@ -23,13 +23,13 @@ from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
-    Database,
     Denars,
     Game,
     GamePlayer,
     GameSession,
     GameSessionPlayer,
     GameType,
+    SessionLocal,
     User,
 )
 from prijateli_tree.app.utils.constants import (
@@ -55,6 +55,14 @@ templates.env.globals["URL"] = URL
 logger = logging.getLogger()
 
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 router = APIRouter()
 
 login_manager = LoginManager(
@@ -64,7 +72,7 @@ login_manager = LoginManager(
 )
 
 
-@login_manager.user_loader(db_session=Database())
+@login_manager.user_loader(db_session=SessionLocal())
 def query_user(user_uuid: int, db_session: Session) -> User | None:
     return db_session.query(User).filter_by(uuid=user_uuid).one_or_none()
 
@@ -88,7 +96,7 @@ def confirm_login(
     first_name: Annotated[str, Form()],
     last_name: Annotated[str, Form()],
     email: Annotated[str, Form()],
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     user = (
         db.query(User)
@@ -125,7 +133,7 @@ def dashboard(
     request: Request,
     success: str = "",
     user=Depends(login_manager.optional),
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
@@ -164,7 +172,7 @@ def dashboard_create_session(
     request: Request,
     error: str = "",
     user=Depends(login_manager.optional),
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
@@ -192,7 +200,7 @@ def create_session(
     player_six: Annotated[int, Form()],
     num_games: Annotated[int, Form()] | None = None,
     user=Depends(login_manager.optional),
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
@@ -328,7 +336,7 @@ def create_session(
 def create_session_games(
     session,
     game,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> None:
     for i in range(session.num_games):
         previous_game = game
@@ -415,7 +423,7 @@ def dashboard_add_students(
 def add_students(
     file: UploadFile = File(...),
     user=Depends(login_manager.optional),
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)

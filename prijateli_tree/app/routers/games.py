@@ -158,7 +158,7 @@ def view_round(
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
-    print(f'in round current_round is {current_round}')
+    print(f"in round current_round is {current_round}")
     template_data = {
         "practice_game": game.practice,
         "first_round": current_round == 1,
@@ -397,9 +397,11 @@ def all_set(
         or (n_answers / len(game.players)) > this_players_round
     )
     game_over = player.game.rounds == this_round
-    print(f'in all_set')
-    print(f'n_answers is {n_answers} and len(game.players) is {len(game.players)}')
-    print(f'this round is {this_players_round}')
+    print(f"in all_set")
+    print(
+        f"n_answers is {n_answers} and len(game.players) is {len(game.players)}"
+    )
+    print(f"this round is {this_players_round}")
     return JSONResponse(content={"ready": ready, "game_over": game_over})
 
 

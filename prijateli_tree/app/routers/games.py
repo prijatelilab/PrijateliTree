@@ -276,6 +276,19 @@ def add_neighbors(
     else:
         neighbors = [player_one, player_two]
 
+    player_ids = [player.id for player in neighbors]
+
+    if len(set(player_ids)) != len(player_ids):
+        # Do not let them move forward if neighbor is duplicated
+        redirect_url = request.url_for(
+            "choose_neighbors", game_id=game_id, player_id=player_id
+        )
+
+        return RedirectResponse(
+            url=redirect_url,
+            status_code=HTTPStatus.FOUND,
+        )
+
     for neighbor in neighbors:
         new_neighbor = PlayerNetwork(
             game_id=game.id,
@@ -287,7 +300,7 @@ def add_neighbors(
         db.refresh(new_neighbor)
 
     redirect_url = request.url_for(
-        "round", game_id=game_id, player_id=player_id
+        "view_round", game_id=game_id, player_id=player_id
     )
 
     return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)

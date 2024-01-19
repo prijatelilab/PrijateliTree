@@ -397,7 +397,7 @@ def all_set(
         or (n_answers / len(game.players)) > this_players_round
     )
     game_over = player.game.rounds == this_round
-    print(f"in all_set")
+    print("in all_set")
     print(
         f"n_answers is {n_answers} and len(game.players) is {len(game.players)}"
     )

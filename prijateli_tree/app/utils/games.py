@@ -159,10 +159,14 @@ def get_session_player_from_player(
     player: GamePlayer, db: Session
 ) -> GameSessionPlayer | None:
     session_player = (
-        db.query(GameSessionPlayer).filter_by(id=player.session_player_id).one_or_none()
+        db.query(GameSessionPlayer)
+        .filter_by(id=player.session_player_id)
+        .one_or_none()
     )
 
-    raise_exception_if_none(session_player, detail="GameSessionPlayer not found")
+    raise_exception_if_none(
+        session_player, detail="GameSessionPlayer not found"
+    )
 
     return session_player
 
@@ -197,10 +201,22 @@ def get_previous_answers(
             .filter_by(game_id=game_id, player_id=player_id)
             .all()
         )
-
+        neighbors_answers = []
+        neighbors_names = []
         for neighbor in player_neighbors:
             # PENDING
-            pass
+            this_neighbor = (
+                db.query(GamePlayer)
+                .filter_by(game_id=game_id, player_id=neighbor.neighbor_id)
+                .one_or_none()
+            )
+            this_answer = [
+                a for a in this_neighbor.answers if a.round == last_round
+            ][0]
+            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+
+            neighbors_answers.append(this_answer.player_answer)
+            neighbors_names.append(complete_name)
 
     else:
         neighbors_positions = game_util.neighbors[player.position]
@@ -214,15 +230,15 @@ def get_previous_answers(
                 .filter_by(game_id=game_id, position=neighbor_position)
                 .one_or_none()
             )
-            this_answer = [a for a in this_neighbor.answers if a.round == last_round][0]
+            this_answer = [
+                a for a in this_neighbor.answers if a.round == last_round
+            ][0]
 
             # Check if names are hidden
             if game.game_type.names_hidden:
                 complete_name = f"Player {this_neighbor.position}: "
             else:
-                complete_name = (
-                    f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
-                )
+                complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
 
             neighbors_names.append(complete_name)
             neighbors_answers.append(this_answer.player_answer)

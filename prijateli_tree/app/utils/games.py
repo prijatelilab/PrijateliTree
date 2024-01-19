@@ -5,6 +5,7 @@ from http import HTTPStatus
 
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
+
 from prijateli_tree.app.database import (
     Game,
     GamePlayer,

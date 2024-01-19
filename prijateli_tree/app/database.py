@@ -27,34 +27,22 @@ from prijateli_tree.app.utils.constants import KEY_ENV
 
 
 config = config[os.getenv(KEY_ENV)]
+
+engine = create_engine(
+    config.SQLALCHEMY_DATABASE_URI,
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()
 
 
-# Singleton database class so that connections are limited, and we are only using one
-# connection instead of multiple.
-class Database:
-    instance = None
 
-    def __new__(cls) -> Session:
-        if cls.instance is None:
-            cls.instance = super().__new__(cls)
-            # Create and instantiate session.
-            cls.instance.client = sessionmaker(
-                autocommit=False,
-                autoflush=False,
-                bind=create_engine(
-                    config.SQLALCHEMY_DATABASE_URI,
-                ),
-            )()
-            logging.info(f"Database connection created at {datetime.now()}")
-        return cls.instance.client
-
-    @classmethod
-    def close_connection(cls):
-        if cls.instance is not None:
-            logging.info(f"Database connection closed at {datetime.now()}")
-            cls.instance.client.close()
-
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 class User(Base):
     __tablename__ = "users"
@@ -268,7 +256,7 @@ class GamePlayer(Base):
     )
 
     @property
-    def language(self, db: Session = Database()):
+    def language(self, db: Session = next(get_db())):
         user = db.query(User).filter_by(id=self.user_id).one()
         return db.query(Language).filter_by(id=user.language_id).one()
 
@@ -403,6 +391,6 @@ class GameSessionPlayer(Base):
     session = relationship("GameSession", back_populates="players")
 
     @property
-    def language(self, db: Session = Database()):
+    def language(self, db: Session = next(get_db())):
         user = db.query(User).filter_by(id=self.user_id).one()
         return db.query(Language).filter_by(id=user.language_id).one()

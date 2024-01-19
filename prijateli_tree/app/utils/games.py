@@ -283,6 +283,16 @@ def get_header_data(player: GamePlayer, db: Session):
     return {**score_dict, **progress_dict}
 
 
+def check_if_neighbors(player: GamePlayer, db: Session):
+    """
+    Checks if player has any neighbors, used for
+    self-selected games
+    """
+
+    neighbors = db.query(PlayerNetwork).filter_by(player_id=player.id).all()
+    return len(neighbors) > 0
+
+
 def get_games_progress(player: GamePlayer, db: Session):
     """
     Gets the player's progress in the overall session

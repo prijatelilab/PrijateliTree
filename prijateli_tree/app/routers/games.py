@@ -30,6 +30,7 @@ from prijateli_tree.app.utils.constants import (
 )
 from prijateli_tree.app.utils.games import (
     GameUtil,
+    check_if_neighbors,
     did_player_win,
     get_bag_color,
     get_current_round,
@@ -175,15 +176,30 @@ def view_round(
             "end_of_game", game_id=game_id, player_id=player_id
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
+
     # Verify if this is the second round of the self-selected game
     elif (
         current_round == 2
         and game.game_type.network == NETWORK_TYPE_SELF_SELECTED
     ):
-        redirect_url = request.url_for(
-            "choose_neighbors", game_id=game_id, player_id=player_id
-        )
-        return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
+        neighbors_exist = check_if_neighbors(player_id, db)
+
+        # If neighbors do not exist, redirect to choose neighbors
+        if not neighbors_exist:
+            redirect_url = request.url_for(
+                "choose_neighbors", game_id=game_id, player_id=player_id
+            )
+            return RedirectResponse(
+                url=redirect_url, status_code=HTTPStatus.FOUND
+            )
+        # Neighbors exist, so we can continue to the current round
+        else:
+            template_data["previous_answers"] = get_previous_answers(
+                game_id, player_id, db
+            )
+            return templates.TemplateResponse(
+                "round.html", {"request": request, **template_data}
+            )
     else:
         template_data["previous_answers"] = get_previous_answers(
             game_id, player_id, db
@@ -205,8 +221,8 @@ def choose_neighbors(
     Function that will allow each player to choose their neighbors
     """
     game, player = get_game_and_player(game_id, player_id, db)
-
     template_text = languages[get_lang_from_player_id(player_id, db)]
+    header = get_header_data(player, db)
 
     # Get number of neighbors the player has
     # We just use  the integrated network to get the number of neighbors
@@ -231,6 +247,7 @@ def choose_neighbors(
         "game_id": game_id,
         "num_neighbors": num_neighbors,
         "students": users,
+        **header,
     }
 
     return templates.TemplateResponse(
@@ -279,7 +296,7 @@ def add_neighbors(
     else:
         neighbors = [player_one, player_two]
 
-    player_ids = [player.id for player in neighbors]
+    player_ids = [neighbor.id for neighbor in neighbors]
 
     if len(set(player_ids)) != len(player_ids):
         # Do not let them move forward if neighbor is duplicated

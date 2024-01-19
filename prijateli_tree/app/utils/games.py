@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
+    GameAnswer,
     GamePlayer,
     GameSessionPlayer,
     PlayerNetwork,
@@ -204,18 +205,23 @@ def get_previous_answers(
         neighbors_answers = []
         neighbors_names = []
         for neighbor in player_neighbors:
-            # PENDING
-            this_neighbor = (
-                db.query(GamePlayer)
-                .filter_by(game_id=game_id, player_id=neighbor.neighbor_id)
+            # Get provided neighbor's answer
+            neighbor_answer = (
+                db.query(GameAnswer)
+                .filter_by(
+                    game_player_id=neighbor.neighbor_id,
+                    round=last_round,
+                )
                 .one_or_none()
             )
-            this_answer = [
-                a for a in this_neighbor.answers if a.round == last_round
-            ][0]
-            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+            neighbor_user = (
+                db.query(GamePlayer)
+                .filter_by(id=neighbor.neighbor_id)
+                .one_or_none()
+            )
+            complete_name = f"{neighbor_user.user.first_name} {neighbor_user.user.last_name}: "
 
-            neighbors_answers.append(this_answer.player_answer)
+            neighbors_answers.append(neighbor_answer.player_answer)
             neighbors_names.append(complete_name)
 
     else:
@@ -283,13 +289,13 @@ def get_header_data(player: GamePlayer, db: Session):
     return {**score_dict, **progress_dict}
 
 
-def check_if_neighbors(player: GamePlayer, db: Session):
+def check_if_neighbors(player_id: int, db: Session):
     """
     Checks if player has any neighbors, used for
     self-selected games
     """
 
-    neighbors = db.query(PlayerNetwork).filter_by(player_id=player.id).all()
+    neighbors = db.query(PlayerNetwork).filter_by(player_id=player_id).all()
     return len(neighbors) > 0
 
 

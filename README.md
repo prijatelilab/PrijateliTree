@@ -1,14 +1,13 @@
 # Prijateli Tree
 `PrijateliTree` is an oTree application used to play lab games and collect survey data.
-The games are a means to provide insights into social learning, the economics of languages
-and other human behaviors.
+The games are a means to provide insights into social learning, the economics of languages and other human behaviors.
 
 ## Application Requirements
 - Python 🐍 version >= v`3.11`
 - Poetry package manager. If you need information on how to download poetry, check [here](https://python-poetry.org/docs/#installation).
 - PostgreSQL v14.
   - For accessing the database your configuration should look roughly like this:
-  <img src="misc/DBConfig.png" alt="Database Access Configuration" width="400px">
+  ![Database Access Configuration](misc%2FScreenshot%202023-10-02%20at%204.41.36%20PM.png)
 
 ## Steps for Running the Application
 1. Enter the `poetry shell` command from the base folder repository.

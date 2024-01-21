@@ -11,13 +11,13 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
-    Database,
     Game,
     GameAnswer,
     GamePlayer,
     GameSessionPlayer,
     PlayerNetwork,
     User,
+    get_db,
 )
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
@@ -74,7 +74,7 @@ def choose_session_id(request: Request) -> Response:
 
 @router.get("/session/{session_id}", response_class=HTMLResponse)
 def choose_session_players(
-    request: Request, session_id: int, db: Session = Depends(Database)
+    request: Request, session_id: int, db: Session = Depends(get_db)
 ) -> Response:
     games = db.query(Game).filter_by(game_session_id=session_id).all()
     raise_exception_if_not(games, "session not found or games not created")
@@ -99,7 +99,7 @@ def start_session(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     _, player = get_game_and_player(game_id, player_id, db)
     template_text = languages[player.language.abbr]
@@ -122,7 +122,7 @@ def start_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Function that returns the start of game page and
@@ -148,7 +148,7 @@ def view_round(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Function that returns the current round
@@ -158,7 +158,6 @@ def view_round(
 
     template_text = languages[player.language.abbr]
     current_round = get_current_round(game_id, db)
-    print(f"in round current_round is {current_round}")
     template_data = {
         "practice_game": game.practice,
         "first_round": current_round == 1,
@@ -216,7 +215,7 @@ def choose_neighbors(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Function that will allow each player to choose their neighbors
@@ -264,7 +263,7 @@ def add_neighbors(
     player_one: Annotated[int, Form()],
     player_two: Annotated[int, Form()],
     player_three: Annotated[int, Form()] | None = Form(None),
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> RedirectResponse:
     """
     Function that will add the neighbors to the database
@@ -333,7 +332,7 @@ def route_add_answer(
     game_id: int,
     player_id: int,
     player_answer: str = Form(...),
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> RedirectResponse:
     """
     Function that updates the player's guess in the database
@@ -376,7 +375,7 @@ def route_add_answer(
 def all_set(
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> JSONResponse:
     """
     Determines if all players have submitted a guess in the current round
@@ -397,11 +396,6 @@ def all_set(
         or (n_answers / len(game.players)) > this_players_round
     )
     game_over = player.game.rounds == this_round
-    print("in all_set")
-    print(
-        f"n_answers is {n_answers} and len(game.players) is {len(game.players)}"
-    )
-    print(f"this round is {this_players_round}")
     return JSONResponse(content={"ready": ready, "game_over": game_over})
 
 
@@ -412,7 +406,7 @@ def waiting(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Wait screen shows until all players are ready to move to the next section
@@ -442,7 +436,7 @@ def waiting(
 def update_score(
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> JSONResponse:
     """
     Function that updates the player's score in the database
@@ -468,7 +462,7 @@ def get_qualtrics(
     request: Request,
     player_id: int,
     game_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     _, player = get_game_and_player(game_id, player_id, db)
 
@@ -502,7 +496,7 @@ def get_qualtrics(
 def route_get_score(
     request: Request,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> JSONResponse:
     session_player_id = (
         db.query(GamePlayer).filter_by(id=player_id).one().session_player_id
@@ -528,7 +522,7 @@ def end_of_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Function that returns the end of game page and
@@ -569,7 +563,7 @@ def go_to_next_game(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ):
     """
     Moves player to first round of next game or ends the session
@@ -641,7 +635,7 @@ def self_selected_intro(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Function that returns the start of game page and
@@ -664,37 +658,6 @@ def self_selected_intro(
 
 
 @router.get(
-    "/{game_id}/player/{player_id}/real_game_transition",
-    response_class=HTMLResponse,
-)
-def real_game_transition(
-    request: Request,
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(Database),
-) -> Response:
-    """
-    Function that returns the start of game page and
-    template.
-    """
-    game, player = get_game_and_player(game_id, player_id, db)
-    header = get_header_data(player, db)
-    template_text = languages[get_lang_from_player_id(player_id, db)]
-
-    result = {
-        "request": request,
-        "player_id": player_id,
-        "game_id": game_id,
-        "points": game.winning_score,
-        "text": template_text,
-        "completed_game": True,
-        **header,
-    }
-
-    return templates.TemplateResponse("real_game_transition.html", result)
-
-
-@router.get(
     "/{game_id}/player/{player_id}/end_of_session",
     response_class=HTMLResponse,
 )
@@ -702,7 +665,7 @@ def end_of_session(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Function that returns the end of session page and
@@ -740,7 +703,7 @@ def thank_you(
     request: Request,
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     """
     Sends player to thank you page
@@ -760,7 +723,7 @@ def thank_you(
 
 @router.get("/{game_id}", response_class=JSONResponse)
 def route_game_access(
-    game_id: int, db: Session = Depends(Database)
+    game_id: int, db: Session = Depends(get_db)
 ) -> JSONResponse:
     game = db.query(Game).filter_by(id=game_id).one_or_none()
     raise_exception_if_none(game, detail="game not found")
@@ -775,7 +738,7 @@ def route_game_access(
 
 @router.get("/{game_id}/player/{player_id}", response_class=JSONResponse)
 def route_game_player_access(
-    game_id: int, player_id: int, db: Session = Depends(Database)
+    game_id: int, player_id: int, db: Session = Depends(get_db)
 ) -> JSONResponse:
     # tests to ensure game and player exists
     _, _ = get_game_and_player(game_id, player_id, db)
@@ -793,7 +756,7 @@ def confirm_player(
     request: Request,
     player_id: int,
     game_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> RedirectResponse:
     """
     Confirms if the player is ready for the game

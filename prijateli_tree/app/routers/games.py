@@ -138,6 +138,7 @@ def start_of_game(
         "points": game.winning_score,
         "text": template_text,
         "practice_game": game.practice,
+        "game_type": game.game_type.network
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
@@ -169,37 +170,22 @@ def view_round(
         **header,
     }
     # Get current round
-    if current_round == 1:
+    if (current_round == 1):
+        if game.game_type.network == NETWORK_TYPE_SELF_SELECTED:
+            neighbors_exist = check_if_neighbors(player_id, db)
+            if not neighbors_exist:
+                redirect_url = request.url_for(
+                    "choose_neighbors", game_id=game_id, player_id=player_id
+                )
+                return RedirectResponse(
+                    url=redirect_url, status_code=HTTPStatus.FOUND
+                )
         template_data["ball"] = player.initial_ball
     elif current_round > game.rounds:
         redirect_url = request.url_for(
             "end_of_game", game_id=game_id, player_id=player_id
         )
         return RedirectResponse(url=redirect_url, status_code=HTTPStatus.FOUND)
-
-    # Verify if this is the second round of the self-selected game
-    elif (
-        current_round == 2
-        and game.game_type.network == NETWORK_TYPE_SELF_SELECTED
-    ):
-        neighbors_exist = check_if_neighbors(player_id, db)
-
-        # If neighbors do not exist, redirect to choose neighbors
-        if not neighbors_exist:
-            redirect_url = request.url_for(
-                "choose_neighbors", game_id=game_id, player_id=player_id
-            )
-            return RedirectResponse(
-                url=redirect_url, status_code=HTTPStatus.FOUND
-            )
-        # Neighbors exist, so we can continue to the current round
-        else:
-            template_data["previous_answers"] = get_previous_answers(
-                game_id, player_id, db
-            )
-            return templates.TemplateResponse(
-                "round.html", {"request": request, **template_data}
-            )
     else:
         template_data["previous_answers"] = get_previous_answers(
             game_id, player_id, db
@@ -229,11 +215,8 @@ def choose_neighbors(
     game_util = GameUtil(NETWORK_TYPE_INTEGRATED)
     num_neighbors = len(game_util.neighbors[player.position])
 
-    # Get all players in the game
-    players = game.players
-
     # Get the users of the players
-    user_ids = [player.user_id for player in players]
+    user_ids = [p.user_id for p in game.players]
 
     # Remove the current player from the list
     user_ids.remove(player.user_id)
@@ -268,37 +251,18 @@ def add_neighbors(
     """
     Function that will add the neighbors to the database
     """
-    game, player = get_game_and_player(game_id, player_id, db)
-
     # Get the players
-    player_one = (
-        db.query(GamePlayer)
-        .filter_by(user_id=player_one, game_id=game_id)
-        .one_or_none()
-    )
-    player_two = (
-        db.query(GamePlayer)
-        .filter_by(user_id=player_two, game_id=game_id)
-        .one_or_none()
-    )
-    player_three = (
-        db.query(GamePlayer)
-        .filter_by(user_id=player_three, game_id=game_id)
-        .one_or_none()
-        if player_three
-        else None
-    )
+    neighbor_player_ids = []
+    for user_id in [player_one, player_two, player_three]:
+        if user_id is not None:
+            neighbor_player_ids.append(
+                db.query(GamePlayer)
+                .filter_by(user_id=user_id, game_id=game_id)
+                .one_or_none()
+                .id
+            )
 
-    # Add the neighbors to the player_network table
-    if player_three:
-        neighbors = [player_one, player_two, player_three]
-
-    else:
-        neighbors = [player_one, player_two]
-
-    player_ids = [neighbor.id for neighbor in neighbors]
-
-    if len(set(player_ids)) != len(player_ids):
+    if len(set(neighbor_player_ids)) != len(neighbor_player_ids):
         # Do not let them move forward if neighbor is duplicated
         redirect_url = request.url_for(
             "choose_neighbors", game_id=game_id, player_id=player_id
@@ -309,11 +273,11 @@ def add_neighbors(
             status_code=HTTPStatus.FOUND,
         )
 
-    for neighbor in neighbors:
+    for neighbor_id in neighbor_player_ids:
         new_neighbor = PlayerNetwork(
-            game_id=game.id,
-            player_id=player.id,
-            neighbor_id=neighbor.id,
+            game_id=game_id,
+            player_id=player_id,
+            neighbor_id=neighbor_id,
         )
         db.add(new_neighbor)
         db.commit()
@@ -591,30 +555,14 @@ def go_to_next_game(
     if game.practice:
         # Check if next game is practice
         next_game = db.query(Game).filter_by(id=game.next_game_id).one()
-        # If next game is NOT practice
         if not next_game.practice:
-            next_game_gametype = next_game.game_type.network
-            # If next game is self-selected
-            if next_game_gametype == NETWORK_TYPE_SELF_SELECTED:
-                redirect_url = request.url_for(
-                    "self_selected_intro",
-                    game_id=next_game.id,
-                    player_id=next_player_id,
-                )
-            else:
-                # Show end of practice screen
-                redirect_url = request.url_for(
-                    "real_game_transition",
-                    game_id=next_game.id,
-                    player_id=next_player_id,
-                )
-
-            return RedirectResponse(
-                redirect_url,
-                status_code=HTTPStatus.FOUND,
+            # Show end of practice screen
+            redirect_url = request.url_for(
+                "real_game_transition",
+                game_id=next_game.id,
+                player_id=next_player_id,
             )
 
-    # next_player_id
     redirect_url = request.url_for(
         "start_of_game",
         game_id=game.next_game_id,

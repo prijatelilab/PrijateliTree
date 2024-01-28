@@ -138,7 +138,7 @@ def start_of_game(
         "points": game.winning_score,
         "text": template_text,
         "practice_game": game.practice,
-        "game_type": game.game_type.network
+        "game_type": game.game_type.network,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
@@ -170,7 +170,7 @@ def view_round(
         **header,
     }
     # Get current round
-    if (current_round == 1):
+    if current_round == 1:
         if game.game_type.network == NETWORK_TYPE_SELF_SELECTED:
             neighbors_exist = check_if_neighbors(player_id, db)
             if not neighbors_exist:

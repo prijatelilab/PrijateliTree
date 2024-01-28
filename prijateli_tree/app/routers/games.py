@@ -166,7 +166,7 @@ def view_round(
         "player_id": player_id,
         "game_id": game_id,
         "completed_game": player.completed_game,
-        "round_progress": f"{current_round}/{game.rounds}",
+        "round_progress": f"{current_round}/??",
         **header,
     }
     # Get current round
@@ -385,7 +385,7 @@ def waiting(
         "game_id": game_id,
         "player_id": player_id,
         "text": template_text,
-        "round_progress": f"{current_round}/{game.rounds}",
+        "round_progress": f"{current_round}/??",
         "practice_game": game.practice,
         "completed_game": player.completed_game,
         **header,

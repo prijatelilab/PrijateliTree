@@ -44,6 +44,7 @@ from prijateli_tree.app.utils.constants import (
     ROUNDS_ARRAY,
     WINNING_SCORES,
     WINNING_WEIGHTS,
+    DENAR_FACTOR,
 )
 from prijateli_tree.app.utils.games import raise_exception_if_not
 
@@ -141,7 +142,7 @@ def dashboard(
     game_types = db.query(GameType).all()
     sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
-    denar_transactions = db.query(Denars).all()
+    session_players = db.query(GameSessionPlayer).all()
     student_dict = {}
     for s in students:
         student_dict[s.id] = s
@@ -162,7 +163,8 @@ def dashboard(
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,
-            "transactions": denar_transactions,
+            "session_players": session_players,
+            "DENAR_FACTOR": DENAR_FACTOR,
         },
     )
 

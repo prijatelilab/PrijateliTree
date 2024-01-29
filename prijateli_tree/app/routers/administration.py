@@ -198,16 +198,12 @@ def create_session(
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
-    num_games: Annotated[int, Form()] | None = None,
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ) -> RedirectResponse:
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
-    if num_games is None:
-        num_games = NUMBER_OF_GAMES
-        logging.info(f"Setting number of games to {num_games}")
     player_ids = [
         player_one,
         player_two,

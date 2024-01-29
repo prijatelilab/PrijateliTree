@@ -23,7 +23,6 @@ from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
-    Denars,
     Game,
     GamePlayer,
     GameSession,
@@ -33,6 +32,7 @@ from prijateli_tree.app.database import (
     User,
 )
 from prijateli_tree.app.utils.constants import (
+    DENAR_FACTOR,
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
@@ -44,7 +44,6 @@ from prijateli_tree.app.utils.constants import (
     ROUNDS_ARRAY,
     WINNING_SCORES,
     WINNING_WEIGHTS,
-    DENAR_FACTOR,
 )
 from prijateli_tree.app.utils.games import raise_exception_if_not
 
@@ -200,6 +199,7 @@ def create_session(
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    num_games: int = NUMBER_OF_GAMES,
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ) -> RedirectResponse:

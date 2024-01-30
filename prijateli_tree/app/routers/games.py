@@ -589,7 +589,7 @@ def real_game_transition(
     Function that returns the start of game page and
     template.
     """
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, player = get_game_and_player(game_id, player_id, db)
     header = get_header_data(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
@@ -597,13 +597,12 @@ def real_game_transition(
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "points": game.winning_score,
         "text": template_text,
         "completed_game": True,
         **header,
     }
 
-    return templates.TemplateResponse("real_game_transition.html", result)
+    return templates.TemplateResponse("self_selected_intro.html", result)
 
 
 @router.get(

@@ -3,6 +3,7 @@ import json
 import logging
 from http import HTTPStatus
 from pathlib import Path
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -14,16 +15,22 @@ from prijateli_tree.app.database import (
     GameAnswer,
     GamePlayer,
     GameSessionPlayer,
+    PlayerNetwork,
+    User,
     get_db,
 )
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     FILE_MODE_READ,
+    NETWORK_TYPE_INTEGRATED,
+    NETWORK_TYPE_SELF_SELECTED,
     POST_SURVEY_LINK,
     PRE_SURVEY_LINK,
     STANDARD_ENCODING,
 )
 from prijateli_tree.app.utils.games import (
+    GameUtil,
+    check_if_neighbors,
     did_player_win,
     get_bag_color,
     get_current_round,
@@ -131,6 +138,7 @@ def start_of_game(
         "points": game.winning_score,
         "text": template_text,
         "practice_game": game.practice,
+        "game_type": game.game_type.network,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
@@ -163,6 +171,15 @@ def view_round(
     }
     # Get current round
     if current_round == 1:
+        if game.game_type.network == NETWORK_TYPE_SELF_SELECTED:
+            neighbors_exist = check_if_neighbors(player_id, db)
+            if not neighbors_exist:
+                redirect_url = request.url_for(
+                    "choose_neighbors", game_id=game_id, player_id=player_id
+                )
+                return RedirectResponse(
+                    url=redirect_url, status_code=HTTPStatus.FOUND
+                )
         template_data["ball"] = player.initial_ball
     elif current_round > game.rounds:
         redirect_url = request.url_for(
@@ -177,6 +194,100 @@ def view_round(
     return templates.TemplateResponse(
         "round.html", {"request": request, **template_data}
     )
+
+
+@router.get("/{game_id}/player/{player_id}/choose_neighbors")
+def choose_neighbors(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+) -> Response:
+    """
+    Function that will allow each player to choose their neighbors
+    """
+    game, player = get_game_and_player(game_id, player_id, db)
+    template_text = languages[get_lang_from_player_id(player_id, db)]
+    header = get_header_data(player, db)
+
+    # Get number of neighbors the player has
+    # We just use  the integrated network to get the number of neighbors
+    game_util = GameUtil(NETWORK_TYPE_INTEGRATED)
+    num_neighbors = len(game_util.neighbors[player.position])
+
+    # Get the users of the players
+    user_ids = [p.user_id for p in game.players]
+
+    # Remove the current player from the list
+    user_ids.remove(player.user_id)
+
+    # Query users
+    users = db.query(User).filter(User.id.in_(user_ids)).all()
+
+    template_data = {
+        "text": template_text,
+        "player_id": player_id,
+        "game_id": game_id,
+        "num_neighbors": num_neighbors,
+        "students": users,
+        **header,
+    }
+
+    return templates.TemplateResponse(
+        "choose_neighbors.html", {"request": request, **template_data}
+    )
+
+
+@router.post("/{game_id}/player/{player_id}/add_neighbors")
+def add_neighbors(
+    request: Request,
+    game_id: int,
+    player_id: int,
+    player_one: Annotated[int, Form()],
+    player_two: Annotated[int, Form()],
+    player_three: Annotated[int, Form()] | None = Form(None),
+    db: Session = Depends(get_db),
+) -> RedirectResponse:
+    """
+    Function that will add the neighbors to the database
+    """
+    # Get the players
+    neighbor_player_ids = []
+    for user_id in [player_one, player_two, player_three]:
+        if user_id is not None:
+            neighbor_player_ids.append(
+                db.query(GamePlayer)
+                .filter_by(user_id=user_id, game_id=game_id)
+                .one_or_none()
+                .id
+            )
+
+    if len(set(neighbor_player_ids)) != len(neighbor_player_ids):
+        # Do not let them move forward if neighbor is duplicated
+        redirect_url = request.url_for(
+            "choose_neighbors", game_id=game_id, player_id=player_id
+        )
+
+        return RedirectResponse(
+            url=redirect_url,
+            status_code=HTTPStatus.FOUND,
+        )
+
+    for neighbor_id in neighbor_player_ids:
+        new_neighbor = PlayerNetwork(
+            game_id=game_id,
+            player_id=player_id,
+            neighbor_id=neighbor_id,
+        )
+        db.add(new_neighbor)
+        db.commit()
+        db.refresh(new_neighbor)
+
+    redirect_url = request.url_for(
+        "view_round", game_id=game_id, player_id=player_id
+    )
+
+    return RedirectResponse(url=redirect_url, status_code=HTTPStatus.SEE_OTHER)
 
 
 @router.post("/{game_id}/player/{player_id}/answer")
@@ -424,7 +535,6 @@ def go_to_next_game(
     game, player = get_game_and_player(game_id, player_id, db)
 
     if game.next_game_id is None:
-        # TODO: end of session screen
         redirect_url = request.url_for(
             "get_qualtrics", game_id=game_id, player_id=player_id
         )
@@ -445,7 +555,6 @@ def go_to_next_game(
     if game.practice:
         # Check if next game is practice
         next_game = db.query(Game).filter_by(id=game.next_game_id).one()
-        # If next game is NOT practice
         if not next_game.practice:
             # Show end of practice screen
             redirect_url = request.url_for(
@@ -454,12 +563,6 @@ def go_to_next_game(
                 player_id=next_player_id,
             )
 
-            return RedirectResponse(
-                redirect_url,
-                status_code=HTTPStatus.FOUND,
-            )
-
-    # next_player_id
     redirect_url = request.url_for(
         "start_of_game",
         game_id=game.next_game_id,
@@ -486,7 +589,7 @@ def real_game_transition(
     Function that returns the start of game page and
     template.
     """
-    game, player = get_game_and_player(game_id, player_id, db)
+    _, player = get_game_and_player(game_id, player_id, db)
     header = get_header_data(player, db)
     template_text = languages[get_lang_from_player_id(player_id, db)]
 
@@ -494,13 +597,12 @@ def real_game_transition(
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "points": game.winning_score,
         "text": template_text,
         "completed_game": True,
         **header,
     }
 
-    return templates.TemplateResponse("real_game_transition.html", result)
+    return templates.TemplateResponse("self_selected_intro.html", result)
 
 
 @router.get(

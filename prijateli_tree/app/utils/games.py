@@ -8,8 +8,10 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
+    GameAnswer,
     GamePlayer,
     GameSessionPlayer,
+    PlayerNetwork,
     get_db,
 )
 from prijateli_tree.app.utils.constants import (
@@ -192,29 +194,60 @@ def get_previous_answers(
 
     # Use game utils to get the player's neighbors
     game_util = GameUtil(game.game_type.network)
-    neighbors_positions = game_util.neighbors[player.position]
 
-    neighbors_answers = []
-    neighbors_names = []
-    # Get the neighbors' previous answers
-    for neighbor_position in neighbors_positions:
-        this_neighbor = (
-            db.query(GamePlayer)
-            .filter_by(game_id=game_id, position=neighbor_position)
-            .one_or_none()
+    # If network is self-selected, pull info from PlayerNetwork
+    if game.game_type.network == NETWORK_TYPE_SELF_SELECTED:
+        player_neighbors = (
+            db.query(PlayerNetwork)
+            .filter_by(game_id=game_id, player_id=player_id)
+            .all()
         )
-        this_answer = [
-            a for a in this_neighbor.answers if a.round == last_round
-        ][0]
+        neighbors_answers = []
+        neighbors_names = []
+        for neighbor in player_neighbors:
+            # Get provided neighbor's answer
+            neighbor_answer = (
+                db.query(GameAnswer)
+                .filter_by(
+                    game_player_id=neighbor.neighbor_id,
+                    round=last_round,
+                )
+                .one_or_none()
+            )
+            neighbor_user = (
+                db.query(GamePlayer)
+                .filter_by(id=neighbor.neighbor_id)
+                .one_or_none()
+            )
+            complete_name = f"{neighbor_user.user.first_name} {neighbor_user.user.last_name}: "
 
-        # Check if names are hidden
-        if game.game_type.names_hidden:
-            complete_name = f"Player {this_neighbor.position}: "
-        else:
-            complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+            neighbors_answers.append(neighbor_answer.player_answer)
+            neighbors_names.append(complete_name)
 
-        neighbors_names.append(complete_name)
-        neighbors_answers.append(this_answer.player_answer)
+    else:
+        neighbors_positions = game_util.neighbors[player.position]
+
+        neighbors_answers = []
+        neighbors_names = []
+        # Get the neighbors' previous answers
+        for neighbor_position in neighbors_positions:
+            this_neighbor = (
+                db.query(GamePlayer)
+                .filter_by(game_id=game_id, position=neighbor_position)
+                .one_or_none()
+            )
+            this_answer = [
+                a for a in this_neighbor.answers if a.round == last_round
+            ][0]
+
+            # Check if names are hidden
+            if game.game_type.names_hidden:
+                complete_name = f"Player {this_neighbor.position}: "
+            else:
+                complete_name = f"{this_neighbor.user.first_name} {this_neighbor.user.last_name}: "
+
+            neighbors_names.append(complete_name)
+            neighbors_answers.append(this_answer.player_answer)
 
     return {
         "your_previous_answer": player_answer.player_answer,
@@ -256,6 +289,16 @@ def get_header_data(player: GamePlayer, db: Session = Depends(get_db)):
     progress_dict = get_games_progress(player, db)
 
     return {**score_dict, **progress_dict}
+
+
+def check_if_neighbors(player_id: int, db: Session):
+    """
+    Checks if player has any neighbors, used for
+    self-selected games
+    """
+
+    neighbors = db.query(PlayerNetwork).filter_by(player_id=player_id).all()
+    return len(neighbors) > 0
 
 
 def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):

@@ -8,6 +8,9 @@
       <h1>
         {% if practice_game %}
           {{ text.intro_practice.now_you_will_play }}
+        {% elif game_type == "self-selected" %}
+          {{ text.different_game_intro.different_version }}
+          {{ text.different_game_intro.instead_of }}
         {% else %}
           {{ text.ready_to_play.get_ready }}
         {% endif %}

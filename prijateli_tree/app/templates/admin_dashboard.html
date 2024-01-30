@@ -4,12 +4,12 @@
 {% endblock title %}
 {% block helper_script %}
   <script>
-    // $(document).ready(function () {
-    //   $('#sessions').DataTable();
-    //   $('#students').DataTable();
-    //   $('#denar-transactions').DataTable();
+     $(document).ready(function () {
+      $('#sessions').DataTable({ order: [[0, 'desc']]});
+      $('#session_players').DataTable({order: [[0, 'desc'], [1, 'desc']]});
+      $('#students').DataTable();
     //   $('#game-types').DataTable();
-    // });
+     });
     function cleanParams() {
       // Used to clear the URL of parameters after the banner alert is closed.
       window.history.replaceState(null, '', window.location.pathname);
@@ -37,111 +37,127 @@
   {% endif %}
   <div class="container-fluid">
     <div class="row">
-      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <a class="btn btn-primary btn-sm"
-           href='{{ url_for("dashboard_create_session") }}'
-           role="button">New Session</a>
-        <table id="sessions"
-               class="table table-hover table-bordered caption-top text-center">
-          <caption>List of Sessions</caption>
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Number of Games</th>
-              <th scope="col">Players</th>
-              <th scope="col">Copy URL</th>
-            </tr>
-          </thead>
-          <tbody class="table-group-divider">
-            {% if sessions|length == 0 %}
-              <tr class="empty-table">
-                <td colspan="4">There are no sessions currently in the system.</td>
-              </tr>
-            {% endif %}
-            {% for s in sessions|sort(attribute='-created_at') %}
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8"
+           style="position: relative">
+        <h2>
+          List of Sessions
+          <a class="btn btn-primary btn-lg"
+             href='{{ url_for("dashboard_create_session") }}'
+             id="session_button"
+             role="button">New Session</a>
+        </h2>
+        <div class="table-container">
+          <table id="sessions"
+                 class="table table-hover table-bordered caption-top text-center">
+            <thead>
               <tr>
-                <th>{{ s.id }}</th>
-                <td>{{ s.num_games }}</td>
-                <td>{{ s.player_string }}</td>
-                <td>
-                  {% if not s.finished %}
-                    <button role="button"
-                            class="btn btn-primary btn-sm"
-                            onclick="copyToClipboard({{ s.id }})">Copy to Clipboard</button>
-                  {% endif %}
-                </td>
+                <th scope="col">ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Number of Games</th>
+                <th scope="col">Players</th>
+                <th scope="col">Copy URL</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="students"
-               class="table table-hover table-bordered caption-top text-center">
-          <caption>List of Students</caption>
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Language</th>
-              <th scope="col">Email</th>
-              <th scope="col">Grade</th>
-              <th scope="col">High School</th>
-            </tr>
-          </thead>
-          <tbody class="table-group-divider">
-            {% if students|length == 0 %}
-              <tr class="empty-table">
-                <td colspan="7">There are no students currently in the system.</td>
-              </tr>
-            {% endif %}
-            {% for s in students|sort(attribute='high_school.name, last_name') %}
+            </thead>
+            <tbody class="table-group-divider">
+              {% if sessions|length == 0 %}
+                <tr class="empty-table">
+                  <td colspan="4">There are no sessions currently in the system.</td>
+                </tr>
+              {% endif %}
+              {% for s in sessions|sort(attribute='-created_at') %}
+                <tr>
+                  <th>{{ s.id }}</th>
+                  <td>{{ s.created_at.date() }}</td>
+                  <td>{{ s.num_games }}</td>
+                  <td>{{ s.player_string }}</td>
+                  <td>
+                    {% if not s.finished %}
+                      <button role="button"
+                              class="btn btn-primary btn-sm"
+                              onclick="copyToClipboard({{ s.id }})">Copy to Clipboard</button>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <br>
+        <br>
+        <h2>List of Awards</h2>
+        <div class="table-container">
+          <table id="session_players"
+                 class="table table-hover table-bordered caption-top">
+            <thead>
               <tr>
-                <th>{{ s.id }}</th>
-                <td>{{ s.first_name }}</td>
-                <td>{{ s.last_name }}</td>
-                <td>{{ s.language.name }}</td>
-                <td>{{ s.email }}</td>
-                <td>{{ s.grade_level }}</td>
-                <td>{{ s.high_school.name }}</td>
+                <th scope="col">Date</th>
+                <th scope="col">Session ID</th>
+                <th scope="col">Student</th>
+                <th scope="col">Correct Answers</th>
+                <th scope="col">Total Points</th>
+                <th scope="col">Award Amount</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container text-center">
-        <table id="denar-transactions"
-               class="table table-hover table-bordered caption-top">
-          <caption>List of Denar Transactions</caption>
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">User</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Game ID</th>
-            </tr>
-          </thead>
-          <tbody class="table-group-divider">
-            {% if transactions|length == 0 %}
-              <tr class="empty-table">
-                <td colspan="5">There are no denar transactions currently in the system.</td>
-              </tr>
-            {% endif %}
-            {% for t in transactions %}
+            </thead>
+            <tbody class="table-group-divider">
+              {% if session_players|length == 0 %}
+                <tr class="empty-table">
+                  <td colspan="5">There are no session players currently in the system.</td>
+                </tr>
+              {% endif %}
+              {% for sp in session_players %}
+                <tr>
+                  <td>{{ sp.created_at.date() }}</td>
+                  <td>{{ sp.session_id }}</td>
+                  <td>{{ sp.user.first_name + ' ' + sp.user.last_name }}</td>
+                  <td>{{ sp.correct_answers }}</td>
+                  <td>{{ sp.points }}</td>
+                  <td>{{ sp.points * DENAR_FACTOR }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <br>
+        <br>
+        <h2>List of Students</h2>
+        <div class="table-container">
+          <table id="students"
+                 class="table table-hover table-bordered caption-top text-center">
+            <caption>List of Students</caption>
+            <thead>
               <tr>
-                <th>{{ t.id }}</th>
-                <td>{{ t.user.first_name + ' ' + t.user.last_name }}</td>
-                <td>{{ t.amount }}</td>
-                <td>{{ t.created_by_game_id }}</td>
+                <th scope="col">ID</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Language</th>
+                <th scope="col">Email</th>
+                <th scope="col">Grade</th>
+                <th scope="col">High School</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody class="table-group-divider">
+              {% if students|length == 0 %}
+                <tr class="empty-table">
+                  <td colspan="7">There are no students currently in the system.</td>
+                </tr>
+              {% endif %}
+              {% for s in students|sort(attribute='high_school.name, last_name') %}
+                <tr>
+                  <th>{{ s.id }}</th>
+                  <td>{{ s.first_name }}</td>
+                  <td>{{ s.last_name }}</td>
+                  <td>{{ s.language.name }}</td>
+                  <td>{{ s.email }}</td>
+                  <td>{{ s.grade_level }}</td>
+                  <td>{{ s.high_school.name }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!--
       <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
-        <table id="game-types"
-               class="table table-hover table-bordered caption-top text-center">
+        <table id="game-types" class="table table-hover table-bordered caption-top text-center">
           <caption>List of Game Types</caption>
           <thead>
             <tr>
@@ -169,6 +185,8 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
+    -->
       </div>
     </div>
   </div>

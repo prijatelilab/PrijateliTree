@@ -10,8 +10,13 @@ div.table-container {
     margin-top: 20px;
     max-height: 400px;
     overflow-y: auto;
-    padding-bottom: 20px;
-    padding-top: 20px;
+    padding: 20px 30px 10px 20px;
+}
+
+#session_button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
 }
 
 div.table-container a.btn {

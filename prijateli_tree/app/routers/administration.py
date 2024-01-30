@@ -23,7 +23,6 @@ from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
-    Denars,
     Game,
     GamePlayer,
     GameSession,
@@ -33,6 +32,7 @@ from prijateli_tree.app.database import (
     User,
 )
 from prijateli_tree.app.utils.constants import (
+    DENAR_FACTOR,
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
@@ -144,7 +144,7 @@ def dashboard(
     game_types = db.query(GameType).all()
     sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
-    denar_transactions = db.query(Denars).all()
+    session_players = db.query(GameSessionPlayer).all()
     student_dict = {}
     for s in students:
         student_dict[s.id] = s
@@ -165,7 +165,8 @@ def dashboard(
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,
-            "transactions": denar_transactions,
+            "session_players": session_players,
+            "DENAR_FACTOR": DENAR_FACTOR,
         },
     )
 
@@ -201,7 +202,7 @@ def create_session(
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
-    num_games: Annotated[int, Form()] | None = None,
+    num_games: int = NUMBER_OF_GAMES,
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
 ) -> RedirectResponse:

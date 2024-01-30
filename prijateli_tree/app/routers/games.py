@@ -576,10 +576,10 @@ def go_to_next_game(
 
 
 @router.get(
-    "/{game_id}/player/{player_id}/self_selected_intro",
+    "/{game_id}/player/{player_id}/real_game_transition",
     response_class=HTMLResponse,
 )
-def self_selected_intro(
+def real_game_transition(
     request: Request,
     game_id: int,
     player_id: int,

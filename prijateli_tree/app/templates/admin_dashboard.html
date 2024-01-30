@@ -5,9 +5,9 @@
 {% block helper_script %}
   <script>
      $(document).ready(function () {
-      $('#sessions').DataTable();
+      $('#sessions').DataTable({ order: [[0, 'desc']]});
+      $('#session_players').DataTable({order: [[0, 'desc'], [1, 'desc']]});
       $('#students').DataTable();
-      $('#session_players').DataTable();
     //   $('#game-types').DataTable();
      });
     function cleanParams() {
@@ -37,11 +37,12 @@
   {% endif %}
   <div class="container-fluid">
     <div class="row">
-      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8">
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8" style="position: relative;">
         <h2>
           List of Sessions
           <a class="btn btn-primary btn-lg"
              href='{{ url_for("dashboard_create_session") }}'
+             id="session_button"
              role="button">New Session</a>
         </h2>
         <div class="table-container">
@@ -89,6 +90,7 @@
             <thead>
               <tr>
                 <th scope="col">Date</th>
+                <th scope="col">Session ID</th>
                 <th scope="col">Student</th>
                 <th scope="col">Correct Answers</th>
                 <th scope="col">Total Points</th>
@@ -104,6 +106,7 @@
               {% for sp in session_players %}
                 <tr>
                   <td>{{ sp.created_at.date() }}</td>
+                  <td>{{ sp.session_id }}</td>
                   <td>{{ sp.user.first_name + ' ' + sp.user.last_name }}</td>
                   <td>{{ sp.correct_answers }}</td>
                   <td>{{ sp.points }}</td>

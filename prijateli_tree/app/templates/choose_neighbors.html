@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}
+  PrijateliTree - Choose Neighbors
+{% endblock title %}
+{% block helper_script %}
+  <script>
+    fetch('{{ url_for("create_session") }}', {
+          method: 'POST',
+          body: formData
+        })
+      .then(resp => {
+        window.location.href = resp.url
+      }) // or, resp.text(), etc
+      .catch(error => {
+          console.error(error);
+      });
+    function cleanParams() {
+      // Used to clear the URL of parameters after the banner alert is closed.
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  </script>
+{% endblock helper_script %}
+{% block content %}
+  {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>ERROR:</strong> {{ error }}
+      <button type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              onclick="cleanParams()"></button>
+    </div>
+  {% endif %}
+  <div class="container-sm general-container">
+    <h3 style="margin-bottom: 40px;">
+      {{ text.different_game_choices.please_choose_players | replace('{X}', num_neighbors) }}
+    </h3>
+    <div class="row justify-content-center">
+      <!-- Added row and justify-content-center classes -->
+      <div class="col-sm-4">
+        <form method="post"
+              action='{{ url_for("add_neighbors", game_id=game_id, player_id=player_id) }}'>
+          <div class="mb-3 row">
+            <label for="pos-one" class="col-sm-4 form-label">{{ text.util.player }} 1</label>
+            <div class="col-sm-8">
+              <select id="pos-one" class="form-select form-select-sm" name="player_one">
+                {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="pos-two" class="col-sm-4 form-label">{{ text.util.player }} 2</label>
+            <div class="col-sm-8">
+              <select id="pos-two" class="form-select form-select-sm" name="player_two">
+                {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
+              </select>
+            </div>
+          </div>
+          {% if num_neighbors > 2 %}
+            <div class="mb-3 row">
+              <label for="pos-three" class="col-sm-4 form-label">{{ text.util.player }} 3</label>
+              <div class="col-sm-8">
+                <select id="pos-three" class="form-select form-select-sm" name="player_three">
+                  {% for s in students|sort(attribute='last_name') %}<option value="{{ s.id }}">{{ s.name_str }}</option>{% endfor %}
+                </select>
+              </div>
+            </div>
+          {% endif %}
+          <button type="submit" class="btn btn-primary float-end">{{ text.ready_to_play.im_ready }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

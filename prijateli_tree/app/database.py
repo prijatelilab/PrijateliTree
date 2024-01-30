@@ -392,3 +392,28 @@ class GameSessionPlayer(Base):
     def language(self, db: Session = next(get_db())):
         user = db.query(User).filter_by(id=self.user_id).one()
         return db.query(Language).filter_by(id=user.language_id).one()
+
+
+class PlayerNetwork(Base):
+    __tablename__ = "player_networks"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    game_id = Column(
+        Integer,
+        ForeignKey("games.id", name="game_players_game_id_fkey"),
+        nullable=False,
+    )
+    player_id = Column(
+        Integer,
+        ForeignKey("game_players.id", name="game_players_player_id_fkey"),
+        nullable=False,
+    )
+    neighbor_id = Column(
+        Integer,
+        ForeignKey("game_players.id", name="game_players_neighbor_id_fkey"),
+        nullable=False,
+    )
+
+    player = relationship("GamePlayer", foreign_keys="PlayerNetwork.player_id")
+    neighbor = relationship(
+        "GamePlayer", foreign_keys="PlayerNetwork.neighbor_id"
+    )

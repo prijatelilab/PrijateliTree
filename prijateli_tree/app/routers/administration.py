@@ -36,8 +36,11 @@ from prijateli_tree.app.utils.constants import (
     KEY_LOGIN_SECRET,
     NETWORK_TYPE_INTEGRATED,
     NETWORK_TYPE_SEGREGATED,
+    NETWORK_TYPE_SELF_SELECTED,
     NUMBER_OF_GAMES,
+    NUMBER_OF_PRACTICE_GAMES,
     NUMBER_OF_ROUNDS,
+    NUMBER_OF_SELF_SELECTED_GAMES,
     ROLE_ADMIN,
     ROLE_STUDENT,
     ROLE_SUPER_ADMIN,
@@ -206,6 +209,10 @@ def create_session(
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
+    if num_games is None:
+        num_games = NUMBER_OF_GAMES
+        logging.info(f"Setting number of games to {num_games}")
+
     player_ids = [
         player_one,
         player_two,
@@ -263,15 +270,15 @@ def create_session(
                 user_id=p_id,
             )
         )
-
     db.commit()
     db.refresh(session)
+
     game = None
     previous_game = None
     network_type = [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
     random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
 
-    for i in range(2):
+    for i in range(NUMBER_OF_PRACTICE_GAMES):
         if game:
             previous_game = game
 
@@ -295,25 +302,7 @@ def create_session(
             previous_game.next_game_id = game.id
             db.commit()
 
-        bag = game.game_type.bag
-        rand_bag = random.sample(bag, len(bag))
-        position = 1
-        for p_list in lang_dict.values():
-            for p in p_list:
-                session_player = [
-                    sp for sp in session.players if sp.user_id == p.id
-                ][0]
-                db.add(
-                    GamePlayer(
-                        created_by=user.id,
-                        game_id=game.id,
-                        user_id=p.id,
-                        session_player_id=session_player.id,
-                        position=position,
-                        initial_ball=rand_bag[position - 1],
-                    )
-                )
-                position += 1
+        add_players_to_first_game(lang_dict, game, session, db)
 
         db.commit()
         db.refresh(game)
@@ -336,17 +325,31 @@ def create_session_games(
     game,
     db: Session = Depends(get_db),
 ) -> None:
+    regular_game_count = session.num_games - NUMBER_OF_SELF_SELECTED_GAMES
+
     for i in range(session.num_games):
         previous_game = game
-        game_types = (
-            db.query(GameType)
-            .filter(
-                GameType.network.in_(
-                    [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+
+        if i < regular_game_count:
+            game_types = (
+                db.query(GameType)
+                .filter(
+                    GameType.network.in_(
+                        [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
+                    )
                 )
+                .all()
             )
-            .all()
-        )
+        else:
+            game_types = (
+                db.query(GameType)
+                .filter(
+                    GameType.network.in_([NETWORK_TYPE_SELF_SELECTED]),
+                    GameType.names_hidden.is_(False),
+                )
+                .all()
+            )
+
         game_type = random.choice(game_types)
         n_rounds = random.choice(ROUNDS_ARRAY)
 
@@ -370,20 +373,49 @@ def create_session_games(
         previous_game.next_game_id = game.id
         db.commit()
 
-        # randomize location in network conditional on language
-        # one group is always in 1-2-3 and the other 4-5-6
-        group_1 = [p for p in previous_game.players if p.position in (1, 2, 3)]
-        random.shuffle(group_1)
-
-        group_2 = [p for p in previous_game.players if p.position in (4, 5, 6)]
-        random.shuffle(group_2)
-
-        pos_players = group_1 + group_2
-        add_players_to_game(pos_players, game, db)
+        add_players_to_game(previous_game, game, db)
 
 
-def add_players_to_game(pos_players: list[GamePlayer], game, db) -> None:
+def add_players_to_first_game(lang_dict, game, session, db):
+    user_ids = []
+    session_players = []
+    user_lists = lang_dict.values()
+    for user_list in user_lists:
+        for user in user_list:
+            user_ids.append(user.id)
+            session_players.append(
+                [sp for sp in session.players if sp.user_id == user.id][0]
+            )
+
+    rand_bag = random.sample(game.game_type.bag, len(game.game_type.bag))
+
+    for i, session_player in enumerate(session_players):
+        db.add(
+            GamePlayer(
+                created_by=session.created_by,
+                game_id=game.id,
+                user_id=user_ids[i],
+                session_player_id=session_player.id,
+                position=i + 1,
+                initial_ball=rand_bag[i],
+            )
+        )
+
+    db.commit()
+    db.refresh(game)
+
+
+def add_players_to_game(previous_game, game, db) -> None:
     """ """
+    # randomize location in network conditional on language
+    # one group is always in 1-2-3 and the other 4-5-6
+    group_1 = [p for p in previous_game.players if p.position in (1, 2, 3)]
+    random.shuffle(group_1)
+
+    group_2 = [p for p in previous_game.players if p.position in (4, 5, 6)]
+    random.shuffle(group_2)
+
+    pos_players = group_1 + group_2
     rand_bag = random.sample(game.game_type.bag, len(game.game_type.bag))
 
     for i, player in enumerate(pos_players):

@@ -96,3 +96,11 @@ tr.empty-table {
       transform: rotate(360deg);
     }
   }
+
+
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    color: #fff;
+
+  }

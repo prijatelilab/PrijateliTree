@@ -151,7 +151,7 @@ def start_of_game(
 def get_data_for_network(
     game_id: int,
     player_id: int,
-    db: Session = Depends(Database),
+    db: Session = Depends(get_db),
 ) -> Response:
     game, _ = get_game_and_player(game_id, player_id, db)
 

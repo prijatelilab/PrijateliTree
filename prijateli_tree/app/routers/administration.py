@@ -31,6 +31,7 @@ from prijateli_tree.app.database import (
     SessionLocal,
     User,
 )
+from prijateli_tree.app.utils.administration import show_network
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     KEY_LOGIN_SECRET,
@@ -282,6 +283,8 @@ def create_session(
         if game:
             previous_game = game
 
+        is_network_visible = show_network()
+
         game = Game(
             created_by=user.id,
             game_session_id=session.id,
@@ -292,6 +295,7 @@ def create_session(
             rounds=NUMBER_OF_ROUNDS,
             practice=True,
             winning_score=random_score,
+            is_network_visible=is_network_visible,
         )
 
         db.add(game)
@@ -340,6 +344,8 @@ def create_session_games(
                 )
                 .all()
             )
+
+            is_network_visible = show_network()
         else:
             game_types = (
                 db.query(GameType)
@@ -349,6 +355,7 @@ def create_session_games(
                 )
                 .all()
             )
+            is_network_visible = False
 
         game_type = random.choice(game_types)
         n_rounds = random.choice(ROUNDS_ARRAY)
@@ -364,6 +371,7 @@ def create_session_games(
             game_type_id=game_type.id,
             rounds=n_rounds,
             winning_score=random_score,
+            is_network_visible=is_network_visible,
         )
 
         db.add(game)

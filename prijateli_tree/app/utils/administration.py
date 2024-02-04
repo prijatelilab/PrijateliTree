@@ -1,8 +1,8 @@
 """Script for utils functions for the app's administration."""
 
-from utils.constants import SHOW_NETWORK_PROBABILITY
-
 import random
+
+from utils.constants import SHOW_NETWORK_PROBABILITY
 
 
 def show_network():

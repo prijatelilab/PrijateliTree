@@ -26,6 +26,7 @@ ROLE_STUDENT = "student"
 ROLE_SUPER_ADMIN = "super-admin"
 SYSTEM_ID = 0
 ROUNDS_ARRAY = [3, 4, 5]
+SHOW_NETWORK_PROBABILITY = 0.2
 
 
 # Language Constants

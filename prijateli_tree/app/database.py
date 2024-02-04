@@ -207,6 +207,7 @@ class Game(Base):
         "GameType", foreign_keys="Game.game_type_id", back_populates="games"
     )
     winning_score = Column(Integer, nullable=False)
+    is_network_visible = Column(Boolean, nullable=True, server_default="false")
     players = relationship("GamePlayer", back_populates="game")
     session = relationship("GameSession", back_populates="games")
 

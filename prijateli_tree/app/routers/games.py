@@ -131,6 +131,7 @@ def start_of_game(
     """
     template_text = languages[get_lang_from_player_id(player_id, db)]
     game, _ = get_game_and_player(game_id, player_id, db)
+
     result = {
         "request": request,
         "player_id": player_id,
@@ -140,6 +141,7 @@ def start_of_game(
             key: game.__dict__[key] for key in ["practice", "winning_score"]
         },
         "game_type": game.game_type.network,
+        "show_network": game.is_network_visible,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)

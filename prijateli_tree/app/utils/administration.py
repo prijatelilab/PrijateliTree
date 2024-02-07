@@ -2,7 +2,7 @@
 
 import random
 
-from utils.constants import SHOW_NETWORK_PROBABILITY
+from prijateli_tree.app.utils.constants import SHOW_NETWORK_PROBABILITY
 
 
 def show_network():

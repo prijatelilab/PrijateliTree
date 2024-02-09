@@ -23,7 +23,7 @@
         {{ text.real_game_intro.added_points | replace('{X}', game.winning_score) }}
       {% endif %}
     </h3>
-    {% if show_network %}
+    {% if game.is_network_visible %}
       {% include "networks.html" %}
     {% endif %}
     <div class="p-5">

@@ -19,13 +19,25 @@
 
 
         let nodes = [];
-        nodes.push([offset, v_offset]); // 0 (1)
-        nodes.push([offset, height - v_offset]); // 1 (2)
-        nodes.push([(width_inner) / 3 + offset, height / 2]); // 2 (3)
-        nodes.push([2 * (width_inner) / 3 + offset, height / 2 ]); // 3 (4)
-        nodes.push([width - offset, (height - v_offset) ]); // 4 (5)
-        nodes.push([width - offset,  v_offset]); // 5 (6)
 
+
+        if (data.reflect) {
+            nodes.push([offset, v_offset]); // 0 (1)
+            nodes.push([offset, height - v_offset]); // 1 (2)
+            nodes.push([(width_inner) / 3 + offset, height / 2]); // 2 (3)
+            nodes.push([2 * (width_inner) / 3 + offset, height / 2 ]); // 3 (4)
+            nodes.push([width - offset,  v_offset]); // 4 (5)
+            nodes.push([width - offset, (height - v_offset) ]); // 5 (6)
+
+        } else {
+            // reflection across 45 degree line
+            nodes.push([offset, v_offset]); // 0 (1)
+            nodes.push([width - offset,  v_offset]); // 1 (2) (was 4 (5))
+            nodes.push([(width_inner) / 2 + offset, height / 3]); // 2 (3)
+            nodes.push([(width_inner) / 2 + offset, 2 * height / 3 ]); // 3 (4)
+            nodes.push([offset, height - v_offset]); // 4 (5) (was 1 (2))
+            nodes.push([width - offset, (height - v_offset) ]); // 5 (6)
+        }
 
         if (data.reverse) {
             nodes.reverse()

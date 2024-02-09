@@ -138,10 +138,10 @@ def start_of_game(
         "game_id": game_id,
         "text": template_text,
         "game": {
-            key: game.__dict__[key] for key in ["practice", "winning_score"]
+            key: game.__dict__[key]
+            for key in ["practice", "winning_score", "is_network_visible"]
         },
         "game_type": game.game_type.network,
-        "show_network": game.is_network_visible,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
@@ -180,7 +180,13 @@ def get_data_for_network(
     # ensures consistent diagram on refresh
     random.seed(game_id * player_id)
     reverse = random.random() > 0.5
-    return {"data": players, "is_integrated": is_integrated, "reverse": reverse}
+    reflect = random.random() > 0.5
+    return {
+        "data": players,
+        "is_integrated": is_integrated,
+        "reverse": reverse,
+        "reflect": reflect,
+    }
 
 
 @router.get("/{game_id}/player/{player_id}/round")

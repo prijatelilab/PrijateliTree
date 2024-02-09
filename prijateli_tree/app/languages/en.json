@@ -29,7 +29,10 @@
     },
     "different_game_intro": {
       "different_version": "Now, we will play a different version of the game.",
-      "instead_of": "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe."
+      "each_circle": "Each circle is a player: you are the green circle.",
+      "instead_of": "Instead of assigning you the peers you observe randomly, we will let you choose the players you observe.",
+      "players_connected": "Players connected by a line can see each other's guesses.",
+      "this_diagram": "This diagram shows who can see who in this game."
     },
     "final_score": {
       "ask_your_teachers": "Ask your teachers about getting your reward!",

@@ -6,7 +6,7 @@
   <div class="container-sm general-container col-md-8 offset-md-2">
     <div class="pb-4">
       <h1>
-        {% if practice_game %}
+        {% if game.practice %}
           {{ text.intro_practice.now_you_will_play }}
         {% elif game_type == "self-selected" %}
           {{ text.different_game_intro.different_version }}
@@ -16,13 +16,16 @@
         {% endif %}
       </h1>
     </div>
-    <h3>
-      {% if practice_game %}
+    <h3 style="margin-bottom: 20px;">
+      {% if game.practice %}
         {{ text.intro_practice.since_these_rules }}
       {% else %}
-        {{ text.real_game_intro.added_points | replace('{X}', points) }}
+        {{ text.real_game_intro.added_points | replace('{X}', game.winning_score) }}
       {% endif %}
     </h3>
+    {% if game.is_network_visible %}
+      {% include "networks.html" %}
+    {% endif %}
     <div class="p-5">
       <form method="get"
             action="{{ url_for('view_round', player_id=player_id, game_id=game_id) }}">

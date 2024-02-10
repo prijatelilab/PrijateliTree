@@ -1,6 +1,7 @@
 import glob
 import json
 import logging
+import random
 from http import HTTPStatus
 from pathlib import Path
 from typing import Annotated
@@ -135,13 +136,58 @@ def start_of_game(
         "request": request,
         "player_id": player_id,
         "game_id": game_id,
-        "points": game.winning_score,
         "text": template_text,
-        "practice_game": game.practice,
+        "game": {
+            key: game.__dict__[key]
+            for key in ["practice", "winning_score", "is_network_visible"]
+        },
         "game_type": game.game_type.network,
     }
 
     return templates.TemplateResponse("start_of_game.html", result)
+
+
+@router.get(
+    "/{game_id}/player/{player_id}/network", response_class=JSONResponse
+)
+def get_data_for_network(
+    game_id: int,
+    player_id: int,
+    db: Session = Depends(get_db),
+) -> Response:
+    game, player = get_game_and_player(game_id, player_id, db)
+    template_text = languages[player.language.abbr]
+    is_integrated = game.game_type.network == NETWORK_TYPE_INTEGRATED
+
+    if not game.game_type.names_hidden:
+        players = [
+            {
+                "position": p.position,
+                "this_player": p.id == player_id,
+                "name": f"{p.user.first_name} {p.user.last_name}",
+            }
+            for p in game.players
+        ]
+    else:
+        players = [
+            {
+                "position": p.position,
+                "this_player": p.id == player_id,
+                "name": f"{p.position}",
+            }
+            for p in game.players
+        ]
+    # ensures consistent diagram on refresh
+    random.seed(game_id * player_id)
+    reverse = random.random() > 0.5
+    reflect = random.random() > 0.5
+    return {
+        "text": template_text,
+        "data": players,
+        "is_integrated": is_integrated,
+        "reverse": reverse,
+        "reflect": reflect,
+    }
 
 
 @router.get("/{game_id}/player/{player_id}/round")

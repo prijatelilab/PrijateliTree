@@ -1,0 +1,139 @@
+<div id="network"></div>
+<div id="network_legend">
+  <h3 style="margin-bottom: 20px; margin-top: 25px;">{{ text.different_game_intro.this_diagram }}</h3>
+  <h3 style="margin-bottom: 20px;">{{ text.different_game_intro.each_circle }}</h3>
+  <h3>{{ text.different_game_intro.players_connected }}</h3>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+    // https://observablehq.com/@harrylove/draw-lines-between-circles-nodes-using-d3-links
+    async function build_network() {
+        const response = await fetch("/games/{{game_id}}/player/{{player_id}}/network");
+        const data = await response.json();
+        const width = 1000
+        const height = 400
+        const offset = 175
+        const v_offset = 50
+        const width_inner = width - 2 * offset
+
+        const svg = d3.select('#network')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+
+        let nodes = [];
+
+
+        if (data.reflect) {
+            nodes.push([offset, v_offset]); // 0 (1)
+            nodes.push([offset, height - v_offset]); // 1 (2)
+            nodes.push([(width_inner) / 3 + offset, height / 2]); // 2 (3)
+            nodes.push([2 * (width_inner) / 3 + offset, height / 2 ]); // 3 (4)
+            nodes.push([width - offset,  v_offset]); // 4 (5)
+            nodes.push([width - offset, (height - v_offset) ]); // 5 (6)
+
+        } else {
+            // reflection across 45 degree line
+            nodes.push([offset, v_offset]); // 0 (1)
+            nodes.push([width - offset,  v_offset]); // 1 (2) (was 4 (5))
+            nodes.push([(width_inner) / 2 + offset, height / 3]); // 2 (3)
+            nodes.push([(width_inner) / 2 + offset, 2 * height / 3 ]); // 3 (4)
+            nodes.push([offset, height - v_offset]); // 4 (5) (was 1 (2))
+            nodes.push([width - offset, (height - v_offset) ]); // 5 (6)
+        }
+
+        if (data.reverse) {
+            nodes.reverse()
+        }
+
+        let connections = [[0,2], [1,2], [2,3], [3,4], [3,5]];
+        if (data.is_integrated) {
+            connections.push([1,5], [0, 4])
+        } else {
+            connections.push([1, 0], [5, 4])
+        }
+
+        let links = [];
+        for (i in connections) {
+            links.push(
+                d3.linkHorizontal()({
+                source: nodes[connections[i][0]],
+                target: nodes[connections[i][1]]
+                })
+            );
+        }
+
+        for (let i = 0; i < links.length; i++) {
+            svg
+                .append('path')
+                .attr('d', links[i])
+                .attr('stroke', 'white')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+        }
+
+
+
+        const Tooltip = d3.select("#network")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0)
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "3px")
+        .style("border-radius", "3px")
+        .style("padding", "5px")
+
+        // Three function that change the tooltip when user hover / move / leave a cell
+        const mouseover = function(event, d) {
+        Tooltip.style("opacity", 1)
+        }
+        var mousemove = function(event, d) {
+        Tooltip
+            .html(d.name )
+            .style('font', "16pt sans-serif")
+            .style('color', "black")
+            .style("left", (event.x) + "px")
+            .style("top", (event.y) - 20 + "px")
+        }
+        var mouseleave = function(event, d) {
+            Tooltip.style("opacity", 0)
+        }
+
+
+        data.data.forEach(element => {
+            i = element['position'] - 1
+            element['cx'] = nodes[i][0]
+            element['cy'] = nodes[i][1]
+        });
+
+        svg.selectAll('g')
+            .data(data.data)
+            .join('circle')
+            .attr('r', 40)
+            .attr('cx', function(d){
+                return d.cx
+            })
+            .attr('cy', function(d){
+                return d.cy
+            })
+            .style('fill', function(d){
+                if (d.this_player) {
+                    return "lightgreen"
+                } else {
+                    return "grey"
+                }
+            })
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave)
+
+
+
+    }
+
+    $(document).ready( function () {
+        build_network();
+    });
+</script>

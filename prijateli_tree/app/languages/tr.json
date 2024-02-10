@@ -29,7 +29,10 @@
     },
     "different_game_intro": {
       "different_version": "\u015eimdi oyunun farkl\u0131 bir versiyonunu oynayaca\u011f\u0131z.",
-      "instead_of": "G\u00f6zlemledi\u011finiz oyuncular\u0131 size rastgele atamak yerine, g\u00f6zlemledi\u011finiz oyuncular\u0131 se\u00e7menize izin verece\u011fiz."
+      "each_circle": "Her \u00e7ember bir oyuncudur: sen ye\u015fil \u00e7embersin.",
+      "instead_of": "G\u00f6zlemledi\u011finiz oyuncular\u0131 size rastgele atamak yerine, g\u00f6zlemledi\u011finiz oyuncular\u0131 se\u00e7menize izin verece\u011fiz.",
+      "players_connected": "Bir \u00e7izgiyle ba\u011flanan oyuncular birbirlerinin tahminlerini g\u00f6rebilir.",
+      "this_diagram": "Bu diyagram, bu oyunda kimin kimi g\u00f6rebildi\u011fini g\u00f6steriyor."
     },
     "final_score": {
       "ask_your_teachers": "\u00d6\u011fretmenlerinize \u00f6d\u00fcl\u00fcn\u00fcz\u00fc nas\u0131l alaca\u011f\u0131n\u0131z\u0131 sorun!",

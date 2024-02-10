@@ -31,6 +31,7 @@ from prijateli_tree.app.database import (
     SessionLocal,
     User,
 )
+from prijateli_tree.app.utils.administration import show_network
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     KEY_LOGIN_SECRET,
@@ -275,23 +276,29 @@ def create_session(
 
     game = None
     previous_game = None
-    network_type = [NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED]
-    random_score = random.choices(WINNING_SCORES, weights=WINNING_WEIGHTS)[0]
 
     for i in range(NUMBER_OF_PRACTICE_GAMES):
         if game:
             previous_game = game
 
+        game_type_id = (
+            db.query(GameType)
+            .filter_by(
+                network=[NETWORK_TYPE_INTEGRATED, NETWORK_TYPE_SEGREGATED][i],
+                names_hidden=[True, False][i],
+            )
+            .first()
+            .id
+        )
+
         game = Game(
             created_by=user.id,
             game_session_id=session.id,
-            game_type_id=db.query(GameType)
-            .filter_by(network=network_type[i], names_hidden=False)
-            .first()
-            .id,
+            game_type_id=game_type_id,
             rounds=NUMBER_OF_ROUNDS,
             practice=True,
-            winning_score=random_score,
+            winning_score=0,
+            is_network_visible=False,
         )
 
         db.add(game)
@@ -302,7 +309,7 @@ def create_session(
             previous_game.next_game_id = game.id
             db.commit()
 
-        add_players_to_first_game(lang_dict, game, session, db)
+        add_players_to_practice_game(lang_dict, game, session, db)
 
         db.commit()
         db.refresh(game)
@@ -340,6 +347,8 @@ def create_session_games(
                 )
                 .all()
             )
+            is_network_visible = show_network()
+
         else:
             game_types = (
                 db.query(GameType)
@@ -349,6 +358,7 @@ def create_session_games(
                 )
                 .all()
             )
+            is_network_visible = False
 
         game_type = random.choice(game_types)
         n_rounds = random.choice(ROUNDS_ARRAY)
@@ -364,6 +374,7 @@ def create_session_games(
             game_type_id=game_type.id,
             rounds=n_rounds,
             winning_score=random_score,
+            is_network_visible=is_network_visible,
         )
 
         db.add(game)
@@ -376,7 +387,7 @@ def create_session_games(
         add_players_to_game(previous_game, game, db)
 
 
-def add_players_to_first_game(lang_dict, game, session, db):
+def add_players_to_practice_game(lang_dict, game, session, db):
     user_ids = []
     session_players = []
     user_lists = lang_dict.values()

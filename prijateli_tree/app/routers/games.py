@@ -155,8 +155,8 @@ def get_data_for_network(
     player_id: int,
     db: Session = Depends(get_db),
 ) -> Response:
-    game, _ = get_game_and_player(game_id, player_id, db)
-
+    game, player = get_game_and_player(game_id, player_id, db)
+    template_text = languages[player.language.abbr]
     is_integrated = game.game_type.network == NETWORK_TYPE_INTEGRATED
 
     if not game.game_type.names_hidden:
@@ -182,6 +182,7 @@ def get_data_for_network(
     reverse = random.random() > 0.5
     reflect = random.random() > 0.5
     return {
+        "text": template_text,
         "data": players,
         "is_integrated": is_integrated,
         "reverse": reverse,

@@ -58,6 +58,7 @@ class User(Base):
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=True, unique=True)
+    hashed_password = Column(String, nullable=True)
     birth_date = Column(Date, nullable=True)
     qualtrics_id = Column(String, nullable=True)
     role = Column(String, nullable=False)

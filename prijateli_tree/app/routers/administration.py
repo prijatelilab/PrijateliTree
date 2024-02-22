@@ -31,7 +31,7 @@ from prijateli_tree.app.database import (
     SessionLocal,
     User,
 )
-from prijateli_tree.app.utils.administration import show_network
+from prijateli_tree.app.utils.administration import Hasher, show_network
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     KEY_LOGIN_SECRET,
@@ -97,23 +97,21 @@ def admin_login(request: Request) -> Response:
 @router.post("/login")
 def confirm_login(
     request: Request,
-    first_name: Annotated[str, Form()],
-    last_name: Annotated[str, Form()],
     email: Annotated[str, Form()],
+    password: Annotated[str, Form()],
     db: Session = Depends(get_db),
 ) -> Response:
     user = (
         db.query(User)
         .filter(func.lower(User.email) == email.lower())
-        .filter(func.lower(User.first_name) == first_name.lower())
-        .filter(func.lower(User.last_name) == last_name.lower())
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
-    if user is None:
-        logger.info(
-            f"User submitted invalid credentials: {email} {first_name} {last_name}"
-        )
+    if (
+        not Hasher.verify_password(password, str(user.hashed_password))
+        or user is None
+    ):
+        logger.info(f"User submitted invalid credentials: {email}")
         return templates.TemplateResponse(
             "admin_login.html",
             {"request": request, "error": "Please submit valid credentials."},

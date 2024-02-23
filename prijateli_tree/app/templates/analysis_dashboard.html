@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}
+  PrijateliTree - Analysis Dashboard
+{% endblock title %}
+{% block helper_script %}
+  <script>
+     $(document).ready(function () {
+      // $('#sessions').DataTable({ order: [[0, 'desc']]});
+       // $('#session_players').DataTable({order: [[0, 'desc'], [1, 'desc']]});
+       // $('#students').DataTable();
+        $('#game-types').DataTable();
+     });
+
+  </script>
+{% endblock helper_script %}
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- START -->
+        <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+            <table id="game-types" class="table table-hover table-bordered caption-top text-center">
+              <caption>List of Game Types</caption>
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Network</th>
+                  <th scope="col">Bag</th>
+                  <th scope="col">Hidden Names</th>
+                  <th scope="col">Number of Games</th>
+                </tr>
+              </thead>
+              <tbody class="table-group-divider">
+                {% if game_types|length == 0 %}
+                  <tr class="empty-table">
+                    <td colspan="5">There are no game types currently in the system.</td>
+                  </tr>
+                {% endif %}
+                {% for gt in game_types|sort(attribute='-created_at') %}
+                  <tr>
+                    <th>{{ gt.id }}</th>
+                    <td>{{ gt.network|title }}</td>
+                    <td>{{ gt.bag }}</td>
+                    <td>{{ gt.names_hidden }}</td>
+                    <td>{{ gt.games|length }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        
+    </div>
+</div> 
+{% endblock content %}
+<form class="d-flex" action='{{ url_for("logout") }}'>
+  <button class="float-end btn btn-primary" type="submit">Logout</button>
+</form>

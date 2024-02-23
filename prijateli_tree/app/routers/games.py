@@ -68,7 +68,7 @@ logger.debug("Language files imported.")
 @router.get("/sessions", response_class=HTMLResponse)
 def choose_session_id(request: Request) -> Response:
     return templates.TemplateResponse(
-        "new_session.html",
+        "games/new_session.html",
         context={"request": request, "session_id": -1},
     )
 
@@ -86,7 +86,7 @@ def choose_session_players(
     players = first_game.players
 
     return templates.TemplateResponse(
-        "new_session.html",
+        "games/new_session.html",
         context={
             "request": request,
             "players": players,
@@ -113,7 +113,7 @@ def start_session(
         "text": template_text,
     }
 
-    return templates.TemplateResponse("ready.html", result)
+    return templates.TemplateResponse("games/ready.html", result)
 
 
 @router.get(
@@ -144,7 +144,7 @@ def start_of_game(
         "game_type": game.game_type.network,
     }
 
-    return templates.TemplateResponse("start_of_game.html", result)
+    return templates.TemplateResponse("games/start_of_game.html", result)
 
 
 @router.get(
@@ -238,7 +238,7 @@ def view_round(
         )
 
     return templates.TemplateResponse(
-        "round.html", {"request": request, **template_data}
+        "games/round.html", {"request": request, **template_data}
     )
 
 
@@ -280,7 +280,7 @@ def choose_neighbors(
     }
 
     return templates.TemplateResponse(
-        "choose_neighbors.html", {"request": request, **template_data}
+        "games/choose_neighbors.html", {"request": request, **template_data}
     )
 
 
@@ -437,7 +437,7 @@ def waiting(
         **header,
     }
 
-    return templates.TemplateResponse("waiting.html", result)
+    return templates.TemplateResponse("games/waiting.html", result)
 
 
 @router.put(
@@ -492,7 +492,7 @@ def get_qualtrics(
         survey_link = survey_link + "?Q_Language=" + lang
 
     return templates.TemplateResponse(
-        "qualtrics.html",
+        "games/qualtrics.html",
         {
             "request": request,
             "player_id": player_id,
@@ -565,7 +565,7 @@ def end_of_game(
     # add information about winning and ball colors
     result.update(game_status)
 
-    return templates.TemplateResponse("end_of_game.html", result)
+    return templates.TemplateResponse("games/end_of_game.html", result)
 
 
 @router.get("/{game_id}/player/{player_id}/next_game")
@@ -686,7 +686,7 @@ def end_of_session(
         "game_id": game_id,
     }
 
-    return templates.TemplateResponse("end_of_session.html", result)
+    return templates.TemplateResponse("games/end_of_session.html", result)
 
 
 @router.get(
@@ -707,7 +707,7 @@ def thank_you(
         "request": request,
         "text": template_text,
     }
-    return templates.TemplateResponse("thanks_for_playing.html", result)
+    return templates.TemplateResponse("games/thanks_for_playing.html", result)
 
 
 ###########################################

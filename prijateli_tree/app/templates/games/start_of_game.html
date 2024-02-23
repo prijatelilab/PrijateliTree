@@ -8,8 +8,13 @@
       <h1>
         {% if game.practice %}
           {{ text.intro_practice.now_you_will_play }}
+        {% elif is_real_game_transition %}
+          {{ text.real_game_intro.now_we_practiced }}
+          <br>
+          {{ text.real_game_intro.get_ready }}
         {% elif game_type == "self-selected" %}
           {{ text.different_game_intro.different_version }}
+          <br>
           {{ text.different_game_intro.instead_of }}
         {% else %}
           {{ text.ready_to_play.get_ready }}
@@ -24,7 +29,7 @@
       {% endif %}
     </h3>
     {% if game.is_network_visible %}
-      {% include "networks.html" %}
+      {% include "fragments/networks.html" %}
     {% endif %}
     <div class="p-5">
       <form method="get"

@@ -40,6 +40,7 @@ from prijateli_tree.app.utils.games import (
     get_lang_from_player_id,
     get_previous_answers,
     get_session_player_from_player,
+    is_real_game_transition,
     raise_exception_if_none,
     raise_exception_if_not,
 )
@@ -68,7 +69,7 @@ logger.debug("Language files imported.")
 @router.get("/sessions", response_class=HTMLResponse)
 def choose_session_id(request: Request) -> Response:
     return templates.TemplateResponse(
-        "new_session.html",
+        "games/new_session.html",
         context={"request": request, "session_id": -1},
     )
 
@@ -86,7 +87,7 @@ def choose_session_players(
     players = first_game.players
 
     return templates.TemplateResponse(
-        "new_session.html",
+        "games/new_session.html",
         context={
             "request": request,
             "players": players,
@@ -113,7 +114,7 @@ def start_session(
         "text": template_text,
     }
 
-    return templates.TemplateResponse("ready.html", result)
+    return templates.TemplateResponse("games/ready.html", result)
 
 
 @router.get(
@@ -142,9 +143,10 @@ def start_of_game(
             for key in ["practice", "winning_score", "is_network_visible"]
         },
         "game_type": game.game_type.network,
+        "is_real_game_transition": is_real_game_transition(game, db),
     }
 
-    return templates.TemplateResponse("start_of_game.html", result)
+    return templates.TemplateResponse("games/start_of_game.html", result)
 
 
 @router.get(
@@ -238,7 +240,7 @@ def view_round(
         )
 
     return templates.TemplateResponse(
-        "round.html", {"request": request, **template_data}
+        "games/round.html", {"request": request, **template_data}
     )
 
 
@@ -280,7 +282,7 @@ def choose_neighbors(
     }
 
     return templates.TemplateResponse(
-        "choose_neighbors.html", {"request": request, **template_data}
+        "games/choose_neighbors.html", {"request": request, **template_data}
     )
 
 
@@ -437,7 +439,7 @@ def waiting(
         **header,
     }
 
-    return templates.TemplateResponse("waiting.html", result)
+    return templates.TemplateResponse("games/waiting.html", result)
 
 
 @router.put(
@@ -492,7 +494,7 @@ def get_qualtrics(
         survey_link = survey_link + "?Q_Language=" + lang
 
     return templates.TemplateResponse(
-        "qualtrics.html",
+        "games/qualtrics.html",
         {
             "request": request,
             "player_id": player_id,
@@ -565,7 +567,7 @@ def end_of_game(
     # add information about winning and ball colors
     result.update(game_status)
 
-    return templates.TemplateResponse("end_of_game.html", result)
+    return templates.TemplateResponse("games/end_of_game.html", result)
 
 
 @router.get("/{game_id}/player/{player_id}/next_game")
@@ -598,17 +600,6 @@ def go_to_next_game(
     raise_exception_if_none(next_player_id, detail="next player not found")
 
     # Check if this game is practice
-    if game.practice:
-        # Check if next game is practice
-        next_game = db.query(Game).filter_by(id=game.next_game_id).one()
-        if not next_game.practice:
-            # Show end of practice screen
-            redirect_url = request.url_for(
-                "real_game_transition",
-                game_id=next_game.id,
-                player_id=next_player_id,
-            )
-
     redirect_url = request.url_for(
         "start_of_game",
         game_id=game.next_game_id,
@@ -619,36 +610,6 @@ def go_to_next_game(
         redirect_url,
         status_code=HTTPStatus.FOUND,
     )
-
-
-@router.get(
-    "/{game_id}/player/{player_id}/real_game_transition",
-    response_class=HTMLResponse,
-)
-def real_game_transition(
-    request: Request,
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-) -> Response:
-    """
-    Function that returns the start of game page and
-    template.
-    """
-    _, player = get_game_and_player(game_id, player_id, db)
-    header = get_header_data(player, db)
-    template_text = languages[get_lang_from_player_id(player_id, db)]
-
-    result = {
-        "request": request,
-        "player_id": player_id,
-        "game_id": game_id,
-        "text": template_text,
-        "completed_game": True,
-        **header,
-    }
-
-    return templates.TemplateResponse("self_selected_intro.html", result)
 
 
 @router.get(
@@ -686,7 +647,7 @@ def end_of_session(
         "game_id": game_id,
     }
 
-    return templates.TemplateResponse("end_of_session.html", result)
+    return templates.TemplateResponse("games/end_of_session.html", result)
 
 
 @router.get(
@@ -707,7 +668,7 @@ def thank_you(
         "request": request,
         "text": template_text,
     }
-    return templates.TemplateResponse("thanks_for_playing.html", result)
+    return templates.TemplateResponse("games/thanks_for_playing.html", result)
 
 
 ###########################################

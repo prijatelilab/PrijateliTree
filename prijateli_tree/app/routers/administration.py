@@ -91,7 +91,9 @@ def admin_page(user=Depends(login_manager.optional)) -> RedirectResponse:
 
 @router.get("/login", response_class=HTMLResponse)
 def admin_login(request: Request) -> Response:
-    return templates.TemplateResponse("admin_login.html", {"request": request})
+    return templates.TemplateResponse(
+        "administration/admin_login.html", {"request": request}
+    )
 
 
 @router.post("/login")
@@ -113,7 +115,7 @@ def confirm_login(
     ):
         logger.info(f"User submitted invalid credentials: {email}")
         return templates.TemplateResponse(
-            "admin_login.html",
+            "administration/admin_login.html",
             {"request": request, "error": "Please submit valid credentials."},
         )
 
@@ -155,7 +157,7 @@ def dashboard(
         s.player_string = ", ".join(players)
 
     return templates.TemplateResponse(
-        "admin_dashboard.html",
+        "administration/admin_dashboard.html",
         {
             "request": request,
             "success": success,
@@ -183,7 +185,7 @@ def dashboard_create_session(
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
 
     return templates.TemplateResponse(
-        "create_session.html",
+        "administration/create_session.html",
         {
             "request": request,
             "error": error,
@@ -451,7 +453,7 @@ def dashboard_add_students(
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
     return templates.TemplateResponse(
-        "admin_bulk_add.html",
+        "administration/admin_bulk_add.html",
         {
             "request": request,
         },

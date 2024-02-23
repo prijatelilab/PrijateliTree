@@ -40,6 +40,7 @@ from prijateli_tree.app.utils.games import (
     get_lang_from_player_id,
     get_previous_answers,
     get_session_player_from_player,
+    is_real_game_transition,
     raise_exception_if_none,
     raise_exception_if_not,
 )
@@ -142,6 +143,7 @@ def start_of_game(
             for key in ["practice", "winning_score", "is_network_visible"]
         },
         "game_type": game.game_type.network,
+        "is_real_game_transition": is_real_game_transition(game, db),
     }
 
     return templates.TemplateResponse("games/start_of_game.html", result)
@@ -598,17 +600,6 @@ def go_to_next_game(
     raise_exception_if_none(next_player_id, detail="next player not found")
 
     # Check if this game is practice
-    if game.practice:
-        # Check if next game is practice
-        next_game = db.query(Game).filter_by(id=game.next_game_id).one()
-        if not next_game.practice:
-            # Show end of practice screen
-            redirect_url = request.url_for(
-                "real_game_transition",
-                game_id=next_game.id,
-                player_id=next_player_id,
-            )
-
     redirect_url = request.url_for(
         "start_of_game",
         game_id=game.next_game_id,
@@ -619,36 +610,6 @@ def go_to_next_game(
         redirect_url,
         status_code=HTTPStatus.FOUND,
     )
-
-
-@router.get(
-    "/{game_id}/player/{player_id}/real_game_transition",
-    response_class=HTMLResponse,
-)
-def real_game_transition(
-    request: Request,
-    game_id: int,
-    player_id: int,
-    db: Session = Depends(get_db),
-) -> Response:
-    """
-    Function that returns the start of game page and
-    template.
-    """
-    _, player = get_game_and_player(game_id, player_id, db)
-    header = get_header_data(player, db)
-    template_text = languages[get_lang_from_player_id(player_id, db)]
-
-    result = {
-        "request": request,
-        "player_id": player_id,
-        "game_id": game_id,
-        "text": template_text,
-        "completed_game": True,
-        **header,
-    }
-
-    return templates.TemplateResponse("self_selected_intro.html", result)
 
 
 @router.get(

@@ -366,3 +366,12 @@ def get_games_progress(player: GamePlayer, db: Session = Depends(get_db)):
         "practice_game_progress": practice_game_progress,
         "real_game_progress": real_game_progress,
     }
+
+
+def is_real_game_transition(game: Game, db: Session = Depends(get_db)):
+    if not game.practice:
+        prev_game = db.query(Game).filter_by(next_game_id=game.id).one()
+        # Check if prev game is practice
+        return prev_game.practice
+
+    return False

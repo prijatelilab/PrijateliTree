@@ -510,26 +510,3 @@ def add_students(
         redirect_url,
         status_code=HTTPStatus.FOUND,
     )
-
-
-@router.get("/analysis_dashboard", response_class=HTMLResponse)
-def analysis_dashboard(
-    request: Request,
-    user=Depends(login_manager.optional),
-    db: Session = Depends(get_db),
-) -> Response:
-    if user is None:
-        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
-
-    game_types = db.query(GameType).all()
-    games = db.query(Game).all()
-
-    return templates.TemplateResponse(
-        "analysis_dashboard.html",
-        {
-            "request": request,
-            "game_types": game_types,
-            "games": games,
-        }
-    )
-

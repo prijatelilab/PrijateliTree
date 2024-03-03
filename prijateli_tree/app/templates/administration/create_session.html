@@ -7,6 +7,18 @@
   $(document).ready(function() {
      $('#students').DataTable({
        "select": 'multi',
+       columnDefs: [
+        {
+            target: 0,
+            visible: false,
+            searchable: false
+        },
+        {
+            target: 1,
+            visible: false,
+            searchable: false
+        }
+    ]
     });
 
     $('#students tbody').on( 'click', 'tr', function () {
@@ -72,8 +84,8 @@
         <caption>List of Students</caption>
         <thead>
           <tr>
-            <th scope="col" hidden>ID</th>
-            <th scope="col" hidden>Language</th>
+            <th scope="col">ID</th>
+            <th scope="col">Language</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Grade</th>
@@ -89,8 +101,8 @@
           {% for s in students|sort(attribute='high_school.name, last_name') %}
             <tr>
               <!-- hidden columns referenced in js-->
-              <td hidden>{{ s.id }}</td>
-              <td hidden>{{ s.language.abbr }}</td>
+              <td>{{ s.id }}</td>
+              <td>{{ s.language.abbr }}</td>
               <td>{{ s.name_str }}</td>
               <td>{{ s.email }}</td>
               <td>{{ s.grade_level }}</td>

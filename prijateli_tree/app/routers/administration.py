@@ -142,7 +142,6 @@ def dashboard(
     if user is None:
         return RedirectResponse("login", status_code=HTTPStatus.FOUND)
 
-    game_types = db.query(GameType).all()
     sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
     session_players = db.query(GameSessionPlayer).all()
@@ -162,7 +161,6 @@ def dashboard(
             "request": request,
             "success": success,
             "user": user,
-            "game_types": game_types,
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,

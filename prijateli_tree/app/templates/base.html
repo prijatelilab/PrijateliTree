@@ -17,20 +17,30 @@
     </title>
     <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}"
           rel="stylesheet">
-    <link href="{{ url_for('static', path='css/datatables.min.css') }}"
+    <link href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css"
+          rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/3.0.0/css/buttons.dataTables.css"
           rel="stylesheet">
     <link href="{{ url_for('static', path='/css/custom.css') }}"
           rel="stylesheet">
     <script type="text/javascript"
             src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>
     <script type="text/javascript"
-            src="{{ url_for('static', path='/js/jquery-3.6.0.min.js') }}"></script>
+            src="{{ url_for('static', path='/js/jquery-3.7.1.js') }}"></script>
     <script type="text/javascript"
-            src="{{ url_for('static', path='/js/jquery.dataTables.min.js') }}"></script>
+            src="{{ url_for('static', path='/js/dataTables/v2/dataTables.js') }}"></script>
     <script type="text/javascript"
-            src="{{ url_for('static', path='/js/dataTables.bootstrap5.min.js') }}"></script>
+            src="{{url_for('static', path='js/dataTables/v2/dataTables.select.js')}}"></script>
     <script type="text/javascript"
-            src="{{url_for('static', path='js/dataTables.select.min.js')}}"></script>
+            src="{{url_for('static', path='js/dataTables/v2/select.dataTables.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url_for('static', path='js/dataTables/v2/dataTables.buttons.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url_for('static', path='js/dataTables/v2/buttons.dataTables.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url_for('static', path='js/dataTables/jszip.min.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url_for('static', path='js/dataTables/v2/buttons.html5.min.js')}}"></script>
     {% block helper_script %}
     {% endblock helper_script %}
   </head>

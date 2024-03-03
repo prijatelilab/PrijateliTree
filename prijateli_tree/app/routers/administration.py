@@ -24,6 +24,7 @@ from starlette.datastructures import URL
 
 from prijateli_tree.app.database import (
     Game,
+    GameAnswer,
     GamePlayer,
     GameSession,
     GameSessionPlayer,
@@ -483,7 +484,7 @@ def add_students(
             detail="Upload file is missing expected fields",
         )
 
-        for index, student in student_df.iterrows():
+        for _, student in student_df.iterrows():
             student_in = User(
                 created_by=user.id,
                 **student,
@@ -509,4 +510,40 @@ def add_students(
     return RedirectResponse(
         redirect_url,
         status_code=HTTPStatus.FOUND,
+    )
+
+
+@router.get("/dashboard_analysis", response_class=HTMLResponse)
+def analysis_dashboard(
+    request: Request,
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
+) -> Response:
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    games = db.query(Game).all()
+    answers = db.query(GameAnswer).all()
+    students = db.query(User).filter_by(role=ROLE_STUDENT).all()
+    game_players = db.query(GamePlayer).all()
+    # student_dict = {}
+    # for s in students:
+    #     student_dict[s.id] = s
+
+    # for s in sessions:
+    #    players: [str] = []
+    #    for p in s.players:
+    #        players.append(student_dict[p.user_id].name_str)
+    #   s.player_string = ", ".join(players)
+
+    return templates.TemplateResponse(
+        "administration/analysis_dashboard.html",
+        {
+            "request": request,
+            "user": user,
+            "games": games,
+            "students": students,
+            "game_players": game_players,
+            "answers": answers,
+        },
     )

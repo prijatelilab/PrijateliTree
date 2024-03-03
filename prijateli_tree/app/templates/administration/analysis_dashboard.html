@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}
+  PrijateliTree - Analysis Dashboard
+{% endblock title %}
+{% block helper_script %}
+  <script>
+     $(document).ready(function () {
+      $('#session_history').DataTable({
+        layout: {
+          topStart: {buttons: ['csvHtml5']}
+        }
+      })
+      $('#answers').DataTable({
+        layout: {
+          topStart: {buttons: ['csvHtml5']}
+        }
+      })
+      $('#signals').DataTable({
+        layout: {
+          topStart: {buttons: ['csvHtml5']}
+        }
+      })
+      $('#students').DataTable({
+        layout: {
+          topStart: {buttons: ['csvHtml5']}
+        }
+      })
+     });
+  </script>
+{% endblock helper_script %}
+{% block content %}
+  <div class="container-fluid">
+    <div class="row">
+      <!--Begin Table -->
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <h2>Game History</h2>
+        Each row is a session-game
+        <table id="session_history"
+               class="table table-hover table-bordered caption-top text-center">
+          <caption>Game History</caption>
+          <thead>
+            <tr>
+              <th>session id</th>
+              <th>game id</th>
+              <th>network type</th>
+              <th>names hidden</th>
+              <th>practice</th>
+              <th>n rounds</th>
+              <th>network visible</th>
+              <th>points</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% if games |length == 0 %}
+              <tr class="empty-table">
+                <td colspan="5">There are no game types currently in the system.</td>
+              </tr>
+            {% endif %}
+            {% for g in games %}
+              <tr>
+                <td>{{ g.game_session_id }}</td>
+                <td>{{ g.id }}</td>
+                <td>{{ g.game_type.network }}</td>
+                <td>{{ g.game_type.names_hidden }}</td>
+                <td>{{ g.practice }}</td>
+                <td>{{ g.rounds }}</td>
+                <td>{{ g.is_network_visible }}</td>
+                <td>{{ g.winning_score }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!--End Table -->
+      <!--Begin Table -->
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <h2>Game Answers</h2>
+        Each row is a guess by player X in game Y during round Z
+        <table id="answers"
+               class="table table-hover table-bordered caption-top text-center">
+          <caption>Game Answers</caption>
+          <thead>
+            <tr>
+              <th>session id</th>
+              <th>game id</th>
+              <th>user id</th>
+              <th>position</th>
+              <th>round</th>
+              <th>guess</th>
+              <th>correct</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% if answers|length == 0 %}
+              <tr class="empty-table">
+                <td colspan="5">There are no game types currently in the system.</td>
+              </tr>
+            {% endif %}
+            {% for a in answers %}
+              <tr>
+                <td>{{ a.player.game.game_session_id }}</td>
+                <td>{{ a.player.game_id }}</td>
+                <td>{{ a.player.user.id }}</td>
+                <td>{{ a.player.position }}</td>
+                <td>{{ a.round }}</td>
+                <td>{{ a.player_answer }}</td>
+                <td>{{ a.correct_answer }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!--End Table -->
+      <!--Begin USERS Table -->
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <h2>Signals</h2>
+        Each row is the signal shown to player X in game Y
+        <table id="signals"
+               class="table table-hover table-bordered caption-top text-center">
+          <caption>Signals</caption>
+          <thead>
+            <tr>
+              <th>session id</th>
+              <th>game id</th>
+              <th>user id</th>
+              <th>position</th>
+              <th>round</th>
+              <th>signal</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% if answers|length == 0 %}
+              <tr class="empty-table">
+                <td colspan="5">There are no game types currently in the system.</td>
+              </tr>
+            {% endif %}
+            {% for gp in game_players %}
+              <tr>
+                <td>{{ gp.game.game_session_id }}</td>
+                <td>{{ gp.game.id }}</td>
+                <td>{{ gp.user.id }}</td>
+                <th>{{ gp.position }}</th>
+                <td>0</td>
+                <td>{{ gp.initial_ball }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!--End Table -->
+      <!--Begin USERS Table -->
+      <div class="offset-md-1 col-md-10 offset-xl-2 col-xl-8 table-container">
+        <h2>Students</h2>
+        Each row is mapping from internal id to cid
+        <table id="students"
+               class="table table-hover table-bordered caption-top text-center">
+          <caption>Students</caption>
+          <thead>
+            <tr>
+              <th>user id</th>
+              <th>cid</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% if answers|length == 0 %}
+              <tr class="empty-table">
+                <td colspan="5">There are no game types currently in the system.</td>
+              </tr>
+            {% endif %}
+            {% for s in students %}
+              <tr>
+                <td>{{ s.id }}</td>
+                <td>{{ s.qualtrics_id }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!--End Table -->
+    </div>
+  </div>
+{% endblock content %}
+<form class="d-flex" action='{{ url_for("logout") }}'>
+  <button class="float-end btn btn-primary" type="submit">Logout</button>
+</form>

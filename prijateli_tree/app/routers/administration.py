@@ -111,8 +111,8 @@ def confirm_login(
         .one_or_none()
     )
     if (
+        user is None or
         not Hasher.verify_password(password, str(user.hashed_password))
-        or user is None
     ):
         logger.info(f"User submitted invalid credentials: {email}")
         return templates.TemplateResponse(

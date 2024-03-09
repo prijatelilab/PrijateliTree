@@ -134,7 +134,7 @@
             <caption>List of Students</caption>
             <thead>
               <tr>
-                <th scope="col">ID</th>
+                <th scope="col">Group Ids</th>
                 <th scope="col">First</th>
                 <th scope="col">Last</th>
                 <th scope="col">Language</th>
@@ -149,9 +149,12 @@
                   <td colspan="7">There are no students currently in the system.</td>
                 </tr>
               {% endif %}
-              {% for s in students|sort(attribute='high_school.name, last_name') %}
+              {% for s in students %}
                 <tr>
-                  <th>{{ s.id }}</th>
+                  <th> {% for g in s.random_group %}
+                    {{ g.group_id }}
+                    {% endfor %}
+                  </th>
                   <td>{{ s.first_name }}</td>
                   <td>{{ s.last_name }}</td>
                   <td>{{ s.language.name }}</td>

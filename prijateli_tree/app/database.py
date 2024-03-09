@@ -81,7 +81,7 @@ class User(Base):
         nullable=True,
     )
     high_school = relationship("HighSchool", back_populates="users")
-    group_membership = relationship("RandomGroups", back_populates="users")
+    random_group = relationship("RandomGroups", back_populates="users")
     
     @property
     def name_str(self):
@@ -96,7 +96,7 @@ class User(Base):
 
 
 class RandomGroups(Base):
-    __tablename__ = "randomized_grouping"
+    __tablename__ = "random_groups"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(
         DateTime(timezone=True),
@@ -109,7 +109,7 @@ class RandomGroups(Base):
         ForeignKey("users.id", name="user_fkey"),
         nullable=False,
     )
-    users = relationship("User", back_populates="randomized_grouping")
+    users = relationship("User", back_populates="random_group")
 
 
 class HighSchool(Base):

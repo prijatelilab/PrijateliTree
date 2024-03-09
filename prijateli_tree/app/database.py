@@ -81,7 +81,8 @@ class User(Base):
         nullable=True,
     )
     high_school = relationship("HighSchool", back_populates="users")
-
+    group_membership = relationship("RandomGroups", back_populates="users")
+    
     @property
     def name_str(self):
         return f"{self.first_name.title()} {self.last_name.title()} ({self.language.abbr.upper()})"
@@ -92,6 +93,23 @@ class User(Base):
             name="role_options",
         ),
     )
+
+
+class RandomGroups(Base):
+    __tablename__ = "randomized_grouping"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    group_id = Column(String, nullable=False)
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", name="user_fkey"),
+        nullable=False,
+    )
+    users = relationship("User", back_populates="randomized_grouping")
 
 
 class HighSchool(Base):

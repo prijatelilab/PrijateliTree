@@ -202,6 +202,7 @@ def create_session(
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    session_key: Annotated[str, Form()],
     num_games: int = NUMBER_OF_GAMES,
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),

@@ -3,11 +3,11 @@
   <script>
 function redirectToChoosePlayers() {
   // Get the session ID from the input field
-  const sessionId = document.getElementById("session_id").value;
+  const sessionId = document.getElementById("session_key").value;
 
   // Construct the URL with the session ID
   const url = "/games/session/" + sessionId + "/";
-
+  console.log(url)
   // Redirect to the generated URL
   window.location.href = url;
 }
@@ -24,19 +24,34 @@ function redirectToSession() {
   window.location.href = url;
 }
 
+  function cleanParams() {
+      // Used to clear the URL of parameters after the banner alert is closed.
+      window.history.replaceState(null, '', window.location.pathname);
+  }
+
   </script>
 {% endblock helper_script %}
 {% block title %}
   PrijateliTree - Access Session
 {% endblock title %}
 {% block content %}
+{% if message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> {{ message }}
+      <button type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              onclick="cleanParams()"></button>
+    </div>
+  {% endif %}
   <div class="container-sm flex-container">
     <h1>Welcome.</h1>
-    {% if session_id == -1 %}
-      <p>Enter the session id.</p>
+    {% if session_key == -1 %}
+      <p>Enter the session key.</p>
       <div class="col-sm-4">
         <form>
-          <input type="text" id="session_id" name="session_id">
+          <input type="text" id="session_key" name="session_key">
           <br>
           <br>
           <button type="button"

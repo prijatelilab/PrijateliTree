@@ -256,6 +256,7 @@ def create_session(
     logging.info("Setting up session")
     session = GameSession(
         created_by=user.id,
+        session_key=session_key,
         num_games=num_games,
     )
 
@@ -317,7 +318,7 @@ def create_session(
     create_session_games(session, game, db)
 
     redirect_url = URL("/admin/dashboard").include_query_params(
-        success=f"Your session (ID: {session.id}) and first "
+        success=f"Your session (Key: {session.session_key}) and first "
         f"game (ID: {game.id}) have been created!"
     )
 

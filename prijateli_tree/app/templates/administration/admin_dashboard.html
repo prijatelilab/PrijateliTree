@@ -155,7 +155,7 @@
               {% for s in students %}
                 <tr>
                   <td>
-                    {% for g in s.random_group %}{{ g.group_id }}{% endfor %}
+                    {% for g in s.random_group %}{{ g.group_id }}&nbsp;{% endfor %}
                   </td>
                   <td>{{ s.first_name }}</td>
                   <td>{{ s.last_name }}</td>

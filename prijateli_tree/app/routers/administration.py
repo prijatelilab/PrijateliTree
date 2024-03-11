@@ -485,13 +485,19 @@ def add_students(
         )
 
         for _, student in student_df.iterrows():
-            student_in = User(
-                created_by=user.id,
-                **student,
-                role="student",
+            student_exists = (
+                db.query(User)
+                .filter_by(qualtrics_id=student.qualtrics_id)
+                .one_or_none()
             )
-            db.add(student_in)
-            students_added += 1
+            if student_exists is None and student.qualtrics_id is not None:
+                student_in = User(
+                    created_by=user.id,
+                    **student,
+                    role="student",
+                )
+                db.add(student_in)
+                students_added += 1
         db.commit()
 
     except Exception as e:

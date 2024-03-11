@@ -5,7 +5,7 @@
 {% block helper_script %}
   <script>
      $(document).ready(function () {
-      $('#sessions').DataTable({ order: [[0, 'desc']]});
+      $('#sessions').DataTable({ order: [[0, 'desc'], [2, 'desc']]});
       $('#session_players').DataTable({
         order: [[0, 'desc'], [1, 'desc']],
       layout: {
@@ -15,17 +15,18 @@
               ]
           }
       }
-});
+      });
       $('#students').DataTable();
      });
-    function cleanParams() {
+
+     function cleanParams() {
       // Used to clear the URL of parameters after the banner alert is closed.
       window.history.replaceState(null, '', window.location.pathname);
     }
 
-    const copyToClipboard = async (id) => {
+    const copyToClipboard = async (key) => {
       try {
-        await navigator.clipboard.writeText(`${window.location.host}/games/session/${id}`);
+        await navigator.clipboard.writeText(`${window.location.host}/games/session/${key}`);
       } catch (error) {
         console.error("Failed to copy to clipboard:", error);
       }
@@ -59,7 +60,8 @@
                  class="table table-hover table-bordered caption-top text-center">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+                <th scope="col">Id</th>
+                <th scope="col">Key</th>
                 <th scope="col">Date</th>
                 <th scope="col">Number of Games</th>
                 <th scope="col">Players</th>
@@ -74,7 +76,8 @@
               {% endif %}
               {% for s in sessions|sort(attribute='-created_at') %}
                 <tr>
-                  <th>{{ s.id }}</th>
+                  <td>{{ s.id }}</td>
+                  <td>{{ s.session_key }}</td>
                   <td>{{ s.created_at.date() }}</td>
                   <td>{{ s.num_games }}</td>
                   <td>{{ s.player_string }}</td>
@@ -82,7 +85,7 @@
                     {% if not s.finished %}
                       <button role="button"
                               class="btn btn-primary btn-sm"
-                              onclick="copyToClipboard({{ s.id }})">Copy to Clipboard</button>
+                              onclick="copyToClipboard({{ s.session_key }})">Copy to Clipboard</button>
                     {% endif %}
                   </td>
                 </tr>
@@ -134,7 +137,7 @@
             <caption>List of Students</caption>
             <thead>
               <tr>
-                <th scope="col">ID</th>
+                <th scope="col">Session Ids</th>
                 <th scope="col">First</th>
                 <th scope="col">Last</th>
                 <th scope="col">Language</th>
@@ -149,9 +152,11 @@
                   <td colspan="7">There are no students currently in the system.</td>
                 </tr>
               {% endif %}
-              {% for s in students|sort(attribute='high_school.name, last_name') %}
+              {% for s in students %}
                 <tr>
-                  <th>{{ s.id }}</th>
+                  <td>
+                    {% for g in s.random_group %}{{ g.group_id }}{% endfor %}
+                  </td>
                   <td>{{ s.first_name }}</td>
                   <td>{{ s.last_name }}</td>
                   <td>{{ s.language.name }}</td>

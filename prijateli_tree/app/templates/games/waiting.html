@@ -5,7 +5,7 @@
     window.onpopstate = function () {
       window.history.go(1);
     };
-    <!--calls wait again after 3 seconds-->
+    <!--calls wait again after 2.5 seconds-->
     async function check_all_set() {
       const response = await fetch("/games/{{game_id}}/player/{{player_id}}/all_set");
       const all_set = await response.json();
@@ -36,7 +36,7 @@
     $(document).ready( function () {
       check_all_set();
     });
-    setInterval(function() { check_all_set();}, 3000);
+    setInterval(function() { check_all_set();}, 2500);
   </script>
 {% endblock helper_script %}
 {% block title %}

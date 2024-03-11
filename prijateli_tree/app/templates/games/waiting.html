@@ -33,9 +33,7 @@
         console.log("Other players are not ready, restarting the wait cycle.")
       }
     }
-    $(document).ready( function () {
-      check_all_set();
-    });
+
     setInterval(function() { check_all_set();}, 2500);
   </script>
 {% endblock helper_script %}

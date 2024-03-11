@@ -29,6 +29,7 @@ from prijateli_tree.app.database import (
     GameSession,
     GameSessionPlayer,
     GameType,
+    RandomGroup,
     SessionLocal,
     User,
 )
@@ -50,7 +51,10 @@ from prijateli_tree.app.utils.constants import (
     WINNING_SCORES,
     WINNING_WEIGHTS,
 )
-from prijateli_tree.app.utils.games import raise_exception_if_not
+from prijateli_tree.app.utils.games import (
+    raise_exception_if_none,
+    raise_exception_if_not,
+)
 
 
 base_dir = Path(__file__).resolve().parent
@@ -110,9 +114,8 @@ def confirm_login(
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
-    if (
-        not Hasher.verify_password(password, str(user.hashed_password))
-        or user is None
+    if user is None or not Hasher.verify_password(
+        password, str(user.hashed_password)
     ):
         logger.info(f"User submitted invalid credentials: {email}")
         return templates.TemplateResponse(
@@ -202,6 +205,7 @@ def create_session(
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    session_key: Annotated[str, Form()],
     num_games: int = NUMBER_OF_GAMES,
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
@@ -255,6 +259,7 @@ def create_session(
     logging.info("Setting up session")
     session = GameSession(
         created_by=user.id,
+        session_key=session_key,
         num_games=num_games,
     )
 
@@ -316,7 +321,7 @@ def create_session(
     create_session_games(session, game, db)
 
     redirect_url = URL("/admin/dashboard").include_query_params(
-        success=f"Your session (ID: {session.id}) and first "
+        success=f"Your session (Key: {session.session_key}) and first "
         f"game (ID: {game.id}) have been created!"
     )
 
@@ -455,6 +460,7 @@ def dashboard_add_students(
         "administration/admin_bulk_add.html",
         {
             "request": request,
+            "user": user,
         },
     )
 
@@ -485,13 +491,19 @@ def add_students(
         )
 
         for _, student in student_df.iterrows():
-            student_in = User(
-                created_by=user.id,
-                **student,
-                role="student",
+            student_exists = (
+                db.query(User)
+                .filter_by(qualtrics_id=student.qualtrics_id)
+                .one_or_none()
             )
-            db.add(student_in)
-            students_added += 1
+            if student_exists is None and student.qualtrics_id is not None:
+                student_in = User(
+                    created_by=user.id,
+                    **student,
+                    role="student",
+                )
+                db.add(student_in)
+                students_added += 1
         db.commit()
 
     except Exception as e:
@@ -505,6 +517,61 @@ def add_students(
 
     redirect_url = URL("/admin/dashboard").include_query_params(
         success=f"{students_added} students added to the database."
+    )
+
+    return RedirectResponse(
+        redirect_url,
+        status_code=HTTPStatus.FOUND,
+    )
+
+
+@router.post("/add_group_assignments", response_class=HTMLResponse)
+def add_group_assignments(
+    file: UploadFile = File(...),
+    user=Depends(login_manager.optional),
+    db: Session = Depends(get_db),
+) -> RedirectResponse:
+    if user is None:
+        return RedirectResponse("login", status_code=HTTPStatus.FOUND)
+
+    try:
+        group_df = pd.read_csv(file.file)
+        expected_fields = ["user_id", "group_id"]
+        raise_exception_if_not(
+            all([x in group_df.columns for x in expected_fields]),
+            detail="Upload file is missing expected fields",
+        )
+        groups_added = 0
+        for _, assignment in group_df.iterrows():
+            student_exists = (
+                db.query(User).filter_by(id=assignment.user_id).one_or_none()
+            )
+            raise_exception_if_none(
+                student_exists,
+                detail=f"student {assignment.user_id} not found in db.",
+            )
+
+            group_assignment_in = RandomGroup(
+                # created_by=user.id,
+                user_id=assignment.user_id,
+                group_id=assignment.group_id.lower(),
+            )
+            db.add(group_assignment_in)
+            groups_added += 1
+
+        db.commit()
+
+    except Exception as e:
+        # Rollback the transaction if an error occurs
+        raise HTTPException(
+            status_code=500, detail=f"Internal Server Error: {str(e)}"
+        )
+
+    finally:
+        file.file.close()
+
+    redirect_url = URL("/admin/dashboard").include_query_params(
+        success=f"{groups_added} group assignments added to the database."
     )
 
     return RedirectResponse(

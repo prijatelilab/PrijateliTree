@@ -24,8 +24,22 @@
   <div class="container-sm">
     <div class="row">
       <div class="form-container bg-light-subtle col-xs-12 offset-md-1 col-md-10 offset-lg-1 col col-lg-10 offset-xl-3 col col-xl-6">
+        <h1>Upload Students</h1>
+        <p>Expects first_name, last_name, qualtrics_id, high_school_id, grade_level and langauge_id</p>
         <form method="post"
               action='{{ url_for("add_students") }}'
+              enctype="multipart/form-data">
+          <label for="file">Choose a CSV file:</label>
+          <input type="file" name="file" accept=".csv" required>
+          <br>
+          <button type="submit" class="btn btn-primary float-end">Upload Data</button>
+        </form>
+      </div>
+      <div class="form-container bg-light-subtle col-xs-12 offset-md-1 col-md-10 offset-lg-1 col col-lg-10 offset-xl-3 col col-xl-6">
+        <h1>Upload Group Assignments</h1>
+        <p>Expects a valid user id and group id</p>
+        <form method="post"
+              action='{{ url_for("add_group_assignments") }}'
               enctype="multipart/form-data">
           <label for="file">Choose a CSV file:</label>
           <input type="file" name="file" accept=".csv" required>
@@ -36,6 +50,3 @@
     </div>
   </div>
 {% endblock content %}
-<form class="d-flex" action='{{ url_for("logout") }}'>
-  <button class="float-end btn btn-primary" type="submit">Logout</button>
-</form>

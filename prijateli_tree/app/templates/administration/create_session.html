@@ -41,7 +41,7 @@
         formData.append("player_" + numbers[i], parseInt(selectedRows[i][0]))
         lang = selectedRows[i][1]
         languageCounter[lang] = languageCounter[lang] ? languageCounter[lang]  + 1 : 1;
-        groups = selectedRows[i][2].split('\n').map(s => s.trim());
+        groups = selectedRows[i][2].split('&nbsp;').map(s => s.trim());
         for (const g of groups) {
           if (g) { // g can be ""
             groupCounter[g] = groupCounter[g] ? groupCounter[g]  + 1 : 1;

@@ -552,7 +552,7 @@ def add_group_assignments(
             )
 
             group_assignment_in = RandomGroup(
-                #created_by=user.id,
+                # created_by=user.id,
                 user_id=assignment.user_id,
                 group_id=assignment.group_id.lower(),
             )

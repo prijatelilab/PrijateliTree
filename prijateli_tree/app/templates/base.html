@@ -55,13 +55,12 @@
             <span>Admin Panel</span>
           </a>
           {% if user.role == "super-admin" %}
-
-          <form class="d-flex" action='{{ url_for("add_students") }}'>
-            <button class="btn  float-end" type="submit">Add Users</button>
-          </form>
-          <form class="d-flex" action='{{ url_for("analysis_dashboard") }}'>
-            <button class="btn float-end" type="submit">Analysis Dashboard</button>
-          </form>
+            <form class="d-flex" action='{{ url_for("add_students") }}'>
+              <button class="btn  float-end" type="submit">Add Users</button>
+            </form>
+            <form class="d-flex" action='{{ url_for("analysis_dashboard") }}'>
+              <button class="btn float-end" type="submit">Analysis Dashboard</button>
+            </form>
           {% endif %}
           <form class="d-flex" action='{{ url_for("logout") }}'>
             <button class="btn btn-primary float-end" type="submit">Logout</button>

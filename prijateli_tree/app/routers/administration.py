@@ -110,9 +110,8 @@ def confirm_login(
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
-    if (
-        not Hasher.verify_password(password, str(user.hashed_password))
-        or user is None
+    if user is None or not Hasher.verify_password(
+        password, str(user.hashed_password)
     ):
         logger.info(f"User submitted invalid credentials: {email}")
         return templates.TemplateResponse(
@@ -202,6 +201,7 @@ def create_session(
     player_four: Annotated[int, Form()],
     player_five: Annotated[int, Form()],
     player_six: Annotated[int, Form()],
+    session_key: Annotated[str, Form()],
     num_games: int = NUMBER_OF_GAMES,
     user=Depends(login_manager.optional),
     db: Session = Depends(get_db),
@@ -255,6 +255,7 @@ def create_session(
     logging.info("Setting up session")
     session = GameSession(
         created_by=user.id,
+        session_key=session_key,
         num_games=num_games,
     )
 
@@ -316,7 +317,7 @@ def create_session(
     create_session_games(session, game, db)
 
     redirect_url = URL("/admin/dashboard").include_query_params(
-        success=f"Your session (ID: {session.id}) and first "
+        success=f"Your session (Key: {session.session_key}) and first "
         f"game (ID: {game.id}) have been created!"
     )
 

@@ -81,6 +81,7 @@ class User(Base):
         nullable=True,
     )
     high_school = relationship("HighSchool", back_populates="users")
+    random_group = relationship("RandomGroups", back_populates="users")
 
     @property
     def name_str(self):
@@ -92,6 +93,23 @@ class User(Base):
             name="role_options",
         ),
     )
+
+
+class RandomGroups(Base):
+    __tablename__ = "random_groups"
+    id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sql_func.now(),
+    )
+    group_id = Column(String, nullable=False)
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", name="user_fkey"),
+        nullable=False,
+    )
+    users = relationship("User", back_populates="random_group")
 
 
 class HighSchool(Base):
@@ -349,6 +367,7 @@ class GameSession(Base):
     )
     # 16 was used as the default, but it can really be any number.
     num_games = Column(Integer, nullable=False, server_default=text("16"))
+    session_key = Column(String)
     finished = Column(
         Boolean, nullable=False, server_default=expression.false()
     )

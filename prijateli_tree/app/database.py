@@ -81,7 +81,7 @@ class User(Base):
         nullable=True,
     )
     high_school = relationship("HighSchool", back_populates="users")
-    random_group = relationship("RandomGroups", back_populates="users")
+    random_group = relationship("RandomGroup", back_populates="users")
 
     @property
     def name_str(self):
@@ -95,7 +95,7 @@ class User(Base):
     )
 
 
-class RandomGroups(Base):
+class RandomGroup(Base):
     __tablename__ = "random_groups"
     id = Column(Integer, Identity(start=1, cycle=True), primary_key=True)
     created_at = Column(

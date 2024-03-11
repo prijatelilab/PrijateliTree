@@ -128,7 +128,7 @@
               <td>{{ s.id }}</td>
               <td>{{ s.language.abbr }}</td>
               <td>
-                {% for g in s.random_group %}{{ g.group_id }}{% endfor %}
+                {% for g in s.random_group %}{{ g.group_id }} {% endfor %}
               </td>
               <td>{{ s.name_str }}</td>
               <td>{{ s.email }}</td>

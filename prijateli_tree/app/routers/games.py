@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 
 from prijateli_tree.app.database import (
     Game,
@@ -81,8 +82,9 @@ def choose_session_players(
 ) -> Response:
     session = (
         db.query(GameSession)
-        .filter_by(session_key=session_key.lower())
-        .one_or_none()
+        .filter_by(session_key=session_key.lower()) 
+        .order_by(desc('created_at'))
+        .first()
     )
     if session is None:
         return templates.TemplateResponse(

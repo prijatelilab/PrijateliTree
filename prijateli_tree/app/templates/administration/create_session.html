@@ -43,13 +43,13 @@
         languageCounter[lang] = languageCounter[lang] ? languageCounter[lang]  + 1 : 1;
         groups = selectedRows[i][2].split('\n').map(s => s.trim());
         for (const g of groups) {
-          if (g) { // g can be "" 
+          if (g) { // g can be ""
             groupCounter[g] = groupCounter[g] ? groupCounter[g]  + 1 : 1;
           }
         }
       }
       const languageCounts = Object.values(languageCounter)
-      
+
       // Test group/session id memberships
       let sessionKey = null;
       let maxValue = -Infinity;
@@ -127,9 +127,8 @@
               <!-- hidden columns referenced in js-->
               <td>{{ s.id }}</td>
               <td>{{ s.language.abbr }}</td>
-              <td> {% for g in s.random_group %}
-                {{ g.group_id }}
-                {% endfor %}
+              <td>
+                {% for g in s.random_group %}{{ g.group_id }}{% endfor %}
               </td>
               <td>{{ s.name_str }}</td>
               <td>{{ s.email }}</td>

@@ -13,9 +13,9 @@ from sqlalchemy.orm import Session
 
 from prijateli_tree.app.database import (
     Game,
-    GameSession,
     GameAnswer,
     GamePlayer,
+    GameSession,
     GameSessionPlayer,
     PlayerNetwork,
     User,
@@ -79,12 +79,20 @@ def choose_session_id(request: Request) -> Response:
 def choose_session_players(
     request: Request, session_key: str, db: Session = Depends(get_db)
 ) -> Response:
-    session = db.query(GameSession).filter_by(session_key=session_key.lower()).one_or_none()
-    if (session is None):
-        return templates.TemplateResponse(
-        "games/new_session.html",
-        context={"request": request, "session_key": -1, "message": "Session key not found. Make sure the key is correct."},
+    session = (
+        db.query(GameSession)
+        .filter_by(session_key=session_key.lower())
+        .one_or_none()
     )
+    if session is None:
+        return templates.TemplateResponse(
+            "games/new_session.html",
+            context={
+                "request": request,
+                "session_key": -1,
+                "message": "Session key not found. Make sure the key is correct.",
+            },
+        )
 
     games = db.query(Game).filter_by(game_session_id=session.id).all()
     raise_exception_if_not(games, "session not found or games not created")

@@ -82,7 +82,7 @@ class User(Base):
     )
     high_school = relationship("HighSchool", back_populates="users")
     random_group = relationship("RandomGroups", back_populates="users")
-    
+
     @property
     def name_str(self):
         return f"{self.first_name.title()} {self.last_name.title()} ({self.language.abbr.upper()})"

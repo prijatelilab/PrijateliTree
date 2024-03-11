@@ -110,9 +110,8 @@ def confirm_login(
         .filter((User.role == ROLE_ADMIN) | (User.role == ROLE_SUPER_ADMIN))
         .one_or_none()
     )
-    if (
-        user is None or
-        not Hasher.verify_password(password, str(user.hashed_password))
+    if user is None or not Hasher.verify_password(
+        password, str(user.hashed_password)
     ):
         logger.info(f"User submitted invalid credentials: {email}")
         return templates.TemplateResponse(

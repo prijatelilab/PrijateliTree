@@ -22,6 +22,7 @@ from prijateli_tree.app.database import (
     User,
     get_db,
 )
+from prijateli_tree.app.utils.administration import round_denars
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     FILE_MODE_READ,
@@ -47,7 +48,6 @@ from prijateli_tree.app.utils.games import (
     raise_exception_if_not,
 )
 
-from prijateli_tree.app.utils.administration import round_denars
 
 logger = logging.getLogger()
 router = APIRouter()

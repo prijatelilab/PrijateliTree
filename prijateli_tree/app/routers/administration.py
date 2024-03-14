@@ -33,7 +33,11 @@ from prijateli_tree.app.database import (
     SessionLocal,
     User,
 )
-from prijateli_tree.app.utils.administration import Hasher, show_network, round_denars
+from prijateli_tree.app.utils.administration import (
+    Hasher,
+    round_denars,
+    show_network,
+)
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     KEY_LOGIN_SECRET,
@@ -172,7 +176,7 @@ def dashboard(
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,
-            "session_players": session_players
+            "session_players": session_players,
         },
     )
 

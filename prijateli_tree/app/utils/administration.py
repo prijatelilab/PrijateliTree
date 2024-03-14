@@ -28,4 +28,4 @@ class Hasher:
 
 def round_denars(points, denar_factor):
     denar = points * denar_factor
-    return round(denar * .02) * 50 
+    return round(denar * 0.02) * 50

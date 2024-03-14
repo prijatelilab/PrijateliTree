@@ -114,6 +114,30 @@ def choose_session_players(
     )
 
 
+@router.get("/get_session_players/{session_key}", response_class=JSONResponse)
+def get_session_players(
+    request: Request, session_key: str, db: Session = Depends(get_db)
+) -> Response:
+    session = (
+        db.query(GameSession)
+        .filter_by(session_key=session_key.lower())
+        .order_by(desc("created_at"))
+        .first()
+    )
+    if session is None:
+        return JSONResponse(
+            content={
+                "request": request,
+                "message": "Session key not found. Make sure the key is correct.",
+            },
+        )
+    game = db.query(Game).filter_by(game_session_id=session.id).first()
+    raise_exception_if_none(game, "session not found or games not created")
+    players = [p.user.name_str for p in game.players]
+
+    return JSONResponse(content={"players": players})
+
+
 @router.get("/{game_id}/player/{player_id}/ready", response_class=HTMLResponse)
 def start_session(
     request: Request,

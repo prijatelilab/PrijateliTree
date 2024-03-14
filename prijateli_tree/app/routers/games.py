@@ -47,6 +47,7 @@ from prijateli_tree.app.utils.games import (
     raise_exception_if_not,
 )
 
+from prijateli_tree.app.utils.administration import round_denars
 
 logger = logging.getLogger()
 router = APIRouter()
@@ -674,7 +675,7 @@ def end_of_session(
     # Get points and won games from session player
     total_points = session_player.points
     n_correct_answers = session_player.correct_answers
-    denars = int(total_points * DENAR_FACTOR)
+    denars = round_denars(total_points, DENAR_FACTOR)
 
     template_text = languages[get_lang_from_player_id(player_id, db)]
 

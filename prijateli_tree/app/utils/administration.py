@@ -24,3 +24,8 @@ class Hasher:
     @staticmethod
     def get_password_hash(password):
         return pwd_context.hash(password)
+
+
+def round_denars(points, denar_factor):
+    denar = points * denar_factor
+    return round(denar * .02) * 50 

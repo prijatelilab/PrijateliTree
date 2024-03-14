@@ -33,7 +33,7 @@ from prijateli_tree.app.database import (
     SessionLocal,
     User,
 )
-from prijateli_tree.app.utils.administration import Hasher, show_network
+from prijateli_tree.app.utils.administration import Hasher, show_network, round_denars
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     KEY_LOGIN_SECRET,
@@ -149,6 +149,10 @@ def dashboard(
     sessions = db.query(GameSession).all()
     students = db.query(User).filter_by(role=ROLE_STUDENT).all()
     session_players = db.query(GameSessionPlayer).all()
+
+    for sp in session_players:
+        sp.denars = round_denars(sp.points, DENAR_FACTOR)
+
     student_dict = {}
     for s in students:
         student_dict[s.id] = s
@@ -168,8 +172,7 @@ def dashboard(
             "sessions": sessions,
             "students": students,
             "student_dict": student_dict,
-            "session_players": session_players,
-            "DENAR_FACTOR": DENAR_FACTOR,
+            "session_players": session_players
         },
     )
 

@@ -48,19 +48,16 @@ def home(request: Request) -> Response:
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
-    if exc.status_code == 405 or exc.status_code == 404:
-        suggested_path = request["path"].split("/")
-        suggested_path = [p for p in suggested_path if p != ""]
-        suggested_path[-1] = "round"
-        logging.info(f'Status {exc.status_code}: {exc.detail}'  )
-        return templates.TemplateResponse(
-            "404.html",
-            {
-                "request": request,
-                "suggested_path": "/".join(suggested_path),
-                "exc": exc,
-            },
-        )
+    suggested_path = request["path"].split("/")
+    suggested_path = [p for p in suggested_path if p != ""]
+    suggested_path[-1] = "round"
 
-    # Pass other exceptions as they are
-    raise exc
+    return templates.TemplateResponse(
+        "404.html",
+        context={
+            "request": request,
+            "suggested_path": "/".join(suggested_path),
+            "exc": exc,
+        },
+        status_code=exc.status_code,
+    )

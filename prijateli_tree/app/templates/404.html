@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-{{ exc.status_code }}
+  {{ exc.status_code }}
 {% endblock title %}
 {% block content %}
   <div class="container-sm general-container">
     <h1>Error {{ exc.status_code }}</h1>
     <h2>{{ exc.detail }}</h2>
     {{ request.path }}
-  
     <br>
     <br>
     {% if request.path.find("player") > -1 %}

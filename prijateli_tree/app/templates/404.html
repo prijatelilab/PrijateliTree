@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}
+  {{ exc.status_code }}
+{% endblock title %}
+{% block content %}
+  <div class="container-sm general-container">
+    <h1>Error {{ exc.status_code }}</h1>
+    <h2>{{ exc.detail }}</h2>
+    {{ request.path }}
+    <br>
+    <br>
+    {% if request.path.find("player") > -1 %}
+      <p>If you are in the middle of a game:</p>
+      Click "back" or try
+      <a href={{ request._base_url }}{{ suggested_path }}> {{ request._base_url }}{{ suggested_path }} </a>
+    {% endif %}
+  </div>
+{% endblock content %}

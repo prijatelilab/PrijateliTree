@@ -22,6 +22,7 @@ from prijateli_tree.app.database import (
     User,
     get_db,
 )
+from prijateli_tree.app.utils.administration import round_denars
 from prijateli_tree.app.utils.constants import (
     DENAR_FACTOR,
     FILE_MODE_READ,
@@ -674,7 +675,7 @@ def end_of_session(
     # Get points and won games from session player
     total_points = session_player.points
     n_correct_answers = session_player.correct_answers
-    denars = int(total_points * DENAR_FACTOR)
+    denars = round_denars(total_points, DENAR_FACTOR)
 
     template_text = languages[get_lang_from_player_id(player_id, db)]
 

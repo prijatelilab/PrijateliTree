@@ -49,6 +49,8 @@ from prijateli_tree.app.utils.games import (
 
 
 logger = logging.getLogger()
+
+
 router = APIRouter()
 
 base_dir = Path(__file__).resolve().parent

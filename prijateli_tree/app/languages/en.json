@@ -38,7 +38,7 @@
       "ask_your_teachers": "Ask your teachers about getting your reward!",
       "congratulations": "Congratulations!",
       "denars": "{X} denars!",
-      "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made extra."
+      "you_guessed_correctly": "You guessed correctly in {X} games, and earned {x} points, which means you made."
     },
     "game": {
       "guess_color": "Guess the color of the bag:",

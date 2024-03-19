@@ -38,7 +38,7 @@
       "ask_your_teachers": "Pyetni m\u00ebsimdh\u00ebn\u00ebsin tuaj p\u00ebr marrjen e shp\u00ebrblimit tuaj!",
       "congratulations": "Urime!",
       "denars": "{X} denar\u00eb!",
-      "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar ekstra"
+      "you_guessed_correctly": "Keni q\u00eblluar sakt\u00eb n\u00eb {X} loj\u00ebra dhe keni fituar {x} pik\u00eb, q\u00eb do t\u00eb thot\u00eb se keni fituar"
     },
     "game": {
       "guess_color": "Gjeni ngjyr\u00ebn e \u00e7ant\u00ebs:",

@@ -95,79 +95,82 @@
         </div>
         <br>
         <br>
-        <h2>List of Awards</h2>
-        <div class="table-container">
-          <table id="session_players"
-                 class="table table-hover table-bordered caption-top">
-            <thead>
-              <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Session ID</th>
-                <th scope="col">Student</th>
-                <th scope="col">Correct Answers</th>
-                <th scope="col">Total Points</th>
-                <th scope="col">Award Amount</th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider">
-              {% if session_players|length == 0 %}
-                <tr class="empty-table">
-                  <td colspan="5">There are no session players currently in the system.</td>
-                </tr>
-              {% endif %}
-              {% for sp in session_players %}
+        {% if user.role == "super-admin" %}
+          <h2>List of Awards</h2>
+          <div class="table-container">
+            <table id="session_players"
+                   class="table table-hover table-bordered caption-top">
+              <thead>
                 <tr>
-                  <td>{{ sp.created_at.date() }}</td>
-                  <td>{{ sp.session_id }}</td>
-                  <td>{{ sp.user.first_name + ' ' + sp.user.last_name }}</td>
-                  <td>{{ sp.correct_answers }}</td>
-                  <td>{{ sp.points }}</td>
-                  <td>{{ sp.denars }}</td>
+                  <th scope="col">Date</th>
+                  <th scope="col">Session ID</th>
+                  <th scope="col">Student</th>
+                  <th scope="col">Correct Answers</th>
+                  <th scope="col">Total Points</th>
+                  <th scope="col">Award Amount</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <br>
-        <br>
-        <h2>List of Students</h2>
-        <div class="table-container">
-          <table id="students"
-                 class="table table-hover table-bordered caption-top text-center">
-            <caption>List of Students</caption>
-            <thead>
-              <tr>
-                <th scope="col">Session Ids</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Language</th>
-                <th scope="col">Email</th>
-                <th scope="col">Grade</th>
-                <th scope="col">High School</th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider">
-              {% if students|length == 0 %}
-                <tr class="empty-table">
-                  <td colspan="7">There are no students currently in the system.</td>
-                </tr>
-              {% endif %}
-              {% for s in students %}
+              </thead>
+              <tbody class="table-group-divider">
+                {% if session_players|length == 0 %}
+                  <tr class="empty-table">
+                    <td colspan="5">There are no session players currently in the system.</td>
+                  </tr>
+                {% endif %}
+                {% for sp in session_players %}
+                  <tr>
+                    <td>{{ sp.created_at.date() }}</td>
+                    <td>{{ sp.session_id }}</td>
+                    <td>{{ sp.user.first_name + ' ' + sp.user.last_name }}</td>
+                    <td>{{ sp.correct_answers }}</td>
+                    <td>{{ sp.points }}</td>
+                    <td>{{ sp.denars }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <br>
+          <h2>List of Students</h2>
+          <div class="table-container">
+            <table id="students"
+                   class="table table-hover table-bordered caption-top text-center">
+              <caption>List of Students</caption>
+              <thead>
                 <tr>
-                  <td>
-                    {% for g in s.random_group %}{{ g.group_id }}&nbsp;{% endfor %}
-                  </td>
-                  <td>{{ s.first_name }}</td>
-                  <td>{{ s.last_name }}</td>
-                  <td>{{ s.language.name }}</td>
-                  <td>{{ s.email }}</td>
-                  <td>{{ s.grade_level }}</td>
-                  <td>{{ s.high_school.name }}</td>
+                  <th scope="col">Session Ids</th>
+                  <th scope="col">First</th>
+                  <th scope="col">Last</th>
+                  <th scope="col">Language</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Grade</th>
+                  <th scope="col">High School</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody class="table-group-divider">
+                {% if students|length == 0 %}
+                  <tr class="empty-table">
+                    <td colspan="7">There are no students currently in the system.</td>
+                  </tr>
+                {% endif %}
+                {% for s in students %}
+                  <tr>
+                    <td>
+                      {% for g in s.random_group %}{{ g.group_id }}&nbsp;{% endfor %}
+                    </td>
+                    <td>{{ s.first_name }}</td>
+                    <td>{{ s.last_name }}</td>
+                    <td>{{ s.language.name }}</td>
+                    <td>{{ s.email }}</td>
+                    <td>{{ s.grade_level }}</td>
+                    <td>{{ s.high_school.name }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+        <!-- Super admin -->
       </div>
     </div>
   </div>

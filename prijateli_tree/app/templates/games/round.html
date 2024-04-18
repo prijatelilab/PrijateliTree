@@ -7,8 +7,34 @@
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     document.getElementById('delayedButtons').style.display = 'block';
-  }, 3000); // Change 3000 to however many milliseconds you want to wait
+  }, 3500); // Change 3000 to however many milliseconds you want to wait
 });
+
+function submit(player_answer) {
+  // Get the session ID from the input field
+  $('#delayedButtons button[name="player_answer"]').each(function() {
+    this.disabled = true
+  });
+
+  const formData = new FormData();
+  formData.append(
+    'player_answer',
+    player_answer
+  )
+
+  fetch('{{ url_for("route_add_answer", game_id=game_id, player_id=player_id) }}', {
+          method: 'POST',
+          body: formData,
+        })
+      .then(resp => {
+        window.location.href = resp.url
+      }) // or, resp.text(), etc
+      .catch(error => {
+          console.error(error);
+      });
+
+}
+
   </script>
 {% endblock helper_script %}
 {% block content %}
@@ -55,15 +81,17 @@ document.addEventListener('DOMContentLoaded', function() {
       </ul>
     {% endif %}
     <h1>{{ text.game.guess_color }}</h1>
-    <!-- Button for 'Red' answer -->
     <div id="delayedButtons" style="display: none;">
-      <form action="{{ url_for('route_add_answer', game_id=game_id, player_id=player_id) }}"
-            method="post">
-        <div class="d-grid gap-2 d-md-block">
-          <button type="submit" name="player_answer" value="R" class="btn btn-danger">{{ text.util.red }}</button>
-          <button type="submit" name="player_answer" value="B" class="btn btn-primary">{{ text.util.blue }}</button>
-        </div>
-      </form>
+      <div class="d-grid gap-2 d-md-block">
+        <button onclick="submit('R')"
+                name="player_answer"
+                value="R"
+                class="btn btn-danger">{{ text.util.red }}</button>
+        <button onclick="submit('B')"
+                name="player_answer"
+                value="B"
+                class="btn btn-primary">{{ text.util.blue }}</button>
+      </div>
     </div>
   </div>
 {% endblock content %}
